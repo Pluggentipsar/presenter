@@ -1,0 +1,52 @@
+/* Introt: omslaget och presentationen (30 september 2026). Se intro.tsx. */
+
+/* ------------------------------------------------------------- omslaget */
+
+.field { position: absolute; left: 0; top: 0; width: 1600px; height: 900px; z-index: 3; pointer-events: none; }
+.cover { position: absolute; inset: 0; z-index: 4; transition: opacity .8s var(--ease); }
+.cover[data-card="true"] { opacity: 0; pointer-events: none; }
+.coverKicker { position: absolute; left: 0; right: 0; top: 96px; display: flex; justify-content: center; align-items: center; gap: 14px;
+  font-family: var(--font-body); font-size: 17px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; color: var(--muted);
+  animation: coverFade 1.2s var(--ease) .2s backwards; }
+/* Den stilla titeln: i R, i miniatyrer, i granskningen och vid reducerad rörelse. När punkterna ritar titeln tonar den bort.
+   Ljuspunkterna läser storleken härifrån och har samma mitt (horisonten × 0,5): tre rader ryms mellan överraden och ljuset. */
+.coverTitle { position: absolute; left: 140px; right: 140px; top: calc(var(--hy) * .5); transform: translateY(-50%); text-align: center;
+  font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 120px; line-height: 1.04; letter-spacing: var(--heading-tracking, -.035em);
+  text-wrap: balance; transition: opacity .9s var(--ease); }
+.coverTitle[data-size="m"] { font-size: 108px; }
+.cover[data-live="true"] .coverTitle { opacity: 0; }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* Titelkortet i andra läget kommer fram medan punkterna sjunker tillbaka i ljuset. */
+.card { position: absolute; inset: 0; z-index: 4; animation: coverFade 1.1s var(--ease) .45s backwards; }
+@keyframes coverFade { from { opacity: 0; } }
+
+/* -------------------------------------------------------- presentationen */
+
+.pres { position: absolute; inset: 0; z-index: 4; }
+.presCopy { position: absolute; left: 150px; top: 238px; width: 580px; transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.pres[data-playing="true"] .presCopy { opacity: .12; transform: translateX(-24px); }
+.presKicker { font-family: var(--font-body); font-size: 19px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.presName { margin-top: 14px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 96px; line-height: 1; letter-spacing: var(--heading-tracking, -.035em); }
+.presRoles { margin: 36px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; font-size: 30px; line-height: 1.3; }
+.presRoles li { padding-left: 22px; border-left: 3px solid var(--hz2-glow); }
+.presContact { margin-top: 32px; font-size: 21px; line-height: 1.4; color: var(--muted); }
+.presCopy > * { animation: presRise .75s var(--ease) backwards; }
+.presCopy > :nth-child(2) { animation-delay: .1s; }
+.presCopy > :nth-child(3) { animation-delay: .2s; }
+.presCopy > :nth-child(4) { animation-delay: .3s; }
+/* Filmen: pausad till höger (1100 × 619 skalad till 0,6), förstorad mitt på scenen när den spelar. Ovanför textningsmarginalen i båda lägena. */
+.presScreen { position: absolute; left: 0; top: 0; width: 1100px; height: 619px; border-radius: 18px; overflow: hidden; background: #000;
+  border: 1px solid var(--glass-edge); box-shadow: var(--shadow); transform-origin: 0 0; transform: translate(790px, 250px) scale(.6);
+  transition: transform .85s var(--ease); animation: coverFade 1s var(--ease) .25s backwards; }
+.pres[data-playing="true"] .presScreen { transform: translate(250px, 110px) scale(1); }
+.presScreen video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.presPlay { position: absolute; left: 50%; top: 50%; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%;
+  background: color-mix(in srgb, #000 38%, transparent); border: 2px solid color-mix(in srgb, #fff 70%, transparent); transition: opacity .4s var(--ease); }
+.presPlay::after { content: ""; position: absolute; left: 46px; top: 35px; border-style: solid; border-width: 25px 0 25px 40px; border-color: transparent transparent transparent #fff; }
+.pres[data-playing="true"] .presPlay { opacity: 0; }
+.pres[data-still="true"] *, .pres[data-still="true"] { transition: none !important; animation: none !important; }
+@keyframes presRise { from { opacity: 0; transform: translateY(34px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .cover, .coverKicker, .coverTitle, .card, .presCopy, .presCopy > *, .presScreen, .presPlay { animation: none !important; transition: none !important; }
+}

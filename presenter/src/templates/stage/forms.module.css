@@ -1,0 +1,342 @@
+/*
+ * Stage · generiska former.
+ * Koordinater på 1600 × 900. Innehåll i bildläget talare håller sig till x 96–1010,
+ * helbild till x 150–1450. Nödvändig text slutar ovanför y 745 (textningsmarginalen).
+ */
+
+/* Källraden förankras nedifrån: en rad slutar på y 764, och två rader växer uppåt i stället för in i textningsmarginalen. */
+.credit { position: absolute; left: 96px; bottom: 136px; z-index: 8; max-width: 940px; font-size: 15px; font-weight: 600; letter-spacing: .05em; color: var(--muted); }
+/* Tiopotenserna: skalmätaren står nere till vänster, så källraden går till höger hörn. */
+/* I tiopotenserna står skalmätaren nere till vänster; källraden går till höger. Två attribut, så att bildläget full (left: 150px) inte vinner. */
+[data-skala][data-layout] .credit { left: auto; right: 44px; bottom: 26px; max-width: 760px; text-align: right; }
+/* På planetnivån står jorden till höger: affischer och citat håller sig till vänster om den. */
+[data-skala="7"] .poster, [data-skala="7"] .quote:not([data-image="true"]) { width: 690px; }
+.adress { position: absolute; right: 96px; bottom: 118px; z-index: 8; margin: 0; padding: 12px 26px; border-radius: 999px; font-size: 25px; font-weight: 700; letter-spacing: -.005em; color: var(--ink);
+  background: var(--glass); border: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 var(--glass-top), var(--shadow); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+
+/* ---------------------------------------------------------------- affisch */
+
+.poster { position: absolute; left: 96px; top: 96px; width: 940px; height: 640px; z-index: 3; display: flex; flex-direction: column; justify-content: center; gap: 30px; }
+.posterTitle { font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 84px; line-height: 1.03; letter-spacing: -.042em; text-wrap: balance; }
+.poster[data-size="xl"] .posterTitle { font-size: 118px; line-height: .98; letter-spacing: -.052em; }
+.poster[data-size="m"] .posterTitle { font-size: 64px; line-height: 1.05; }
+.poster[data-size="s"] .posterTitle { font-size: 50px; line-height: 1.1; letter-spacing: -.03em; }
+.posterCaption { max-width: 780px; font-size: 24px; line-height: 1.45; color: var(--muted); }
+/* Ekot blir rubriken: orden som byts glider ut och in på samma plats (fältet echo). */
+.morphOut, .morphIn { display: inline-grid; vertical-align: bottom; }
+.morphOut > span, .morphIn > span { min-width: 0; overflow-x: clip; overflow-y: visible; white-space: pre; }
+.morphOut { grid-template-columns: 0fr; opacity: 0; animation: morphOut 1s var(--ease) 1.9s backwards; }
+.morphIn { grid-template-columns: 1fr; animation: morphIn 1.1s var(--ease) 2.05s backwards; }
+@keyframes morphOut { from { grid-template-columns: 1fr; opacity: 1; } }
+@keyframes morphIn { from { grid-template-columns: 0fr; opacity: 0; } }
+
+/* ------------------------------------------------------------------ citat */
+
+.quote { position: absolute; left: 96px; top: 96px; width: 940px; height: 640px; z-index: 3; display: flex; flex-direction: column; justify-content: center; }
+.quote[data-image="true"] { left: 480px; width: 560px; }
+.quoteText { position: relative; margin: 22px 0 0; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 64px; line-height: 1.06; letter-spacing: -.035em; text-wrap: balance; }
+.quote[data-size="xl"] .quoteText { font-size: 82px; line-height: 1.02; letter-spacing: -.042em; }
+.quote[data-size="m"] .quoteText { font-size: 52px; line-height: 1.1; }
+.quote[data-size="s"] .quoteText { font-size: 42px; line-height: 1.16; letter-spacing: -.025em; }
+.quoteText::before { content: "”"; position: absolute; left: -.62em; top: -.14em; font-size: 1.9em; line-height: 1; color: var(--soft); }
+.quoteCite { display: flex; align-items: center; gap: 16px; margin-top: 36px; font-style: normal; font-size: 20px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.quoteCite::before { content: ""; flex: none; width: 56px; height: 2px; background: var(--hz2-glow); }
+.quoteAfter { margin-top: 34px; max-width: 840px; font-size: 32px; line-height: 1.35; font-weight: 600; }
+.quoteFigure { position: absolute; left: 36px; bottom: 0; width: 430px; height: 640px; margin: 0; z-index: 2; }
+.quoteFigure[data-place="below"] { left: 296px; width: 560px; height: 560px; }
+.quote[data-image="true"][data-place="below"] { left: 96px; top: 84px; width: 940px; height: auto; justify-content: flex-start; }
+.quote[data-place="below"] .quoteText::before { left: -.56em; }
+.quoteFigure img { width: 100%; height: 100%; object-fit: contain; object-position: 50% 100%;
+  filter: drop-shadow(0 0 1px color-mix(in srgb, var(--hz2-hot) 55%, transparent)) drop-shadow(26px -6px 34px color-mix(in srgb, var(--hz2-glow) 28%, transparent)) drop-shadow(0 30px 60px color-mix(in srgb, #000 45%, transparent));
+  -webkit-mask-image: linear-gradient(180deg, #000 74%, transparent 99%); mask-image: linear-gradient(180deg, #000 74%, transparent 99%); }
+
+/* ------------------------------------------------------------------ chatt */
+
+.chatHead { position: absolute; left: 150px; top: 64px; width: 1100px; z-index: 4; transition: opacity var(--mid) var(--ease), filter var(--mid) var(--ease); }
+.chatHead[data-resting="true"] { opacity: 0; filter: blur(4px); }
+.chatHeading { margin-top: 14px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 44px; line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.chatPanel { position: absolute; left: 150px; top: 426px; translate: 0 -50%; width: 1100px; min-height: 280px; max-height: 628px; z-index: 3; display: flex; flex-direction: column; overflow: hidden; border-radius: 30px;
+  background: var(--glass); border: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 var(--glass-top), var(--shadow);
+  -webkit-backdrop-filter: blur(22px) saturate(1.25); backdrop-filter: blur(22px) saturate(1.25); transform-origin: 18% 50%;
+  transition: transform var(--slow) var(--ease), opacity var(--mid) var(--ease), filter var(--mid) var(--ease); }
+.chatPanel[data-titled="true"] { top: 470px; max-height: 540px; }
+.chatPanel[data-resting="true"] { opacity: .2; filter: blur(2px); transform: scale(.94); }
+.chatPanel[data-device="phone"] { width: 470px; left: 300px; border-radius: 56px; }
+.chatBar { display: flex; align-items: center; gap: 12px; padding: 18px 30px; border-bottom: 1px solid var(--glass-edge); font-size: 15px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); }
+.chatThread { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 22px; padding: 30px 34px 34px; overflow: hidden; }
+.bubble { max-width: 80%; }
+.bubble[data-who="ai"] { align-self: flex-start; }
+.bubble[data-who="du"], .bubble[data-who="elev"], .bubble[data-who="talare"] { align-self: flex-end; }
+.bubble[data-who="not"] { align-self: stretch; max-width: none; }
+.bubble small { display: flex; align-items: center; gap: 8px; margin: 0 14px 9px; font-size: 17px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+.bubble[data-who="du"] small, .bubble[data-who="elev"] small, .bubble[data-who="talare"] small { justify-content: flex-end; }
+.bubble p { padding: 18px 26px; font-size: 28px; line-height: 1.38; }
+.bubble[data-who="ai"] p { border-radius: 26px 26px 26px 8px; background: color-mix(in srgb, var(--ink) 9%, var(--bg-surface)); border: 1px solid var(--glass-edge); }
+.bubble[data-who="du"] p, .bubble[data-who="elev"] p, .bubble[data-who="talare"] p { border-radius: 26px 26px 8px 26px; background: var(--human); color: var(--on-human); font-weight: 600; }
+.bubble[data-who="not"] p { padding: 6px 0 6px 24px; border-left: 4px solid var(--hz2-glow); font-weight: 600; }
+.chatPanel[data-size="m"] .bubble p { font-size: 24px; padding: 15px 22px; }
+.chatPanel[data-size="s"] .bubble p { font-size: 20px; line-height: 1.4; padding: 13px 20px; }
+.chatPanel[data-size="xs"] .bubble p { font-size: 17px; line-height: 1.42; padding: 12px 18px; }
+.chatPanel[data-size="s"] .chatThread, .chatPanel[data-size="xs"] .chatThread { gap: 14px; }
+/* Tiopotenserna: samtalet som ett utskrivet samtal (transkript) i stället för chattbubblor. Talaren i
+   marginalen i sin färg, repliken stort, hårfina linjer mellan replikerna. Ingen panel, inga bubblor. */
+[data-skala] .chatHead { left: 96px; }
+[data-skala] .chatHeading { font-size: 58px; letter-spacing: -.04em; }
+[data-skala] .chatPanel { left: 96px; top: 232px; translate: none; width: 1240px; min-height: 0; max-height: none; overflow: visible;
+  border: 0; border-radius: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+[data-skala] .chatBar { gap: 0; padding: 0 0 14px; border-bottom: 1px solid color-mix(in srgb, var(--ink) 34%, transparent);
+  font-family: var(--font-label, var(--font-mono)); font-size: 16px; font-weight: 600; letter-spacing: .16em; }
+[data-skala] .chatBar i { display: none; }
+[data-skala] .chatThread { gap: 0; padding: 0; overflow: visible; }
+[data-skala] .bubble { max-width: none; align-self: stretch; display: grid; grid-template-columns: 180px 1fr; align-items: baseline; column-gap: 32px; padding: 24px 0 26px;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); }
+[data-skala] .bubble small { margin: 0; justify-content: flex-start; font-family: var(--font-label, var(--font-mono)); font-size: 17px; font-weight: 600; letter-spacing: .18em; }
+[data-skala] .bubble small i { display: none; }
+[data-skala] .bubble[data-who="talare"] small, [data-skala] .bubble[data-who="du"] small, [data-skala] .bubble[data-who="elev"] small { color: var(--human); }
+[data-skala] .bubble[data-who="ai"] small { color: var(--ai); }
+[data-skala][data-tone="light"] .bubble:is([data-who="talare"], [data-who="du"], [data-who="elev"]) small { color: color-mix(in srgb, var(--human) 42%, var(--ink)); }
+[data-skala] .bubble p, [data-skala] .chatPanel[data-size] .bubble p { padding: 0; border: 0; border-radius: 0; background: none; color: var(--ink);
+  font-family: var(--font-display); font-weight: 600; font-size: 34px; line-height: 1.24; letter-spacing: -.015em; }
+[data-skala] .bubble[data-who="ai"] p { color: color-mix(in srgb, var(--ink) 82%, transparent); font-weight: 500; }
+.chatNote { position: absolute; left: 150px; top: 130px; width: 1150px; height: 600px; z-index: 6; display: flex; flex-direction: column; justify-content: center;
+  font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 84px; line-height: 1.03; letter-spacing: -.042em; text-wrap: balance; }
+.chatNote[data-with-image="true"] { width: 660px; font-size: 72px; }
+.chatImage { position: absolute; left: 860px; top: 160px; width: 600px; height: 520px; margin: 0; z-index: 5; }
+.chatImage img { width: 100%; height: 100%; object-fit: cover; border-radius: 26px; box-shadow: var(--shadow); }
+
+/* ---------------------------------------------------------------- ordfält */
+
+.wordsKicker { position: absolute; left: 96px; top: 84px; z-index: 4; }
+.wordField { position: absolute; left: 90px; top: 130px; width: 930px; height: 580px; z-index: 3; display: flex; flex-wrap: wrap; align-content: center; justify-content: flex-start; gap: 26px 20px; }
+.word { padding: 10px 24px; border-radius: 999px; white-space: nowrap; font-weight: 700; letter-spacing: -.01em; transform: translateY(var(--lift)) rotate(var(--tilt));
+  background: var(--glass); border: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 var(--glass-top), 0 10px 30px color-mix(in srgb, #000 18%, transparent);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  animation: wordIn .75s var(--ease) both; animation-delay: calc(var(--i) * 70ms);
+  transition: opacity .6s var(--ease), transform .9s var(--ease), filter .6s var(--ease); }
+.word:nth-child(3n + 1) { border-color: color-mix(in srgb, var(--ai) 45%, transparent); }
+.wordField[data-step="1"] .word { opacity: .09; filter: blur(4px); transform: translate(var(--drift), calc(var(--lift) + 30px)) rotate(var(--tilt)) scale(.9); }
+@keyframes wordIn { from { opacity: 0; transform: translateY(calc(var(--lift) + 26px)) rotate(var(--tilt)) scale(.9); filter: blur(6px); } }
+:global([data-still="true"]) .word { animation: none; }
+.wordsTitle { position: absolute; left: 96px; top: 190px; width: 960px; z-index: 5; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 140px; line-height: .96; letter-spacing: -.056em; }
+
+/* ------------------------------------------------------------- stora tal */
+
+.stats { position: absolute; left: 96px; top: 96px; width: 940px; height: 640px; z-index: 3; display: flex; flex-direction: column; justify-content: center; }
+.statsTitle { margin: 16px 0 48px; max-width: 900px; font-size: 34px; line-height: 1.25; font-weight: 700; }
+.statRow { display: flex; gap: 44px; }
+.stat { flex: 1; margin: 0; padding-top: 28px; border-top: 2px solid color-mix(in srgb, var(--ink) 22%, transparent); }
+.stat strong { display: block; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 150px; line-height: .92; letter-spacing: -.055em; font-variant-numeric: tabular-nums; white-space: nowrap; text-shadow: 0 0 60px color-mix(in srgb, var(--hz2-glow) 28%, transparent); }
+.stats[data-count="4"] .stat strong { font-size: 100px; }
+.stat[data-text="true"] strong { font-size: 76px; line-height: 1.02; white-space: normal; }
+.unit { margin-left: .04em; font-size: .46em; letter-spacing: -.02em; color: var(--soft); }
+.stat figcaption { margin-top: 16px; font-size: 24px; line-height: 1.4; font-weight: 600; color: var(--muted); }
+.dots { display: flex; gap: 9px; margin-top: 20px; }
+.dots i { width: 24px; height: 24px; border-radius: 50%; border: 2px solid color-mix(in srgb, var(--ink) 34%, transparent); transition: background-color .5s var(--ease), border-color .5s var(--ease); }
+.dots i[data-on="true"] { background: var(--hz2-glow); border-color: var(--hz2-glow); }
+.stat[data-index="0"] .dots i[data-on="true"] { background: var(--soft); border-color: var(--soft); }
+.stat[data-index="1"] .dots i[data-on="true"] { background: var(--ai); border-color: var(--ai); box-shadow: 0 0 12px color-mix(in srgb, var(--ai) 60%, transparent); }
+/* Förändringen (fälten from): talet räknas om från förra värdet, stapeln växer från förra nivån, de andra dämpas. */
+.stat { position: relative; transition: opacity .7s var(--ease), filter .7s var(--ease); }
+.stats[data-focus] .stat:not([data-moving]) { opacity: .26; filter: blur(.5px); }
+.stats[data-settled] .stat { opacity: .45; }
+/* Utanför flödet: stapeln ligger i luften under etiketten och flyttar inte slutraden. */
+.statFrom { position: absolute; left: 0; right: 0; top: calc(100% + 10px); display: block; opacity: 0; transition: opacity .6s var(--ease); }
+.statFrom[data-on="true"] { opacity: 1; }
+.statFrom i { position: relative; display: block; height: 10px; border-radius: 6px; background: color-mix(in srgb, var(--ink) 14%, transparent); }
+.statFrom i::before, .statFrom i::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: calc(var(--from) * 100%); border-radius: inherit; }
+.statFrom i::before { background: color-mix(in srgb, var(--ink) 34%, transparent); }
+.statFrom i::after { background: var(--hz2-glow); box-shadow: 0 0 14px var(--hz2-glow); transition: width 1.4s var(--ease) .35s; }
+.statFrom[data-on="true"] i::after { width: calc(var(--to) * 100%); }
+.statFrom small { display: block; margin-top: 6px; font-size: 19px; font-weight: 700; letter-spacing: .04em; color: var(--muted); }
+.stats:has(.statFrom) .statsNote { margin-top: 64px; }
+.statsNote { margin-top: 46px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 56px; line-height: 1.06; letter-spacing: -.035em; text-wrap: balance; }
+.statsNote2 { margin-top: 46px; max-width: 900px; padding-left: 22px; border-left: 3px solid var(--hz2-glow); font-size: 28px; line-height: 1.4; font-weight: 600; }
+
+/* ------------------------------------------------------------- två sidor */
+
+.splitWrap { position: absolute; left: 150px; top: 90px; width: 1300px; height: 650px; z-index: 3; display: flex; flex-direction: column; justify-content: center; }
+.splitTitle { margin: 14px 0 30px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 52px; line-height: 1.06; letter-spacing: -.035em; text-wrap: balance; }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.side { --role: color-mix(in srgb, var(--ink) 40%, transparent); padding: 30px 36px 38px; border-radius: 26px; border-top: 5px solid var(--role);
+  background: var(--glass); border-inline: 1px solid var(--glass-edge); border-bottom: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 var(--glass-top), var(--shadow);
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+.side small { display: block; margin-bottom: 14px; font-size: 20px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+.side p { font-size: 32px; line-height: 1.3; font-weight: 600; }
+.splitNote { margin-top: 42px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 58px; line-height: 1.05; letter-spacing: -.035em; text-wrap: balance; }
+
+/* ------------------------------------------------------------------ rader */
+
+.stack { position: absolute; left: 96px; top: 90px; width: 930px; height: 650px; z-index: 3; display: flex; flex-direction: column; justify-content: center; }
+.stackTitle { margin: 14px 0 26px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 56px; line-height: 1.05; letter-spacing: -.035em; text-wrap: balance; }
+.stackList { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.stackList li { --role: color-mix(in srgb, var(--ink) 40%, transparent); display: flex; align-items: center; gap: 26px; padding: 18px 28px; border-radius: 18px; border-left: 6px solid var(--role);
+  background: var(--glass); border-top: 1px solid var(--glass-edge); border-right: 1px solid var(--glass-edge); border-bottom: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 var(--glass-top);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); transition: opacity var(--mid) var(--ease), transform var(--slow) var(--ease), filter var(--mid) var(--ease), visibility 0s; }
+/* Etiketten bär rollen (Eleven bär, AI utmanar …) och ska gå att läsa i filmen: cirka 27 px vid 1920. */
+.tag { flex: none; display: flex; align-items: center; gap: 12px; min-width: 196px; font-size: 22px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: color-mix(in srgb, var(--role) 45%, var(--ink)); }
+.tag::before { content: ""; flex: none; width: 13px; height: 13px; border-radius: 50%; background: var(--role); }
+.itemText { font-size: 32px; line-height: 1.25; font-weight: 600; }
+.stack[data-count="6"] .itemText, .stack[data-count="7"] .itemText, .stack[data-count="8"] .itemText { font-size: 27px; }
+.stack[data-count="6"] .stackList li, .stack[data-count="7"] .stackList li, .stack[data-count="8"] .stackList li { padding-block: 11px; }
+.stack[data-resting="true"] .stackList li[data-on="true"] { opacity: .5; }
+.stackNote { margin-top: 30px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 50px; line-height: 1.06; letter-spacing: -.032em; text-wrap: balance; }
+/* Designpasset i tiopotenserna: raderna som en specifikation. Hårfina linjer mellan raderna och etiketten
+   i mono och rollens färg, utan glaskort eller kantband. */
+[data-skala] .stackList { gap: 0; border-top: 1px solid color-mix(in srgb, var(--ink) 30%, transparent); }
+[data-skala] .stackList li { align-items: baseline; padding: 22px 0; border-radius: 0; border: 0; border-bottom: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+[data-skala] .tag { min-width: 250px; font-family: var(--font-label, var(--font-mono)); font-size: 20px; font-weight: 600; letter-spacing: .16em; color: var(--role); }
+[data-skala] .tag::before { width: 9px; height: 9px; border-radius: 0; }
+[data-skala][data-tone="light"] .tag { color: color-mix(in srgb, var(--role) 45%, var(--ink)); }
+
+/* Högen före listan: chattskärmbilder utan text faller i en hög och glider undan. */
+.pile { position: absolute; inset: 0; z-index: 2; pointer-events: none; transform-origin: 780px 420px; transition: transform 1.1s var(--ease), opacity .8s var(--ease), filter .8s var(--ease); }
+.pile[data-aside="true"] { transform: translate(150px, 60px) scale(.7); opacity: .14; filter: blur(1.5px); }
+.pileShot { position: absolute; left: var(--x); top: var(--y); width: 150px; height: 250px; padding: 30px 12px 12px; display: flex; flex-direction: column; gap: 10px; border-radius: 22px;
+  background: color-mix(in srgb, var(--bg) 70%, #000); border: 1px solid var(--glass-edge); box-shadow: 0 16px 40px color-mix(in srgb, #000 45%, transparent);
+  transform: rotate(var(--tilt)); animation: pileFall .75s cubic-bezier(.3, 1.3, .5, 1) calc(.2s + var(--i) * .07s) backwards; }
+.pileShot i { display: block; height: 22px; border-radius: 10px; }
+.pileShot i[data-who="du"] { align-self: flex-end; background: var(--human); }
+.pileShot i[data-who="ai"] { align-self: flex-start; background: color-mix(in srgb, var(--ink) 16%, var(--bg-surface)); }
+@keyframes pileFall { from { opacity: 0; transform: translateY(-420px) rotate(calc(var(--tilt) * -2)); } }
+:global([data-still="true"]) .pileShot { animation: none; }
+
+/* Formler som glittrar och sjunker i vattnet när sliden kommer; sedan listan. */
+.sinking { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+.sink { position: absolute; left: var(--x); top: var(--y); white-space: nowrap; font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 46px; letter-spacing: -.02em;
+  color: transparent; background: linear-gradient(100deg, var(--ink) 30%, var(--hz2-hot) 46%, color-mix(in srgb, var(--ai) 55%, var(--ink)) 54%, var(--ink) 70%) 0 0 / 260% 100%;
+  -webkit-background-clip: text; background-clip: text; filter: drop-shadow(0 0 18px color-mix(in srgb, var(--hz2-glow) 55%, transparent));
+  opacity: 0; animation: sinkLife 3.1s var(--ease) calc(.2s + var(--i) * .2s) both, sinkShine 1.6s ease-in-out calc(.45s + var(--i) * .2s) both; }
+@keyframes sinkLife {
+  0% { opacity: 0; transform: translateY(26px) scale(.96); }
+  16% { opacity: 1; transform: none; }
+  52% { opacity: 1; transform: none; animation-timing-function: cubic-bezier(.55, 0, .85, .4); }
+  100% { opacity: 0; transform: translateY(calc(720px - var(--y))) scaleY(.55); }
+}
+@keyframes sinkShine { from { background-position: 100% 0; } }
+.sinking[data-still="true"] .sink { animation: none; }
+.stack[data-sinking] .stackList li:first-child { animation: stackLate .8s var(--ease) 3.1s backwards; }
+@keyframes stackLate { from { opacity: 0; transform: translateY(24px); filter: blur(8px); } }
+
+/* Roller: människa, AI, gemensamt, blottläggning. */
+.side[data-role="human"], .stackList li[data-role="human"] { --role: var(--human); }
+.side[data-role="ai"], .stackList li[data-role="ai"] { --role: var(--ai); }
+.side[data-role="shared"], .stackList li[data-role="shared"] { --role: var(--accent-positive); }
+.side[data-role="alert"], .stackList li[data-role="alert"] { --role: var(--alert); }
+.side[data-role="glow"], .stackList li[data-role="glow"] { --role: var(--hz2-glow); }
+
+/* ------------------------------------------------------------------ media */
+
+.mediaHead { position: absolute; left: 150px; top: 64px; z-index: 5; transition: opacity var(--mid) var(--ease), filter var(--mid) var(--ease); }
+.mediaHead[data-resting="true"] { opacity: 0; filter: blur(4px); }
+.mediaTitle { margin-top: 12px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 44px; letter-spacing: -.03em; }
+.mediaItem { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.mediaItem[data-current="true"] { z-index: 4; }
+.mediaPrompt { position: absolute; left: 150px; top: 138px; max-width: 980px; padding: 18px 26px 22px; border-radius: 26px 26px 8px 26px; z-index: 4;
+  background: var(--human); color: var(--on-human); box-shadow: var(--shadow); font-size: 28px; line-height: 1.35; font-weight: 600; }
+.mediaPrompt small { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 16px; letter-spacing: .15em; text-transform: uppercase; opacity: .82; }
+.mediaPrompt small i { background: var(--on-human); box-shadow: none; }
+.mediaBody { position: absolute; left: 190px; width: 1220px; top: 150px; height: 580px; transition: opacity var(--mid) var(--ease), transform var(--slow) var(--ease), filter var(--mid) var(--ease), left var(--slow) var(--ease), top var(--slow) var(--ease), width var(--slow) var(--ease), height var(--slow) var(--ease), visibility 0s; }
+.mediaItem:has(.mediaPrompt) .mediaBody { top: 300px; height: 430px; }
+.mediaItem[data-titled="true"]:not(:has(.mediaPrompt)) .mediaBody { top: 180px; height: 550px; }
+.mediaItem[data-past="true"] .mediaBody, .mediaItem[data-current="false"][data-resting="false"] .mediaBody { opacity: 0; visibility: hidden; transform: scale(.96); }
+/* Vila efter sista mediet: ett stort till vänster, två–tre på rad, fyra–sex i rutnät. */
+.mediaItem[data-resting="true"] .mediaBody { opacity: 1; visibility: visible; left: calc(150px + var(--col) * 440px); top: calc(300px + var(--row) * 230px); width: 420px; height: 214px; }
+.mediaItem[data-resting="true"][data-count="1"] .mediaBody { left: 150px; top: 150px; width: 660px; height: 560px; }
+.mediaItem[data-resting="true"][data-count="2"] .mediaBody, .mediaItem[data-resting="true"][data-count="3"] .mediaBody { top: 380px; height: 330px; }
+/* Stämpel över ett medium: det som inte får stå som fakta. */
+.mediaStamp { position: absolute; right: 6%; top: 8%; z-index: 2; padding: 10px 22px; border: 5px solid var(--alert); border-radius: 10px; font-family: var(--font-display); font-size: 34px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--alert); background: color-mix(in srgb, var(--bg) 78%, transparent); box-shadow: 0 10px 30px color-mix(in srgb, #000 30%, transparent); rotate: -8deg; opacity: 0; scale: 1.35;
+  transition: opacity .35s var(--ease) .55s, scale .5s cubic-bezier(.2, 1.6, .4, 1) .55s; }
+.mediaStamp[data-on="true"] { opacity: 1; scale: 1; }
+/* Slutraden som notis (noteStyle="notis"): mediet står kvar i sin fulla storlek, dämpat, och notisen glider in över det. */
+.mediaHead[data-notice][data-resting="true"] { opacity: 1; filter: none; }
+.mediaItem[data-notice][data-resting="true"] .mediaBody { left: 190px; top: 180px; width: 1220px; height: 550px; filter: brightness(.5) saturate(.7); }
+.mediaNotice { position: absolute; left: 50%; top: 230px; width: 840px; translate: -50% 0; z-index: 7; display: grid; grid-template-columns: 78px 1fr; column-gap: 26px; align-items: center;
+  padding: 28px 34px 30px; border-radius: 30px; background: color-mix(in srgb, var(--bg-surface) 84%, transparent);
+  -webkit-backdrop-filter: blur(22px) saturate(1.4); backdrop-filter: blur(22px) saturate(1.4);
+  box-shadow: 0 30px 70px color-mix(in srgb, #000 55%, transparent), inset 0 0 0 1px var(--glass-edge); }
+/* Inträdet sköts av animationen noticeIn nedan; döljet är bara en tonad övergång. */
+.mediaNotice.mediaNotice[data-on="false"] { transform: none; }
+.noticeIcon { grid-row: span 2; display: grid; place-items: center; width: 78px; height: 78px; border-radius: 20px;
+  background: linear-gradient(150deg, var(--human), color-mix(in srgb, var(--human) 60%, #ff6a3d)); box-shadow: inset 0 0 0 1px color-mix(in srgb, #fff 22%, transparent); }
+.noticeIcon svg { width: 42px; height: 42px; fill: none; stroke: var(--on-human, #1a1204); stroke-width: 2; stroke-linecap: round; }
+.mediaNotice small { font-family: var(--font-label, var(--font-mono)); font-size: 18px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.mediaNotice p { margin-top: 6px; font-family: var(--font-display); font-weight: 700; font-size: 42px; line-height: 1.1; letter-spacing: -.02em; }
+/* Notisen landar med en liten studs och appikonen pingar två gånger (animationspasset). */
+.mediaNotice[data-on="true"] { animation: noticeIn .8s cubic-bezier(.3, 1.35, .5, 1) both; }
+.mediaNotice[data-on="true"] .noticeIcon { animation: noticePing 1.1s var(--ease) .6s 2; }
+@keyframes noticeIn { from { translate: -50% -70px; } to { translate: -50% 0; } }
+@keyframes noticePing { from { box-shadow: inset 0 0 0 1px color-mix(in srgb, #fff 22%, transparent), 0 0 0 0 color-mix(in srgb, var(--human) 60%, transparent); }
+  to { box-shadow: inset 0 0 0 1px color-mix(in srgb, #fff 22%, transparent), 0 0 0 20px color-mix(in srgb, var(--human) 0%, transparent); } }
+:global([data-still="true"]) .mediaNotice, :global([data-still="true"]) .noticeIcon { animation: none; }
+.mediaNote { position: absolute; left: 150px; top: 120px; width: 1300px; z-index: 6; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 84px; line-height: 1.02; letter-spacing: -.042em; }
+.mediaNote[data-count="1"] { left: 860px; top: 150px; width: 590px; height: 560px; display: flex; flex-direction: column; justify-content: center; font-size: 72px; }
+
+/* ----------------------------------------- ett foto, fem vägar in (anchor) */
+/* Underlaget stannar; resultaten samlas under det och fälls till sist ut runt det.
+   Efter första läget i helbild (talare,full). */
+
+.anchor { position: absolute; inset: 0; }
+.anHead { position: absolute; left: 110px; top: 50px; z-index: 5; transition: opacity var(--mid) var(--ease), filter var(--mid) var(--ease); }
+:global([data-layout="talare"]) .anHead { left: 96px; }
+.anHead[data-resting="true"] { opacity: 0; filter: blur(4px); }
+.anSpokes { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; overflow: visible; pointer-events: none; }
+.anSpokes path { fill: none; stroke: color-mix(in srgb, var(--hz2-hot) 62%, transparent); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: 1;
+  filter: drop-shadow(0 0 7px color-mix(in srgb, var(--hz2-glow) 80%, transparent)); transition: stroke-dashoffset .35s var(--ease); }
+.anSpokes path[data-on="true"] { stroke-dashoffset: 0; transition: stroke-dashoffset 1s var(--ease) calc(.55s + var(--k) * .12s); }
+.anItem { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.anItem[data-mode="main"] { z-index: 4; }
+.anPrompt { position: absolute; left: 410px; top: 110px; max-width: 1040px; padding: 18px 26px 22px; border-radius: 26px 26px 8px 26px; z-index: 4;
+  background: var(--human); color: var(--on-human); box-shadow: var(--shadow); font-size: 28px; line-height: 1.35; font-weight: 600; }
+.anPrompt small { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 16px; letter-spacing: .15em; text-transform: uppercase; opacity: .82; }
+.anPrompt small i { background: var(--on-human); box-shadow: none; }
+.anItem .anBody { position: absolute; left: 410px; top: 300px; width: 1040px; height: 430px;
+  transition: left 1s var(--ease), top 1s var(--ease), width 1s var(--ease), height 1s var(--ease), opacity var(--mid) var(--ease), transform var(--slow) var(--ease), filter var(--mid) var(--ease), visibility 0s; }
+/* Första läget: underlaget stort, Joel i bild. */
+.anItem[data-mode="main"][data-anchor="true"] .anBody { left: 96px; top: 130px; width: 914px; height: 600px; }
+.anItem[data-mode="pinned"] .anBody { left: 110px; top: 110px; width: 250px; height: 320px; }
+.anItem[data-mode="strip"] .anBody { left: var(--sx); top: var(--sy); width: 120px; height: 72px; opacity: .88; }
+.anItem[data-mode="center"] .anBody { left: 955px; top: 298px; width: 190px; height: 240px; }
+.anItem[data-mode="ring"] .anBody { left: calc(var(--rx) - 115px); top: calc(var(--ry) - 70px); width: 230px; height: 140px; transition-delay: calc(var(--k) * .07s); }
+/* Små lägen: bara mediet, ingen bildtext; dokumentet krymper som en miniatyr. */
+.anItem:not([data-mode="main"]) figcaption { display: none; }
+.anItem:not([data-mode="main"]) figure > img, .anItem:not([data-mode="main"]) figure > video { border-radius: 10px; }
+.anItem[data-mode="strip"] [data-kind="doc"] > div, .anItem[data-mode="ring"] [data-kind="doc"] > div, .anItem[data-mode="pinned"] [data-kind="doc"] > div { zoom: .3; }
+.anItem[data-mode="strip"] [data-kind="audio"] > div, .anItem[data-mode="ring"] [data-kind="audio"] > div { border-radius: 12px; }
+.anLabel { position: absolute; left: 50%; top: calc(100% + 8px); translate: -50% 0; white-space: nowrap; font-size: 19px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink); text-shadow: 0 2px 12px color-mix(in srgb, var(--bg) 90%, transparent); opacity: 0; transition: opacity .6s var(--ease); }
+.anItem[data-mode="ring"] .anLabel { opacity: 1; transition-delay: calc(.9s + var(--k) * .1s); }
+.anItem[data-mode="center"] .anLabel, .anItem[data-mode="pinned"] .anLabel { opacity: .7; font-size: 14px; letter-spacing: .1em; text-transform: none; font-weight: 600; }
+.anNote { position: absolute; left: 110px; top: 170px; width: 480px; z-index: 6; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 72px; line-height: 1.02; letter-spacing: -.042em; }
+
+/* ------------------------------------------------------------------ titel */
+
+.titleLockup { position: absolute; left: 96px; top: 136px; width: 940px; z-index: 5; }
+.titleLockup h2 { margin-top: 28px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 86px; line-height: 1.02; letter-spacing: -.042em; text-wrap: balance; }
+
+/* ----------------------------------------------------- helbild och talare */
+
+:global([data-layout="talare"]) .chatHead, :global([data-layout="talare"]) .chatPanel { left: 96px; width: 914px; }
+:global([data-layout="talare"]) .chatNote { left: 96px; width: 930px; }
+:global([data-layout="talare"]) .mediaHead { left: 96px; }
+:global([data-layout="talare"]) .mediaPrompt { left: 96px; max-width: 900px; }
+:global([data-layout="talare"]) .mediaBody { left: 96px; width: 914px; }
+:global([data-layout="talare"]) .mediaItem[data-resting="true"] .mediaBody { left: calc(96px + var(--col) * 310px); top: calc(330px + var(--row) * 200px); width: 294px; height: 184px; }
+:global([data-layout="talare"]) .mediaItem[data-resting="true"][data-count="1"] .mediaBody { left: 96px; top: 170px; width: 480px; height: 540px; }
+:global([data-layout="talare"]) .mediaItem[data-resting="true"][data-count="2"] .mediaBody, :global([data-layout="talare"]) .mediaItem[data-resting="true"][data-count="3"] .mediaBody { top: 400px; height: 300px; }
+:global([data-layout="talare"]) .mediaNote { left: 96px; width: 930px; font-size: 72px; }
+:global([data-layout="talare"]) .mediaNote[data-count="1"] { left: 610px; top: 170px; width: 420px; height: 540px; font-size: 48px; hyphens: manual; }
+:global([data-layout="full"]) .poster, :global([data-layout="full"]) .quote:not([data-image="true"]), :global([data-layout="full"]) .stats, :global([data-layout="full"]) .stack { left: 150px; width: 1300px; }
+:global([data-layout="talare"]) .splitWrap { left: 96px; width: 920px; }
+:global([data-layout="talare"]) .side p { font-size: 27px; }
+:global([data-layout="full"]) .credit { left: 150px; }
+
+/* Rund illustration till höger i affisch och rader. Flyter in och gungar lätt; stilla lägen står still. */
+.sideImage { position: absolute; left: 1080px; top: 180px; width: 420px; z-index: 2; margin: 0; text-align: center; animation: sideIn 1.3s var(--ease) .25s backwards; }
+.sideImage img { display: block; width: 420px; height: 420px; object-fit: contain; filter: drop-shadow(0 30px 50px color-mix(in srgb, #000 32%, transparent)); animation: sideBob 7s ease-in-out 1.6s infinite alternate; }
+.sideImage figcaption { margin-top: 16px; font-size: 14px; font-weight: 600; letter-spacing: .06em; color: var(--muted); }
+@keyframes sideIn { from { opacity: 0; transform: translateY(40px) scale(.94); } }
+@keyframes sideBob { to { transform: translateY(-10px) rotate(1.2deg); } }
+:global([data-still="true"]) .sideImage, :global([data-still="true"]) .sideImage img { animation: none; }
+@media (prefers-reduced-motion: reduce) { .sideImage, .sideImage img { animation: none; } }

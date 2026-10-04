@@ -1,0 +1,18 @@
+/* Prisfallet (prisfall.tsx): hårfina linjer i en logaritmisk skala, kurvan i AI:s färg som ritas in. */
+
+.fall { position: absolute; inset: 0; margin: 0; pointer-events: none; transition: opacity .8s var(--ease); }
+.fall[data-dim="true"] { opacity: .28; }
+.fall svg { position: absolute; left: 0; top: 0; width: 1600px; height: 900px; overflow: visible; }
+.grid { fill: none; stroke: color-mix(in srgb, var(--ink) 16%, transparent); stroke-width: 1; }
+.tick { font-family: var(--font-label, var(--font-mono)); font-size: 15px; fill: var(--muted); letter-spacing: .06em; }
+.line { fill: none; stroke: var(--ai); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: 0; }
+.dot { fill: var(--bg); stroke: var(--ai); stroke-width: 3; transform-box: fill-box; transform-origin: center; }
+.label { font-family: var(--font-display); font-size: 30px; font-weight: 800; letter-spacing: -.02em; fill: var(--ai); }
+.source { position: absolute; left: 1050px; top: 650px; width: 470px; font-family: var(--font-label, var(--font-mono)); font-size: 14px; line-height: 1.45; letter-spacing: .06em; color: var(--muted); }
+.fall:not([data-dim="true"]):not([data-still="true"]) .line { animation: pfDraw 1.8s cubic-bezier(.45, 0, .2, 1) .5s backwards; }
+.fall:not([data-dim="true"]):not([data-still="true"]) .dot { animation: pfDot .4s var(--ease) calc(.5s + var(--i) / var(--n) * 1.8s) backwards; }
+.fall:not([data-dim="true"]):not([data-still="true"]) .label { animation: pfIn .6s var(--ease) 1.6s backwards; }
+@keyframes pfDraw { from { stroke-dashoffset: 1; } }
+@keyframes pfDot { from { transform: scale(0); } }
+@keyframes pfIn { from { opacity: 0; } }
+.fall[data-still="true"] * { animation: none !important; }

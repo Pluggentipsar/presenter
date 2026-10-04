@@ -1,0 +1,198 @@
+{
+  "version": "TH 1.1",
+  "source": "https://metr.org/assets/benchmark_results_1_1.yaml",
+  "sourceUrl": "https://metr.org/time-horizons/",
+  "updated": "2026-05-08",
+  "checked": "2026-09-15",
+  "earlyUntil": "2025-01-01",
+  "fitSince": "2023-01-01",
+  "axisEnd": "2026-06-01",
+  "maxReliableHours": 16,
+  "latestNote": "Mythos Preview (early): cirka 17 h, med stor osäkerhet.",
+  "points": [
+    {
+      "id": "gpt_4",
+      "date": "2023-03-14",
+      "minutes": 3.987428,
+      "low": 1.93292,
+      "high": 7.995283,
+      "frontier": true
+    },
+    {
+      "id": "gpt_4_1106_inspect",
+      "date": "2023-11-06",
+      "minutes": 4.044959,
+      "low": 1.866859,
+      "high": 8.443226,
+      "frontier": true
+    },
+    {
+      "id": "claude_3_opus_inspect",
+      "date": "2024-03-04",
+      "minutes": 3.952262,
+      "low": 1.706313,
+      "high": 8.76484,
+      "frontier": false
+    },
+    {
+      "id": "gpt_4_turbo_inspect",
+      "date": "2024-04-09",
+      "minutes": 3.732787,
+      "low": 1.980046,
+      "high": 6.736613,
+      "frontier": false
+    },
+    {
+      "id": "gpt_4o_inspect",
+      "date": "2024-05-13",
+      "minutes": 6.991195,
+      "low": 4.001482,
+      "high": 12.905741,
+      "frontier": true
+    },
+    {
+      "id": "claude_3_5_sonnet_20240620_inspect",
+      "date": "2024-06-20",
+      "minutes": 11.395377,
+      "low": 5.489734,
+      "high": 22.384214,
+      "frontier": true
+    },
+    {
+      "id": "o1_preview",
+      "date": "2024-09-12",
+      "minutes": 20.326586,
+      "low": 11.716193,
+      "high": 33.379877,
+      "frontier": true
+    },
+    {
+      "id": "claude_3_5_sonnet_20241022_inspect",
+      "date": "2024-10-22",
+      "minutes": 20.522872,
+      "low": 10.144026,
+      "high": 40.82028,
+      "frontier": true
+    },
+    {
+      "id": "o1_inspect",
+      "date": "2024-12-05",
+      "minutes": 38.831588,
+      "low": 21.164512,
+      "high": 64.95249,
+      "frontier": true
+    },
+    {
+      "id": "claude_3_7_sonnet_inspect",
+      "date": "2025-02-24",
+      "minutes": 60.388937,
+      "low": 33.006168,
+      "high": 104.226017,
+      "frontier": true
+    },
+    {
+      "id": "o3_inspect",
+      "date": "2025-04-16",
+      "minutes": 119.732634,
+      "low": 74.615398,
+      "high": 190.943818,
+      "frontier": true
+    },
+    {
+      "id": "claude_4_opus_inspect",
+      "date": "2025-05-22",
+      "minutes": 100.366123,
+      "low": 59.994073,
+      "high": 163.454074,
+      "frontier": false
+    },
+    {
+      "id": "claude_4_1_opus_inspect",
+      "date": "2025-08-05",
+      "minutes": 100.472004,
+      "low": 59.272391,
+      "high": 159.451918,
+      "frontier": false
+    },
+    {
+      "id": "gpt_5_2025_08_07_inspect",
+      "date": "2025-08-07",
+      "minutes": 203.012577,
+      "low": 112.641357,
+      "high": 405.551565,
+      "frontier": true
+    },
+    {
+      "id": "gemini_3_pro",
+      "date": "2025-11-18",
+      "minutes": 224.325884,
+      "low": 139.565157,
+      "high": 379.235434,
+      "frontier": true
+    },
+    {
+      "id": "gpt_5_1_codex_max_inspect",
+      "date": "2025-11-19",
+      "minutes": 223.714694,
+      "low": 134.31077,
+      "high": 396.206723,
+      "frontier": false
+    },
+    {
+      "id": "claude_opus_4_5_inspect",
+      "date": "2025-11-24",
+      "minutes": 292.994594,
+      "low": 161.717714,
+      "high": 623.704698,
+      "frontier": true
+    },
+    {
+      "id": "gpt_5_2",
+      "date": "2025-12-11",
+      "minutes": 352.249302,
+      "low": 198.067494,
+      "high": 815.177445,
+      "frontier": true
+    },
+    {
+      "id": "claude_opus_4_6_inspect",
+      "date": "2026-02-05",
+      "minutes": 718.80683,
+      "low": 316.685725,
+      "high": 3633.786163,
+      "frontier": true
+    },
+    {
+      "id": "gpt_5_3_codex",
+      "date": "2026-02-05",
+      "minutes": 349.530732,
+      "low": 194.913134,
+      "high": 816.351994,
+      "frontier": false
+    },
+    {
+      "id": "gemini_3_1_pro",
+      "date": "2026-02-19",
+      "minutes": 384.147435,
+      "low": 233.50073,
+      "high": 694.750898,
+      "frontier": false
+    },
+    {
+      "id": "gpt_5_4",
+      "date": "2026-03-05",
+      "minutes": 341.735276,
+      "low": 186.581591,
+      "high": 768.779526,
+      "frontier": false
+    },
+    {
+      "id": "claude_mythos_preview_early_inspect",
+      "date": "2026-04-07",
+      "minutes": 1044.780145,
+      "low": 508.876789,
+      "high": 3304.261235,
+      "frontier": true
+    }
+  ]
+}

@@ -1,0 +1,988 @@
+/*
+ * Delningspaketet: landningssida + läsläge.
+ *
+ * Allt hämtar färg, typsnitt och kantkänsla ur deckets tema (CSS-variablerna
+ * från themeToCssVars), så varje delad föreläsning ser ut som sig själv utan
+ * egen design. Inga hex-färger här.
+ */
+
+.page,
+.reader {
+  --bar-h: 3.25rem;
+  --split: 61;
+  --read-scale: 1;
+  --ink: var(--text);
+  --rule: color-mix(in srgb, var(--text) 16%, transparent);
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  letter-spacing: var(--body-tracking, 0);
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: var(--heading-weight, 700);
+  letter-spacing: var(--heading-tracking, -0.01em);
+  text-transform: var(--heading-case, none);
+  line-height: 0.95;
+  text-wrap: balance;
+}
+
+/* ───────────────────────── Knappar ───────────────────────── */
+
+.buttonPrimary,
+.buttonGhost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.95rem 1.4rem;
+  border: 2px solid var(--ink);
+  border-radius: calc(var(--radius, 0.5rem) * 0.6);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  text-transform: var(--heading-case, none);
+  text-decoration: none;
+  transition: transform 0.18s var(--motion-ease, ease), box-shadow 0.18s var(--motion-ease, ease);
+}
+.buttonPrimary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.buttonGhost {
+  background: transparent;
+  color: var(--ink);
+}
+.buttonPrimary:hover,
+.buttonGhost:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+.buttonPrimary:focus-visible,
+.buttonGhost:focus-visible,
+.reader button:focus-visible,
+.reader a:focus-visible,
+.page a:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ───────────────────────── Läsläget ───────────────────────── */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  height: var(--bar-h);
+  padding: 0 clamp(0.9rem, 2.5vw, 2rem);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--rule);
+}
+.barBack {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-transform: var(--heading-case, none);
+}
+.barTitle {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.barChapter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  max-width: 46vw;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.barChapter .mono {
+  color: var(--accent);
+}
+.barChapterTitle {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.caret {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+.barRight {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-width: 0;
+}
+.barSettings {
+  display: inline-grid;
+  place-items: center;
+  width: 2.3rem;
+  height: 2.1rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.barSettings[aria-expanded="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+.barWatch {
+  color: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 1px;
+}
+.progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+}
+.progressFill {
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transition: transform 0.15s linear;
+}
+
+.menu {
+  position: fixed;
+  top: var(--bar-h);
+  left: 50%;
+  z-index: 45;
+  width: min(34rem, calc(100vw - 1.5rem));
+  max-height: calc(100vh - var(--bar-h) - 1.5rem);
+  overflow: auto;
+  transform: translateX(-50%);
+  margin-top: 0.6rem;
+  padding: 0.5rem;
+  background: var(--bg);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius, 0.5rem);
+  box-shadow: 6px 6px 0 var(--accent);
+}
+.menu ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.menu button {
+  display: grid;
+  grid-template-columns: 2.2rem 1fr auto;
+  align-items: baseline;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  border: 0;
+  border-radius: calc(var(--radius, 0.5rem) * 0.6);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+}
+.menu button:hover,
+.menuActive {
+  background: var(--accent-dim, color-mix(in srgb, var(--accent) 12%, transparent)) !important;
+}
+.menu button .mono {
+  color: var(--accent);
+}
+.menuMinutes {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  opacity: 0.6;
+}
+
+.columns {
+  display: block;
+}
+
+/* Mobil: sliden ligger fast överst, texten rullar under. */
+.stageCol {
+  position: sticky;
+  top: var(--bar-h);
+  z-index: 30;
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+}
+.stageDock {
+  padding: 0;
+}
+.stageSize {
+  width: 100%;
+}
+.stageFrame {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+}
+.stageHit {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+.stageCaption {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-height: 2rem;
+  padding: 0.35rem clamp(0.9rem, 2.5vw, 2rem);
+  color: color-mix(in srgb, var(--text) 62%, transparent);
+}
+.dots {
+  display: inline-flex;
+  gap: 0.28rem;
+}
+.dots i {
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  transition: background 0.25s ease;
+}
+.dots i[data-on] {
+  background: var(--accent);
+}
+.stageTools {
+  display: inline-flex;
+  gap: 1.1rem;
+  margin-left: auto;
+}
+.stageTools button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.stageTools button:hover {
+  color: var(--accent);
+}
+
+.textCol {
+  padding: 2.5rem clamp(1.1rem, 5vw, 2.5rem) 0;
+}
+.block {
+  max-width: 38rem;
+  margin: 0 auto;
+  /* Webbläsarens egen hash-scroll ska landa OVANFÖR läslinjen (42 vh),
+     annars blir stycket före aktivt när någon öppnar en djuplänk. */
+  scroll-margin-top: 36vh;
+}
+.block + .block {
+  margin-top: 2.4rem;
+}
+/* Bara brödtexten tonas ner och markeras — kapitelrubriken står alltid klar. */
+.block .prose {
+  padding: 0.35rem 0 0.35rem 1.1rem;
+  border-left: 3px solid transparent;
+  opacity: 0.38;
+  transition: opacity 0.35s ease, border-color 0.35s ease;
+}
+.block[data-active] .prose {
+  opacity: 1;
+  border-left-color: var(--accent);
+}
+.chapterHead {
+  margin: 5rem 0 2rem;
+  padding-top: 1.4rem;
+  border-top: 2px solid var(--ink);
+}
+.block:first-of-type .chapterHead {
+  margin-top: 0;
+}
+.chapterHead .mono {
+  color: var(--accent);
+}
+.chapterHead h2 {
+  margin: 0.7rem 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--heading-weight, 700);
+  font-size: clamp(2.1rem, 1.4rem + 3.2vw, 3.6rem);
+  letter-spacing: var(--heading-tracking, -0.01em);
+  text-transform: var(--heading-case, none);
+  line-height: 0.95;
+  text-wrap: balance;
+}
+
+.prose {
+  font-size: calc(clamp(1.08rem, 1rem + 0.35vw, 1.28rem) * var(--read-scale, 1));
+  line-height: 1.62;
+}
+.prose > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.prose > * + * {
+  margin-top: 1.05em;
+}
+.prose h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05em;
+  text-transform: var(--heading-case, none);
+  letter-spacing: 0.01em;
+}
+.prose strong {
+  font-weight: 700;
+}
+.prose a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+.prose ul {
+  padding-left: 1.2em;
+}
+.prose li + li {
+  margin-top: 0.35em;
+}
+.prose blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0.2em 0 0.2em 1em;
+  border-left: 3px solid var(--accent);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.18em;
+  line-height: 1.25;
+  text-transform: none;
+}
+
+.end {
+  max-width: 38rem;
+  margin: 5rem auto 0;
+  padding: 2rem 0 45vh;
+  border-top: 2px solid var(--ink);
+}
+.endNote {
+  margin: 0 0 1.6rem;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--text) 72%, transparent);
+}
+.endLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+}
+
+.warnings {
+  max-width: 38rem;
+  margin: 0 auto 2rem;
+  padding: 1rem 1.2rem;
+  border: 2px solid var(--accent-alert, #b92016);
+  border-radius: calc(var(--radius, 0.5rem) * 0.6);
+  font-size: 0.92rem;
+}
+.warnings ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.2rem;
+}
+
+/* Förstorat läge: samma iframe, bara en annan ram runt — ingen omladdning.
+   Kolumnen bildar en stackningskontext (sticky på mobil, grid-barn på dator),
+   så den måste själv lyftas över topplisten medan sliden är förstorad. */
+.stageCol[data-expanded] {
+  z-index: 70;
+}
+.stageExpanded {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: var(--text);
+}
+.stageExpanded .stageSize {
+  width: min(100vw, calc((100vh - 3.4rem) * 16 / 9));
+}
+.stageExpanded .stageCaption {
+  flex-wrap: wrap;
+  padding-left: 0.9rem;
+  padding-right: 0.9rem;
+  color: var(--bg);
+}
+.stageNav {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-left: auto;
+}
+.stageNav button {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--bg) 45%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--bg);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.stageNav button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.fullscreenError {
+  flex-basis: 100%;
+  font-size: 0.8rem;
+}
+.stageExpanded:fullscreen {
+  width: 100%;
+  height: 100%;
+}
+.stageExpanded:fullscreen .stageSize {
+  width: min(100vw, calc(100dvh * 16 / 9));
+}
+.stageExpanded:fullscreen .stageCaption {
+  display: none;
+}
+.stageExpanded::backdrop {
+  background: #111;
+}
+@media (max-width: 600px) {
+  .stageExpanded .stageSize {
+    width: min(100vw, calc((100dvh - 7rem) * 16 / 9));
+  }
+  .stageNav {
+    justify-content: center;
+  }
+}
+
+/* ── Läsinställningar ── */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 44;
+  border: 0;
+  background: transparent;
+  cursor: default;
+}
+.settings {
+  position: fixed;
+  top: var(--bar-h);
+  right: clamp(0.75rem, 2.5vw, 2rem);
+  z-index: 46;
+  width: min(23rem, calc(100vw - 1.5rem));
+  margin-top: 0.6rem;
+  padding: 1.1rem 1.15rem 1rem;
+  background: var(--bg);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius, 0.5rem);
+  box-shadow: 6px 6px 0 var(--accent);
+}
+.settingsRow {
+  display: grid;
+  gap: 0.5rem;
+}
+.settingsRow + .settingsRow {
+  margin-top: 1rem;
+}
+.settingsRow > .mono {
+  color: color-mix(in srgb, var(--text) 62%, transparent);
+}
+.stepper,
+.segmented {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  border: 1.5px solid var(--ink);
+  border-radius: calc(var(--radius, 0.5rem) * 0.6);
+  overflow: hidden;
+}
+.stepper {
+  grid-auto-columns: auto;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  align-items: stretch;
+}
+.stepper button,
+.segmented button {
+  padding: 0.6rem 0.5rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.stepper button {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+.stepper button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.stepper output {
+  display: grid;
+  place-items: center;
+  border-left: 1.5px solid var(--ink);
+  border-right: 1.5px solid var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+.segmented button + button {
+  border-left: 1.5px solid var(--ink);
+}
+.segmented button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--bg);
+}
+.stepper button:not(:disabled):hover,
+.segmented button[aria-pressed="false"]:hover {
+  background: var(--accent-dim, color-mix(in srgb, var(--accent) 12%, transparent));
+}
+.settingsHint {
+  display: none;
+  margin: 1rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--text) 62%, transparent);
+}
+
+/* ── Bara text: bilden döljs, texten får hela bredden ── */
+.reader[data-layout="text"] .stageCol {
+  display: none;
+}
+.reader[data-layout="text"] .textCol {
+  padding-top: 3.5rem;
+}
+.reader[data-layout="text"] .block,
+.reader[data-layout="text"] .end,
+.reader[data-layout="text"] .warnings {
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+.reader[data-focus="off"] .block .prose {
+  opacity: 1;
+}
+.showStage {
+  position: fixed;
+  right: clamp(0.9rem, 2.5vw, 2rem);
+  bottom: clamp(0.9rem, 2.5vw, 2rem);
+  z-index: 35;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.75rem 1.1rem;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--bg);
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 4px 4px 0 var(--accent);
+  cursor: pointer;
+}
+.showStage .mono {
+  color: var(--accent);
+}
+
+/* ── Mittlinjen: dra för att själv välja bredd (bara dator) ── */
+.splitter {
+  display: none;
+}
+.reader[data-dragging] {
+  cursor: col-resize;
+  user-select: none;
+}
+
+/* Dator: sliden fast till vänster, texten till höger. */
+@media (min-width: 1024px) {
+  .columns {
+    display: grid;
+    grid-template-columns: minmax(0, calc(var(--split) * 1%)) minmax(0, 1fr);
+  }
+  .stageCol:not([data-expanded]) {
+    z-index: auto;
+  }
+  .stageCol {
+    position: static;
+    border-bottom: 0;
+    border-right: 1px solid var(--rule);
+    background: transparent;
+  }
+  .stageDock {
+    position: sticky;
+    top: var(--bar-h);
+    display: grid;
+    place-items: center;
+    height: calc(100vh - var(--bar-h));
+    padding: 1.5rem clamp(1.25rem, 2.5vw, 2.75rem);
+  }
+  .stageDock .stageSize {
+    width: min(100%, calc((100vh - var(--bar-h) - 6.5rem) * 16 / 9));
+  }
+  .stageDock .stageFrame {
+    border: 2px solid var(--ink);
+    border-radius: var(--radius, 0.5rem);
+    box-shadow: 8px 8px 0 var(--accent);
+  }
+  .stageDock .stageCaption {
+    padding: 1rem 0.2rem 0;
+  }
+  .textCol {
+    padding: 38vh clamp(1.5rem, 3.2vw, 3.5rem) 0;
+  }
+  .block,
+  .end {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.6rem;
+  }
+  .barTitle {
+    display: none;
+  }
+  .barChapter {
+    max-width: none;
+    justify-self: stretch;
+    justify-content: space-between;
+  }
+  .barWatch {
+    font-size: 0.78rem;
+  }
+  .barRight {
+    gap: 0.55rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .reader[data-layout="text"] .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .reader[data-layout="text"] .textCol {
+    padding-top: 5rem;
+  }
+  .settingsHint {
+    display: block;
+  }
+  .splitter {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: -0.7rem;
+    z-index: 6;
+    width: 1.4rem;
+    cursor: col-resize;
+    touch-action: none;
+    outline: none;
+  }
+  .splitter::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    transform: translateX(-50%);
+    background: transparent;
+    transition: background 0.2s ease;
+  }
+  .splitter::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 3.25rem;
+    transform: translate(-50%, -50%);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--text) 32%, var(--bg));
+    transition: background 0.2s ease, height 0.2s ease;
+  }
+  .splitter:hover::before,
+  .splitter:focus-visible::before,
+  .reader[data-dragging] .splitter::before {
+    background: var(--accent);
+  }
+  .splitter:hover::after,
+  .splitter:focus-visible::after,
+  .reader[data-dragging] .splitter::after {
+    height: 5rem;
+    background: var(--accent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .block .prose,
+  .progressFill,
+  .buttonPrimary,
+  .buttonGhost {
+    transition: none;
+  }
+}
+
+/* ───────────────────────── Landningssidan ───────────────────────── */
+
+.page {
+  padding-bottom: 5rem;
+}
+.shell {
+  width: min(78rem, 100% - clamp(2rem, 6vw, 5rem));
+  margin: 0 auto;
+}
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.3rem 0;
+}
+.top a {
+  color: inherit;
+  text-decoration: none;
+}
+.top .mono:last-child {
+  border-bottom: 2px solid var(--accent);
+}
+
+.hero {
+  position: relative;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius, 0.5rem);
+  overflow: hidden;
+  box-shadow: 10px 10px 0 var(--accent);
+}
+.heroLink {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+.heroBadge {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 3;
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bg);
+  pointer-events: none;
+}
+
+.intro {
+  display: grid;
+  gap: 2.5rem;
+  padding: clamp(3rem, 6vw, 5.5rem) 0 0;
+}
+.introKicker {
+  color: var(--accent);
+}
+.introTitle {
+  margin: 1rem 0 0;
+  font-size: clamp(2.6rem, 1.4rem + 6.2vw, 6.4rem);
+}
+.introText {
+  max-width: 40rem;
+  margin: 0;
+  font-size: clamp(1.15rem, 1.02rem + 0.55vw, 1.5rem);
+  line-height: 1.5;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  margin: 1.6rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: color-mix(in srgb, var(--text) 66%, transparent);
+}
+
+.doors {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+.door {
+  position: relative;
+  display: grid;
+  align-content: space-between;
+  gap: 2.5rem;
+  min-height: 15rem;
+  padding: clamp(1.4rem, 2.6vw, 2.2rem);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius, 0.5rem);
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.2s var(--motion-ease, ease), box-shadow 0.2s var(--motion-ease, ease);
+}
+.door:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+.doorWatch {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+.doorWatch:hover {
+  box-shadow: 8px 8px 0 var(--ink);
+}
+.doorRead {
+  background: var(--bg-surface);
+}
+.doorTitle {
+  margin: 0;
+  font-size: clamp(2rem, 1.3rem + 2.6vw, 3.4rem);
+}
+.doorText {
+  max-width: 26rem;
+  margin: 0.9rem 0 0;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+.doorFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.doorArrow {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.section {
+  margin-top: clamp(4rem, 8vw, 7rem);
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--ink);
+}
+.sectionGrid {
+  display: grid;
+  gap: 2rem;
+}
+.sectionTitle {
+  margin: 0.8rem 0 0;
+  font-size: clamp(1.9rem, 1.3rem + 2.2vw, 3rem);
+}
+.chapters {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.chapters a {
+  display: grid;
+  grid-template-columns: 3rem 1fr auto;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1.15rem 0.2rem;
+  border-bottom: 1px solid var(--rule);
+  color: inherit;
+  text-decoration: none;
+  font-size: clamp(1.15rem, 1rem + 0.6vw, 1.55rem);
+  font-weight: 600;
+  transition: padding 0.2s ease, color 0.2s ease;
+}
+.chapters a:hover {
+  padding-left: 0.8rem;
+  color: var(--accent);
+}
+.chapters .mono {
+  color: var(--accent);
+}
+.about {
+  max-width: 40rem;
+  margin: 0;
+  font-size: 1.12rem;
+  line-height: 1.6;
+}
+.linkRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.4rem;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.linkRow a {
+  color: inherit;
+  text-decoration-line: underline;
+  font-weight: 600;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+.foot {
+  margin-top: clamp(4rem, 8vw, 6rem);
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule);
+  color: color-mix(in srgb, var(--text) 60%, transparent);
+}
+
+@media (min-width: 860px) {
+  .intro {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: end;
+  }
+  .doors {
+    grid-template-columns: 1fr 1fr;
+  }
+  .sectionGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+}

@@ -1,0 +1,28 @@
+.canvas { position: relative; width: 100%; height: 100%; overflow: hidden; color: var(--text); font-family: var(--font-body); }
+.canvas h2, .canvas p { margin: 0; }
+.mask { position: absolute; top: 7%; width: 39%; height: 87%; object-fit: contain; pointer-events: none; }
+.persistentLabel { position: absolute; top: 5%; left: 4%; font: 600 1.45vw/1.2 var(--font-body); }
+.stage { position: absolute; inset: 0; }
+.opening { position: absolute; left: 4%; top: 21%; width: 73%; }
+.opening h2, .ending h2 { font: 900 8.1vw/.96 var(--font-display); letter-spacing: -.04em; }
+.opening h2 span, .promptText span, .ending h2 span { display: block; }
+.opening > p { position: absolute; top: 32vh; left: 0; width: 46%; font: 650 2.15vw/1.12 var(--font-body); }
+.turnArrow { position: absolute; left: 46%; top: 28vh; width: 27%; height: 20vh; }
+.poster { position: absolute; left: 5%; top: 16%; width: 81%; height: 63%; padding: 3vh 3vw; transform-origin: 50% 65%; }
+.paper { background: var(--text); color: var(--accent); }
+.ink { background: var(--accent); color: var(--text); }
+.promptNumber { font: 800 2.5vw/1 var(--font-display); }
+.promptNumber small { font: 500 1.1vw var(--font-body); }
+.promptText { position: absolute; left: 3vw; right: 2vw; top: 13vh; font: 900 5.8vw/1.01 var(--font-display); letter-spacing: -.025em; }
+.poster[data-prompt='perspective'] .promptText { font-size: 6.5vw; }
+.poster[data-prompt='assumptions'] .promptText { font-size: 6.3vw; }
+.poster[data-prompt='counterexample'] .promptText { font-size: 8.1vw; line-height: .97; }
+.example { position: absolute; left: 3vw; bottom: 3.5vh; width: 77%; font: 600 1.85vw/1.18 var(--font-body); }
+.ending { position: absolute; left: 4%; top: 21%; width: 87%; }
+.ending > p { margin-top: 4vh; width: 79%; font: 650 2.3vw/1.16 var(--font-body); }
+.trail { position: absolute; left: 4%; right: 4%; bottom: 8%; display: flex; gap: 1.4vw; }
+.trail > span { flex: 1; padding-top: 1.5vh; border-top: .55vh solid currentColor; font: 550 1.1vw/1.2 var(--font-body); opacity: .32; }
+.trail > span[data-seen='true'] { opacity: .7; }
+.trail > span[data-current='true'], .canvas[data-step='7'] .trail > span { opacity: 1; }
+.footer { position: absolute; left: 4%; bottom: 2.7%; font: 500 1.1vw/1.2 var(--font-body); }
+@media (prefers-reduced-motion: reduce) { .canvas * { animation-duration: 0s !important; transition-duration: 0s !important; } }

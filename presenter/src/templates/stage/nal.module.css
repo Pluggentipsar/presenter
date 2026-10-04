@@ -1,0 +1,141 @@
+/*
+ * Nålen · delegeringskompetens (2 oktober 2026). Koordinater på 1600 × 900.
+ * Nålen vrider sig i ljuset på horisonten (x 590, y = --py). Bildläget horn:
+ * Joel står liten nere till höger, så att x ≥ 1200 under y 440 hålls fri.
+ * Nödvändig text slutar ovanför y 765 (textningsmarginalen). Färger ur temats
+ * roller: vänster människans, höger AI:s, uppåt det gemensamma (som i facken).
+ */
+
+/* Rollfärgerna är fackens (rektor-arbete.module.css), eftersom nålens tre riktningar blir facken två slides senare. */
+.nal { position: absolute; inset: 0;
+  --nal-left: var(--human);
+  --nal-right: color-mix(in srgb, var(--ai) 28%, #38BACE);
+  --nal-up: color-mix(in srgb, var(--accent-positive, var(--ai)) 28%, #00A483);
+  --nal-tip: var(--hz2-hot);
+  --nal-edge: color-mix(in srgb, var(--ai) 62%, var(--hz2-hot));
+  --nal-dim: color-mix(in srgb, var(--ink) 40%, transparent);
+  --nal-halo: color-mix(in srgb, var(--bg) 82%, transparent);
+  --nal-draw: cubic-bezier(.55, 0, .35, 1); }
+/* Ljust tema: horisontens ljus är vitt, så spetsen och gränsen tar mörkare toner. */
+:global([data-tone="light"]) .nal {
+  --nal-right: color-mix(in srgb, var(--ai) 55%, #1F8FA3);
+  --nal-up: color-mix(in srgb, var(--accent-positive, var(--ai)) 60%, #007F66);
+  --nal-tip: color-mix(in srgb, var(--human) 78%, var(--ink));
+  --nal-edge: color-mix(in srgb, var(--ai) 78%, var(--ink));
+  --nal-quiet: .8; }
+/* Ljust tema: orden i rollfärg blandas med bläcket, som --human-text i tiopotenserna; rollfärgerna är för ljusa som text mot papper. */
+:global([data-tone="light"]) .nal .dir { color: color-mix(in srgb, var(--c) 42%, var(--ink)); }
+
+/* ------------------------------------------------- frågan och slutsatsen */
+
+.head { position: absolute; left: 96px; top: 64px; width: 1040px; z-index: 6; }
+.stack { display: grid; margin-top: 16px; }
+.stack > * { grid-area: 1 / 1; }
+.question, .note { margin: 0; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 58px; line-height: 1.04; letter-spacing: -.036em; text-wrap: balance; }
+.question { transition: opacity var(--mid) var(--ease), filter var(--mid) var(--ease); }
+.nal[data-land="true"] .question { opacity: 0; filter: blur(6px); }
+.note { font-size: 62px; }
+.nal[data-land="true"] .note[data-on="true"] { transition-delay: .35s; }
+
+/* ------------------------------------------------------------- nålen */
+
+.plot { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; overflow: visible; pointer-events: none; }
+.tail { fill: color-mix(in srgb, var(--ink) 34%, transparent); }
+.axis { fill: none; stroke: color-mix(in srgb, #fff 62%, transparent); stroke-width: 1.2; stroke-linecap: round; }
+.needle { filter: drop-shadow(0 0 10px color-mix(in srgb, var(--nal-tip) 50%, transparent)) drop-shadow(0 0 3px var(--hz2-glow)); }
+/* Under ytan blir nålen dov; ovanför speglas den svagt i vattnet. */
+.submerged { opacity: .6; filter: blur(.7px); }
+.reflection { opacity: .17; filter: blur(2.5px); }
+.pivotRing { fill: var(--bg); stroke: var(--nal-tip); stroke-width: 3; }
+.pivotCore { fill: var(--nal-tip); }
+.tick { fill: var(--nal-dim); }
+
+/* Gränsen tecknas från nålen och utåt innan nålen slår i den; den står kvar dämpad. */
+.ridge { fill: none; stroke: var(--nal-edge); stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1;
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--nal-edge) 55%, transparent));
+  transition: stroke-dashoffset .9s var(--nal-draw), opacity var(--mid) var(--ease); }
+.nal[data-edge="true"] .ridge { stroke-dashoffset: 0; }
+.nal[data-lifted="true"] .ridge { opacity: .38; }
+
+/* Lyftet: ljuset stiger längs nålen mot riktningen uppåt. */
+.beam { opacity: 0; filter: blur(1px); transition: opacity 1.6s var(--ease) .4s; }
+.nal[data-lifted="true"] .beam { opacity: 1; }
+
+/* Slutsatsen: dit nålen gled när ingen höll i den står kvar streckat. */
+.ghost { fill: none; stroke: var(--nal-dim); stroke-width: 2; stroke-dasharray: 5 8; opacity: 0; transition: opacity 1s var(--ease) .6s; }
+.nal[data-land="true"] .ghost { opacity: .9; }
+
+/* Gnistan när nålen slår i gränsen (tänds av simuleringen, en gång per slag). */
+.spark { opacity: 0; fill: none; stroke: var(--nal-tip); stroke-width: 2.5; stroke-linecap: round; transform-box: fill-box; transform-origin: center; }
+.sparkOn { animation: nalSpark .65s var(--ease); }
+@keyframes nalSpark { 0% { opacity: 1; scale: .5; } 100% { opacity: 0; scale: 1.6; } }
+
+/* --------------------------------------------------------- riktningarna */
+
+/* Orden står vid markeringarna, ovanför horisontens silhuetter. En mörk kant håller dem läsbara mot ljuset och gryningen. */
+.dir { position: absolute; z-index: 5; margin: 0; white-space: nowrap; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 40px; line-height: 1.05; letter-spacing: -.02em;
+  color: var(--c); opacity: .86; filter: drop-shadow(0 2px 12px var(--nal-halo)); transition: opacity var(--mid) var(--ease), filter var(--mid) var(--ease); }
+.left { right: 1322px; top: calc(var(--py) - 92px); text-align: right; --c: var(--nal-left); }
+.right { left: 902px; top: calc(var(--py) - 92px); --c: var(--nal-right); }
+.up { left: 590px; top: calc(var(--py) - 364px); translate: -50% 0; text-align: center; --c: var(--nal-up); }
+.nal[data-pull="left"] .left, .nal[data-pull="right"] .right, .nal[data-pull="up"] .up { opacity: 1; filter: drop-shadow(0 2px 12px var(--nal-halo)) drop-shadow(0 0 16px color-mix(in srgb, var(--c) 45%, transparent)); }
+
+/* ----------------------------------------------------------- krafterna */
+
+.force { position: absolute; z-index: 5; }
+.force small { display: block; font-family: var(--font-mono); font-size: 18px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.force p { margin: 8px 0 0; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 36px; line-height: 1.08; letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
+.force[data-state="dim"] { opacity: .34; filter: saturate(.4); }
+/* Impulsen under ytan till höger, lärandemålet under ytan till vänster, tekniken vid gränsens yttre ände. */
+.f1 { left: 906px; top: calc(var(--py) + 16px); width: 284px; }
+.f2 { left: 96px; top: calc(var(--py) + 16px); width: 470px; }
+.f3 { left: 936px; top: calc(var(--py) - 304px); width: 250px; }
+.trace { left: 906px; top: calc(var(--py) + 16px); width: 284px; }
+.trace p { font-size: 30px; line-height: 1.14; color: var(--soft); }
+.nal[data-land="true"] .trace[data-on="true"] { transition-delay: .8s; }
+
+/* ----------------------------------------------- ritningen (zoomdeck) */
+/* Tiopotenserna (2 oktober 2026): ingen sjö. Nålen är ett instrument på en linjalkant, i
+   schweizisk typografi och Eames: hårfina linjer, plana färgfält bara där färgen bär en roll,
+   inga sken och inga skuggor. Under linjen ritas nålen som dold kant (streckad). */
+.nal[data-drawing] {
+  --nal-tip: var(--human);
+  --nal-edge: var(--nal-right);
+  --nal-line: color-mix(in srgb, var(--ink) 48%, transparent);
+  --nal-hair: color-mix(in srgb, var(--ink) 26%, transparent); }
+.base { fill: none; stroke: var(--nal-line); stroke-width: 1.2; }
+.ruler, .dial, .dialTicks { fill: none; stroke: var(--nal-hair); stroke-width: 1; }
+.drawFront { fill: var(--nal-left); stroke: var(--nal-left); stroke-width: 1.5; stroke-linejoin: round; }
+.drawTail { fill: var(--bg); stroke: var(--nal-line); stroke-width: 1.5; stroke-linejoin: round; }
+.hiddenEdge .drawFront, .hiddenEdge .drawTail { fill: none; stroke-width: 2; stroke-dasharray: 8 6; }
+.centerMark circle { fill: var(--bg); stroke: var(--ink); stroke-width: 1.5; }
+.centerMark path { fill: none; stroke: var(--nal-line); stroke-width: 1; }
+/* Lyftet: centrumlinjen (streck och punkt) mot riktningen uppåt. */
+.centerline { fill: none; stroke: var(--nal-up); stroke-width: 1.5; stroke-dasharray: 18 5 3 5; opacity: 0; transition: opacity 1.2s var(--ease) .3s; }
+.nal[data-lifted="true"] .centerline { opacity: 1; }
+/* Slutsatsen: spåret som fantomlinje (lång, kort, kort), ritningens tecken för ett annat läge. */
+.phantom { fill: none; stroke: var(--nal-line); stroke-width: 1.5; stroke-dasharray: 16 4 3 4 3 4; opacity: 0; transition: opacity 1s var(--ease) .6s; }
+.nal[data-land="true"] .phantom { opacity: 1; }
+.nal[data-drawing] .ridge { stroke-width: 2.5; filter: none; }
+.nal[data-drawing] .spark { stroke: var(--nal-edge); stroke-width: 1.5; }
+.nal[data-drawing] .tick { fill: var(--nal-line); }
+/* Orden står utanför gradskivan (radie 324 + 16), och uppåt ovanför dess topp. */
+.nal[data-drawing] .left { right: 1350px; }
+.nal[data-drawing] .right { left: 930px; }
+.nal[data-drawing] .up { top: calc(var(--py) - 384px); }
+/* Riktningen som drar stryks under, som deckets framhävningar, i stället för att lysa. */
+.nal[data-drawing] .dir { opacity: var(--nal-quiet, .6); filter: none; }
+.nal[data-drawing][data-pull="left"] .left, .nal[data-drawing][data-pull="right"] .right, .nal[data-drawing][data-pull="up"] .up {
+  opacity: 1; filter: none; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 9px; }
+
+/* ------------------------------------------------------------- spegeln */
+/* spegel="ja": riktningarna byter sida (ett decks fack har AI till vänster). Teckningen speglas i
+   SVG:n; texterna flyttas hit med samma avstånd till nålen. Vridpunkten står då på x 1010. */
+.nal[data-mirror] .left { right: auto; left: 1322px; text-align: left; }
+.nal[data-mirror] .right { left: auto; right: 902px; text-align: right; }
+.nal[data-mirror] .up { left: 1010px; }
+.nal[data-mirror] .f1, .nal[data-mirror] .trace { left: 410px; text-align: right; }
+.nal[data-mirror] .f2 { left: 1034px; text-align: right; }
+.nal[data-mirror] .f3 { left: 414px; text-align: right; }
+.nal[data-drawing][data-mirror] .left { right: auto; left: 1350px; }
+.nal[data-drawing][data-mirror] .right { left: auto; right: 930px; }

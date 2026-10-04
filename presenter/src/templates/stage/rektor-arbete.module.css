@@ -1,0 +1,251 @@
+/*
+ * Stage · rektorsinternatets arbetsformer. Koordinater på 1600 × 900.
+ * Samma roller som öppningens former: Turkos (ÅT), Smaragdgrön (MED), Aprikos (MOT),
+ * Vätterblått för det rektorn själv beställer och horisontens ljus för omdömet.
+ */
+
+.mot, .bygga, .sortera, .kurva, .trappa, .efter {
+  --at: color-mix(in srgb, var(--ai) 28%, #38BACE);
+  --med: color-mix(in srgb, var(--accent-positive) 28%, #00A483);
+  --mot: color-mix(in srgb, var(--alert) 10%, #ED6E50);
+  --gul: color-mix(in srgb, var(--alert) 8%, #F49A00);
+  --role-ink: #0B1E26;
+  --light: var(--hz2-hot);
+  position: absolute; inset: 0;
+}
+:global([data-tone="light"]) :is(.mot, .bygga, .sortera, .kurva, .trappa, .efter) {
+  --at: color-mix(in srgb, var(--ai) 55%, #1F8FA3);
+  --med: color-mix(in srgb, var(--accent-positive) 60%, #007F66);
+  --mot: color-mix(in srgb, var(--alert) 20%, #C9502F);
+  --gul: #B86E00;
+  --light: color-mix(in srgb, var(--accent-bright) 55%, var(--hz2-glow));
+}
+
+.head { position: absolute; left: 96px; top: 60px; width: 1180px; z-index: 5; }
+.head h2 { margin-top: 18px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 64px; line-height: 1.02; letter-spacing: -.04em; text-wrap: balance; }
+
+/* ------------------------------------------------ MOT MIG · beslutet får motstånd */
+
+.motKicker::before { content: ""; flex: none; width: 12px; height: 12px; border-radius: 50%; background: var(--mot); box-shadow: 0 0 12px var(--mot); }
+.motPaper { position: absolute; left: 96px; top: 206px; width: 620px; z-index: 3; padding: 36px 44px 38px; border-radius: 10px; background: var(--paper); color: var(--paper-ink);
+  box-shadow: var(--shadow); transform: rotate(-1.2deg); transform-origin: 30% 50%; }
+.motPaper small { display: block; font-size: 14px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; opacity: .62; }
+.motPaper h3 { margin-top: 12px; font-family: var(--font-display); font-size: 38px; line-height: 1.12; font-weight: 800; letter-spacing: -.02em; text-wrap: balance; }
+.motContext { margin-top: 14px; }
+.motContext p { margin-top: 5px; font-size: 20px; line-height: 1.4; }
+.motNotesWrap { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 1.1s var(--ease); }
+.motNotesWrap[data-open="true"] { grid-template-rows: 1fr; }
+.motNotesWrap > div { min-height: 0; overflow: hidden; }
+.motNotes { margin-top: 20px; padding-top: 16px; border-top: 2px dashed color-mix(in srgb, var(--paper-ink) 18%, transparent); display: grid; gap: 10px; }
+.motNotesLabel { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; opacity: .7; }
+.motNote { padding-left: 14px; font-size: 18.5px; line-height: 1.34; border-left: 4px solid var(--ai); }
+.motNote b { display: block; margin-bottom: 1px; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: color-mix(in srgb, var(--mot) 75%, var(--paper-ink)); }
+.motNotes[data-on="true"] .motNote { animation: noteIn .7s var(--ease) calc(.25s + var(--i) * .18s) backwards; }
+.mot[data-still="true"] .motNote { animation: none !important; }
+@keyframes noteIn { from { opacity: 0; transform: translateX(-12px); } }
+.motPaper[data-hit="0"] { animation: nudgeA .75s cubic-bezier(.3, .7, .3, 1) .55s; }
+.motPaper[data-hit="1"] { animation: nudgeB .75s cubic-bezier(.3, .7, .3, 1) .55s; }
+@keyframes nudgeA { 28% { transform: translateX(-16px) rotate(-2.1deg); } }
+@keyframes nudgeB { 28% { transform: translateX(-16px) rotate(-2.1deg); } }
+
+.motMoves { position: absolute; left: 772px; top: 206px; width: 732px; z-index: 4; margin: 0; padding: 0; list-style: none; display: grid; gap: 16px;
+  transition: opacity .8s var(--ease), transform 1s var(--ease); }
+.motMoves[data-dim="true"] { opacity: .42; }
+.motMoves[data-gone="true"] { opacity: 0; transform: translateX(140px); pointer-events: none; }
+.motMove { position: relative; padding: 18px 26px 20px; border-radius: 22px; background: var(--human); color: var(--on-human);
+  box-shadow: 0 18px 40px color-mix(in srgb, var(--human) 28%, transparent), 0 6px 14px color-mix(in srgb, #000 16%, transparent);
+  transition: transform 1s cubic-bezier(.2, .9, .25, 1.12), opacity .55s var(--ease); }
+.motMove[data-on="false"] { opacity: 0; transform: translateX(640px) rotate(4deg); transition: transform var(--fast) var(--ease), opacity var(--fast) var(--ease); }
+.motMove::before { content: ""; position: absolute; left: -13px; top: 50%; margin-top: -13px; border: 13px solid transparent; border-left-width: 0; border-right-color: var(--human); }
+.motTag { display: inline-block; padding: 5px 11px 4px; border-radius: 999px; background: var(--mot); color: var(--role-ink); font-size: 13px; line-height: 1.25; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.motMove p { margin-top: 10px; font-size: 24px; line-height: 1.34; font-weight: 600; }
+
+.motFinal { position: absolute; left: 800px; top: 300px; width: 704px; z-index: 5; }
+.motFinal h2 { font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 80px; line-height: 1.01; letter-spacing: -.045em; text-wrap: balance; }
+.motFinal p { margin-top: 28px; font-size: 30px; line-height: 1.36; color: var(--muted); text-wrap: balance; }
+.motFinal > [data-on="true"] { transition-delay: .45s; --play-delay: .95s; }
+.motFinal > p[data-on="true"] { transition-delay: 1.05s; }
+
+/* ------------------------------------- AI kan också bygga · in i skärmen, ut igen */
+
+.byggaHead { position: absolute; left: 96px; top: 84px; width: 1200px; z-index: 3; transform-origin: 0 0;
+  transition: opacity 1s var(--ease), filter 1s var(--ease), transform 1.3s var(--ease); }
+.byggaHead h2 { margin-top: 20px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 120px; line-height: .95; letter-spacing: -.052em; }
+.byggaHead[data-dim="true"] { opacity: .1; filter: blur(8px); transform: scale(.94); }
+.byggaFinal { margin-top: 30px; max-width: 1340px; font-size: 42px; line-height: 1.2; font-weight: 700; letter-spacing: -.02em; text-wrap: balance; }
+.byggaFinal[data-on="true"] { transition-delay: .2s; --play-delay: .7s; }
+
+.byggaPrompt { position: absolute; left: 96px; top: 438px; width: 830px; z-index: 4; padding: 26px 32px 28px; border-radius: 30px 30px 30px 10px; background: var(--human); color: var(--on-human); box-shadow: var(--shadow); }
+.byggaPrompt[data-dim="true"] { opacity: .1; filter: blur(5px); }
+.byggaPrompt small { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; color: color-mix(in srgb, var(--on-human) 72%, transparent); }
+.byggaPrompt small i { background: var(--on-human); box-shadow: none; }
+.byggaPrompt p { margin-top: 12px; font-size: 28px; line-height: 1.38; font-weight: 600; }
+.byggaAttach { display: inline-flex; align-items: center; gap: 10px; margin-top: 16px; padding: 8px 14px; border-radius: 12px; background: color-mix(in srgb, var(--on-human) 16%, transparent); font-size: 17px; font-weight: 700; }
+.byggaAttach svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.byggaWindow { position: absolute; z-index: 6; margin: 0; display: flex; flex-direction: column; overflow: hidden; border-radius: 16px; background: var(--bg-surface);
+  border: 1px solid var(--glass-edge); box-shadow: 0 40px 110px color-mix(in srgb, #000 52%, transparent), 0 10px 30px color-mix(in srgb, #000 26%, transparent);
+  transition: left 1.3s var(--ease), top 1.3s var(--ease), width 1.3s var(--ease), height 1.3s var(--ease), opacity .7s var(--ease), border-radius 1.3s var(--ease); }
+.byggaWindow[data-where="far"] { left: 460px; top: 500px; width: 300px; height: 180px; opacity: 0; }
+.byggaWindow[data-where="near"] { left: 230px; top: 66px; width: 1140px; height: 748px; }
+.byggaWindow[data-where="tile"] { left: calc(var(--tx) + 16px); top: 536px; width: 322px; height: 150px; border-radius: 10px; box-shadow: 0 10px 26px color-mix(in srgb, #000 30%, transparent); }
+.byggaBar { flex: none; display: flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border-bottom: 1px solid var(--glass-edge);
+  background: color-mix(in srgb, var(--bg-surface) 88%, var(--ink)); transition: height 1.3s var(--ease), padding 1.3s var(--ease); }
+.byggaBar i { flex: none; width: 11px; height: 11px; border-radius: 50%; background: color-mix(in srgb, var(--ink) 28%, transparent); }
+.byggaUrl { flex: 1; margin-left: 14px; padding: 5px 14px; border-radius: 8px; overflow: hidden; white-space: nowrap; font-size: 15px; color: var(--muted); background: color-mix(in srgb, var(--bg) 55%, transparent); transition: opacity .5s; }
+.byggaWindow img { flex: 1; min-height: 0; width: 100%; display: block; object-fit: cover; object-position: 50% 0; }
+.byggaWindow figcaption { position: absolute; right: 16px; bottom: 14px; padding: 7px 13px; border-radius: 999px; background: color-mix(in srgb, #000 72%, transparent); color: #fff; font-size: 15px; font-weight: 700; letter-spacing: .04em; transition: opacity .5s; }
+.byggaWindow[data-where="tile"] .byggaBar { height: 20px; padding: 0 9px; gap: 5px; }
+.byggaWindow[data-where="tile"] .byggaBar i { width: 7px; height: 7px; }
+.byggaWindow[data-where="tile"] .byggaUrl, .byggaWindow[data-where="tile"] figcaption { opacity: 0; }
+
+.byggaTile { position: absolute; left: var(--x); top: 520px; width: 354px; min-height: 324px; z-index: 4; padding: 16px 16px 20px; border-radius: 22px;
+  background: var(--glass); border: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 var(--glass-top), var(--shadow);
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+.bygga .byggaTile[data-on="false"] { transform: scale(1.14); }
+.bygga .byggaTile[data-on="true"] { transition-delay: calc(.45s + var(--i) * .1s); }
+.byggaIcon { height: 150px; border-radius: 12px; display: grid; place-items: center; background: color-mix(in srgb, var(--ai) 13%, transparent); }
+.byggaIcon[data-web="true"] { background: transparent; }
+.byggaIcon svg { width: 78px; height: 78px; fill: none; stroke: var(--at); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.byggaTile h3 { margin-top: 18px; padding-inline: 6px; font-family: var(--font-display); font-size: 31px; line-height: 1.1; font-weight: 800; letter-spacing: -.02em; }
+.byggaTile p { margin-top: 8px; padding-inline: 6px; font-size: 19px; line-height: 1.36; color: var(--muted); }
+.byggaChip { display: inline-block; margin: 12px 6px 0; padding: 5px 12px 4px; border-radius: 999px; font-size: 13px; line-height: 1.25; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink); border: 1px solid color-mix(in srgb, var(--ink) 35%, transparent); }
+
+/* --------------------------------------------------- Vad får jag dela? · nedåt */
+
+.sortFinal { margin-top: 18px; font-size: 34px; line-height: 1.25; font-weight: 700; letter-spacing: -.015em; }
+.lane { --lane: var(--med); position: absolute; left: var(--x); top: 300px; width: 410px; height: 552px; z-index: 2; overflow: hidden; border-radius: 26px;
+  background: color-mix(in srgb, var(--lane) 8%, var(--glass)); border: 1px solid color-mix(in srgb, var(--lane) 42%, transparent);
+  box-shadow: inset 0 1px 0 var(--glass-top), var(--shadow); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
+.lane[data-lane="2"] { --lane: var(--gul); }
+.lane[data-lane="3"] { --lane: var(--alert); }
+.lane header { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 14px; padding: 26px 28px 0; }
+.lane header i { width: 18px; height: 18px; border-radius: 50%; background: var(--lane); box-shadow: 0 0 0 6px color-mix(in srgb, var(--lane) 22%, transparent); }
+.laneName { font-family: var(--font-display); font-size: 38px; line-height: 1.1; font-weight: 800; letter-spacing: -.02em; }
+.laneRule { grid-column: 1 / -1; margin-top: 10px; font-size: 21px; line-height: 1.38; color: var(--muted); }
+.doc { --lane: var(--med); position: absolute; left: var(--x); top: var(--y); width: 360px; min-height: 74px; z-index: 4; margin: 0; padding: 14px 18px 14px 20px;
+  display: flex; align-items: center; gap: 14px; border-radius: 8px; background: var(--paper); color: var(--paper-ink); font-size: 21px; line-height: 1.24; font-weight: 650;
+  box-shadow: 0 14px 30px color-mix(in srgb, #000 24%, transparent); transform: rotate(var(--r));
+  transition: transform .95s cubic-bezier(.5, 0, .55, 1.22), opacity .3s var(--ease); }
+.doc::after { content: ""; flex: none; margin-left: auto; width: 14px; height: 14px; border-radius: 50%; background: var(--lane); }
+.doc[data-lane="2"] { --lane: var(--gul); }
+.doc[data-lane="3"] { --lane: var(--alert); }
+/* Roller i stället för trafikljus (laneRole1–3): människan i Vätterblått, gemensamt i smaragd, AI i turkos. */
+.lane[data-role="human"], .doc[data-role="human"] { --lane: var(--human); }
+.lane[data-role="shared"], .doc[data-role="shared"] { --lane: var(--med); }
+.lane[data-role="ai"], .doc[data-role="ai"] { --lane: var(--at); }
+.lane[data-role="alert"], .doc[data-role="alert"] { --lane: var(--alert); }
+.doc[data-on="false"] { opacity: 0; transform: translateY(calc(-1 * var(--y) - 120px)) rotate(calc(var(--r) * -4)); transition: transform var(--fast) var(--ease), opacity var(--fast) var(--ease); }
+/* Designpasset i tiopotenserna: facken blir kolumner i ett raster. Rollens färg är kolumnens rubriklinje,
+   papperen staplas på en golvlinje, och varje papper är ett kartotekskort med rollens färg i överkanten. */
+[data-skala] .lane { overflow: visible; border-radius: 0; background: none; border: 0; border-top: 3px solid var(--lane); box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+[data-skala] .lane::after { content: ""; position: absolute; left: 0; right: 0; bottom: 32px; height: 1px; background: color-mix(in srgb, var(--ink) 30%, transparent); }
+[data-skala] .lane header { padding: 22px 0 0; }
+[data-skala] .lane header i { display: none; }
+[data-skala] .laneRule { font-size: 22px; }
+[data-skala] .doc { min-height: 78px; padding: 19px 20px 14px; border-radius: 2px; font-size: 24px;
+  background: linear-gradient(var(--lane), var(--lane)) top / 100% 5px no-repeat, var(--paper); box-shadow: 0 10px 24px color-mix(in srgb, #000 22%, transparent); }
+[data-skala] .doc::after { display: none; }
+
+/* ------------------------------------------------ U-kurvan · längs kurvan */
+
+.kurvaFinal { --play-delay: .6s; margin-top: 14px; max-width: 1180px; font-size: 40px; line-height: 1.2; font-weight: 700; letter-spacing: -.02em; }
+.kurvaPlot { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; overflow: visible; pointer-events: none; }
+.axis { fill: none; stroke: var(--ink); stroke-opacity: .3; stroke-width: 2; }
+.curveGuide { fill: none; stroke: var(--ink); stroke-opacity: .18; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 3 12; }
+.curveLit { fill: none; stroke: var(--light); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 1; filter: drop-shadow(0 0 10px var(--hz2-glow));
+  transition: stroke-dashoffset 1.9s cubic-bezier(.55, 0, .35, 1); }
+.axisX, .axisY { position: absolute; z-index: 3; font-size: 16px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.axisX { right: 130px; top: 836px; }
+.kurvaNote { position: absolute; left: 186px; top: 836px; z-index: 3; font-size: 16px; font-weight: 600; letter-spacing: .04em; color: var(--muted); }
+.axisY { left: 186px; top: 238px; }
+.kurvaLight { position: absolute; left: 0; top: 0; z-index: 4; width: 24px; height: 24px; border-radius: 50%; background: var(--light); offset-rotate: 0deg;
+  box-shadow: 0 0 14px 4px color-mix(in srgb, var(--light) 80%, transparent), 0 0 60px 18px color-mix(in srgb, var(--hz2-glow) 50%, transparent);
+  transition: offset-distance 1.9s cubic-bezier(.55, 0, .35, 1); }
+.point { position: absolute; left: var(--x); top: var(--y); z-index: 3; width: 0; height: 0; }
+.point > i { position: absolute; left: -10px; top: -10px; width: 20px; height: 20px; border-radius: 50%; border: 3px solid var(--ink); background: var(--bg); }
+.point[data-point="1"] > i { border-color: var(--mot); }
+.point[data-point="2"] > i { border-color: var(--at); }
+.pointText { position: absolute; width: 400px; display: grid; gap: 6px; }
+.point[data-point="0"] .pointText { left: -24px; bottom: 30px; }
+.point[data-point="1"] .pointText { left: -200px; bottom: 36px; text-align: center; }
+.point[data-point="2"] .pointText { right: 48px; top: -100px; text-align: right; }
+.pointName { font-family: var(--font-display); font-size: 38px; line-height: 1.05; font-weight: 800; letter-spacing: -.02em; }
+.point[data-point="1"] .pointName { color: var(--mot); }
+.point[data-point="2"] .pointName { color: var(--at); }
+.pointBody { font-size: 22px; line-height: 1.35; color: var(--muted); text-wrap: balance; }
+.point[data-point="1"][data-on="true"], .point[data-point="2"][data-on="true"] { transition-delay: 1.2s; }
+
+/* --------------------------------------------------- Så jobbar jag · trappan */
+
+.stairs { margin: 0; padding: 0; list-style: none; }
+.stair { --role: var(--human); position: absolute; left: var(--x); top: var(--y); width: 560px; min-height: 96px; z-index: 3; display: flex; align-items: center; gap: 20px;
+  padding: 16px 24px; border-radius: 20px; background: var(--glass); border: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 var(--glass-top), var(--shadow);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  transition: transform .9s cubic-bezier(.3, 1.4, .5, 1), opacity .5s var(--ease); }
+.stair[data-on="false"] { opacity: 0; transform: translateY(-120px); transition: transform var(--fast) var(--ease), opacity var(--fast) var(--ease); }
+.stair[data-role="shared"] { --role: var(--med); }
+.stair[data-role="ai"] { --role: var(--at); }
+.stair b { flex: none; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-size: 24px; font-weight: 800; background: var(--role); color: var(--role-ink); }
+.stair[data-role="human"] b { color: var(--on-human); }
+.stairName { display: block; font-family: var(--font-display); font-size: 30px; line-height: 1.1; font-weight: 800; letter-spacing: -.02em; }
+.stairText { display: block; margin-top: 3px; font-size: 20px; line-height: 1.34; color: var(--muted); }
+.stairWho { flex: none; margin-left: auto; align-self: flex-start; display: flex; align-items: center; gap: 8px; font-style: normal; font-size: 13px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.stairWho::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--role); }
+.trappa[data-final="true"] .stair { opacity: .45; }
+/* Högst fyra steg (filmerna): större text, läsbar i en inspelad film. */
+.trappa[data-few="true"] .stair { width: 660px; min-height: 116px; gap: 24px; }
+.trappa[data-few="true"] .stair b { width: 60px; height: 60px; font-size: 28px; }
+.trappa[data-few="true"] .stairName { font-size: 36px; }
+.trappa[data-few="true"] .stairText { font-size: 26px; line-height: 1.3; }
+.trappa[data-few="true"] .stairWho { font-size: 17px; }
+.trappaShot { position: absolute; left: 1040px; top: 150px; width: 464px; z-index: 4; margin: 0; }
+.trappaShot img { display: block; width: 100%; border-radius: 12px; border: 1px solid var(--glass-edge); box-shadow: var(--shadow); }
+.trappaShot figcaption { margin-top: 10px; font-size: 16px; line-height: 1.4; color: var(--muted); }
+.trappa .trappaShot[data-on="false"] { transform: translateY(-60px) rotate(-2deg); }
+/* Tiopotenserna (helbild, ingen talare till höger): bilden står under rubrikraden och till höger om trappan,
+   och slutraden får trappan att nästan försvinna, så att de inte ligger i varandra. */
+[data-skala] .trappaShot { left: 1124px; top: 220px; width: 380px; }
+[data-skala] .trappa[data-final="true"] .stair { opacity: .14; }
+/* Designpasset i tiopotenserna: trappan ritas med linjer i stället för glaskort. Varje steg hänger under en
+   hårfin linje med rollens färg i början, numret står i mono och vem som gör det läses till höger. */
+[data-skala] .stair { align-items: flex-start; gap: 26px; padding: 20px 0 0; border-radius: 0; background: none; border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 30%, transparent); box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+[data-skala] .stair::before { content: ""; position: absolute; left: 0; top: -2px; width: 88px; height: 3px; background: var(--role); }
+[data-skala] .stair b { display: block; width: auto; height: auto; padding-top: 10px; border-radius: 0; background: none;
+  font-family: var(--font-label, var(--font-mono)); font-size: 22px; font-weight: 600; letter-spacing: .06em; color: var(--role); }
+[data-skala] .stair b::before { content: "0"; }
+[data-skala] .stair[data-role="human"] b { color: var(--human-text, var(--human)); }
+[data-skala] .stairWho { padding-top: 12px; font-family: var(--font-label, var(--font-mono)); font-size: 15px; font-weight: 600; }
+[data-skala] .stairWho::before { width: 8px; height: 8px; border-radius: 0; }
+[data-skala] .trappaShot img { border-radius: 0; box-shadow: none; border-color: color-mix(in srgb, var(--ink) 30%, transparent); }
+[data-skala] .trappaShot figcaption { font-family: var(--font-label, var(--font-mono)); font-size: 14px; letter-spacing: .1em; text-transform: uppercase; }
+[data-skala][data-tone="light"] .trappa { --human-text: color-mix(in srgb, var(--human) 42%, var(--ink)); }
+/* Slutsatsen förankras nedifrån, så att två rader slutar ovanför textningsmarginalen (y 765). */
+.trappaFinal { position: absolute; left: 96px; bottom: 140px; width: 780px; z-index: 5; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 50px; line-height: 1.06; letter-spacing: -.035em; }
+
+/* ------------------------------------------------ Jag efter · ljusen stiger */
+
+.efterHead { position: absolute; left: 96px; top: 66px; width: 1100px; z-index: 4; transition: opacity 1s var(--ease); }
+.efterHead h2 { margin-top: 18px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 64px; line-height: 1.02; letter-spacing: -.04em; }
+.efterHead ol { margin: 22px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.efterHead li { font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 54px; line-height: 1.08; letter-spacing: -.035em; }
+.efterHead[data-final="true"] { opacity: .3; }
+.efterLights i { position: absolute; left: var(--x); top: var(--y); z-index: 2; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--light);
+  box-shadow: 0 0 8px 2px color-mix(in srgb, var(--light) 80%, transparent), 0 0 26px 8px color-mix(in srgb, var(--hz2-glow) 42%, transparent);
+  transform: scale(var(--s)); transition: transform 2.3s cubic-bezier(.45, 0, .2, 1) var(--d), opacity 1.3s var(--ease) var(--d); }
+.efter[data-step="1"] .efterLights i[data-group="0"], .efter[data-step="2"] .efterLights i[data-group="0"], .efter[data-step="3"] .efterLights i[data-group="0"] { transform: translateY(var(--sky)) scale(calc(var(--s) * .55)); }
+.efter[data-step="2"] .efterLights i[data-group="1"], .efter[data-step="3"] .efterLights i[data-group="1"] { transform: translateY(50px) scale(.3); opacity: 0; }
+.efter[data-step="3"] .efterLights i[data-group="2"] { transform: translate(var(--gx), var(--gy)) scale(.4); opacity: 0; }
+.efterSun { position: absolute; left: var(--lx); top: var(--hy); width: 0; height: 0; z-index: 1; pointer-events: none; }
+.efterSun::before { content: ""; position: absolute; left: -340px; top: -72px; width: 680px; height: 144px; border-radius: 50%; opacity: 0; transform: scale(.25);
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--light) 96%, transparent) 0%, color-mix(in srgb, var(--light) 52%, transparent) 15%, color-mix(in srgb, var(--hz2-glow) 34%, transparent) 42%, transparent 72%);
+  transition: opacity 1.1s var(--ease), transform 1.4s var(--ease); }
+.efterSun[data-on="true"]::before { opacity: 1; transform: scale(1); transition: opacity 1.4s var(--ease) 1.8s, transform 2s var(--ease) 1.8s; }
+.efterFinal { position: absolute; left: 96px; top: 628px; width: 1200px; z-index: 5; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 66px; line-height: 1.04; letter-spacing: -.042em; text-wrap: balance; }
+.efterFinal[data-on="true"] { transition-delay: .3s; --play-delay: .9s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mot *, .bygga *, .sortera *, .kurva *, .trappa *, .efter * { animation: none !important; }
+}

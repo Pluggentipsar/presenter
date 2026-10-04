@@ -1,0 +1,6 @@
+/* Maskinens röst i temat Rösten. Dold i alla andra teman. */
+.wave{display:none;align-items:center;gap:2px;height:1.1em;margin-left:auto;padding-left:14px;flex:none;vertical-align:middle}
+@container style(--signature: voice){.wave{display:inline-flex}}
+.wave i{display:block;width:3px;height:calc(var(--h) * 100%);border-radius:2px;background:var(--accent-secondary,#5fe0c2);transform-origin:center;animation:speak .62s ease-in-out 4 alternate;animation-delay:calc(var(--d) * 1s)}
+@keyframes speak{from{transform:scaleY(.3)}to{transform:scaleY(1)}}
+@media (prefers-reduced-motion:reduce){.wave i{animation:none}}

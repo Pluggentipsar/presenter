@@ -1,0 +1,50 @@
+/* Lyssningsläget: deckets tema (ShareThemeRoot sätter variablerna), typografi och hårfina linjer. */
+
+.page {
+  min-height: 100vh;
+  padding: 28px clamp(16px, 4vw, 48px) 64px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body, system-ui), system-ui, sans-serif;
+}
+
+.head { max-width: 1400px; margin: 0 auto 22px; }
+.back { color: var(--text-muted); font-size: 14px; text-decoration: none; }
+.back::before { content: "← "; }
+.back:hover { color: var(--accent); }
+.kicker { margin: 14px 0 4px; color: var(--text-muted); font-family: var(--font-mono, ui-monospace), monospace; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+.title { margin: 0; font-family: var(--font-display, inherit), system-ui, sans-serif; font-size: clamp(26px, 3.2vw, 40px); line-height: 1.12; letter-spacing: -.015em; }
+
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 380px); gap: clamp(18px, 3vw, 40px); max-width: 1400px; margin: 0 auto; align-items: start; }
+@media (max-width: 960px) { .layout { grid-template-columns: 1fr; } }
+
+.stageColumn { min-width: 0; }
+.stage { overflow: hidden; border-radius: 6px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 12%, transparent); }
+
+.player { display: flex; align-items: center; gap: 14px; margin-top: 14px; }
+.play { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border: 0; border-radius: 50%; background: var(--accent); color: var(--bg); cursor: pointer; }
+.play svg { width: 22px; height: 22px; fill: currentColor; }
+.time { flex: none; font-family: var(--font-mono, ui-monospace), monospace; font-size: 14px; font-variant-numeric: tabular-nums; color: var(--text-muted); }
+.bar { position: relative; flex: 1; height: 28px; cursor: pointer; }
+.bar::before { content: ""; position: absolute; left: 0; right: 0; top: 13px; height: 2px; background: color-mix(in srgb, var(--text) 18%, transparent); }
+.progress { position: absolute; left: 0; top: 13px; height: 2px; background: var(--accent); }
+.tick { position: absolute; top: 9px; width: 1px; height: 10px; background: color-mix(in srgb, var(--text) 45%, transparent); }
+.make { padding: 8px 16px; border: 1px solid var(--accent); border-radius: 4px; background: none; color: var(--text); font: inherit; cursor: pointer; }
+.note { margin: 0; color: var(--text-muted); font-size: 15px; }
+.now { margin: 10px 0 0; color: var(--text-muted); font-size: 14px; }
+.now span { color: var(--text); }
+
+.side { display: grid; gap: 10px; min-width: 0; }
+.sideHead { margin: 6px 0 0; font-family: var(--font-mono, ui-monospace), monospace; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); }
+.chapters { margin: 0; padding: 0; list-style: none; border-top: 1px solid color-mix(in srgb, var(--text) 14%, transparent); }
+.chapters li { border-bottom: 1px solid color-mix(in srgb, var(--text) 14%, transparent); }
+.chapters button { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 8px; width: 100%; padding: 8px 0; border: 0; background: none; color: var(--text-muted); font: inherit; font-size: 15px; text-align: left; cursor: pointer; }
+.chapters li[data-current] button { color: var(--text); }
+.chapters li[data-current] .chapterTime { color: var(--accent); }
+.chapterTime { font-family: var(--font-mono, ui-monospace), monospace; font-size: 13px; font-variant-numeric: tabular-nums; padding-top: 2px; }
+.chapters button:hover span:last-child { text-decoration: underline; }
+
+.transcript { max-height: 46vh; overflow: auto; padding-right: 6px; line-height: 1.55; }
+.transcript button { display: inline; padding: 0; border: 0; background: none; color: color-mix(in srgb, var(--text) 62%, transparent); font: inherit; font-size: 16px; text-align: left; cursor: pointer; }
+.transcript button[data-current] { color: var(--text); box-shadow: inset 0 -2px 0 var(--accent); }
+.transcript button:hover { color: var(--text); }

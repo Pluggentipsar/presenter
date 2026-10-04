@@ -1,0 +1,132 @@
+/*
+ * Tiopotenser · världen som zoomar (skala.tsx). 1600 × 900, alla färger ur temats
+ * roller. Slöjan (--veil) och skalmätarens storlek (--big) är registrerade så att
+ * de glider mellan lägena; stilla lägen (bakåt, R, reducerad rörelse) hoppar.
+ */
+
+@property --veil { syntax: "<number>"; inherits: true; initial-value: .5; }
+@property --big { syntax: "<number>"; inherits: true; initial-value: 0; }
+
+.sky { position: absolute; inset: 0; overflow: hidden; pointer-events: none; background: var(--bg);
+  transition: --veil .9s var(--ease), --big 1.1s var(--ease); }
+.sky[data-still="true"] { transition: none; }
+
+/* ------------------------------------------------------------- nivåerna */
+
+.level { position: absolute; left: 0; top: 0; width: 1600px; height: 900px; transform-origin: 0 0; }
+.level img { display: block; width: 100%; height: 100%; object-fit: cover; user-select: none; }
+.sky[data-moving="true"] .level { will-change: transform, opacity; }
+/* Nästa nivå inåt får mjuka kanter medan den växer ur mitten. */
+.level[data-inner="true"] {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--feather), #000 calc(100% - var(--feather)), transparent), linear-gradient(180deg, transparent, #000 var(--feather), #000 calc(100% - var(--feather)), transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(90deg, transparent, #000 var(--feather), #000 calc(100% - var(--feather)), transparent), linear-gradient(180deg, transparent, #000 var(--feather), #000 calc(100% - var(--feather)), transparent);
+  mask-composite: intersect;
+}
+/* Ljust tema (T till fyrfärgen): bilderna blir tryck, gråskala multiplicerad mot papperet. */
+.sky[data-tone="light"] .level img { filter: grayscale(1) contrast(1.08) brightness(1.08); mix-blend-mode: multiply; }
+
+/* Kameran inom nivån (fältet kamera): skala och förskjutning kring jordens mitt i planetbilden. */
+.cam { position: absolute; inset: 0; transform-origin: 1155px 450px; }
+/* Rymden bakom bilderna: när kameran skalar eller flyttar bilden syns inte bildens kant mot temats grund
+   (planetbildens rymd är svart). I ett ljust tema står papperet kvar. */
+.cam[data-layer="bild"]::before { content: ""; position: absolute; inset: -200%; background: #000; }
+.sky[data-tone="light"] .cam[data-layer="bild"]::before { display: none; }
+
+/* Gryningen (fältet dygn) bakom jordens kant: jordskivans topp är (1155, 106) och radien 344 px.
+   Skärmblandning ovanpå slöjan, så att solen lyser även när världen är dämpad. Med kameran horisont
+   ligger den längs horisonten. Tonar fram på 4,5 s. */
+.dawn { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; opacity: var(--dawn); transition: opacity 4.5s var(--ease) .5s; }
+.sky[data-still="true"] .dawn { transition: none; }
+.dawn i { position: absolute; }
+.dawn i:nth-child(1) { left: 455px; top: -150px; width: 1400px; height: 520px;
+  background: radial-gradient(ellipse 50% 46% at 50% 50%, rgba(255, 196, 120, .55), rgba(255, 140, 60, .2) 48%, transparent 72%); }
+.dawn i:nth-child(2) { left: 811px; top: 106px; width: 688px; height: 688px; border-radius: 50%;
+  box-shadow: 0 -2px 4px rgba(255, 240, 210, .95), 0 -6px 24px rgba(255, 196, 120, .7), inset 0 6px 14px rgba(255, 220, 170, .35);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 8%, transparent 26%); mask-image: linear-gradient(180deg, #000 0%, #000 8%, transparent 26%); }
+.dawn i:nth-child(3) { left: 1195px; top: 76px; width: 60px; height: 60px; border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 22%, rgba(255, 232, 190, .9) 34%, rgba(255, 190, 110, .35) 60%, transparent 72%); }
+.sky[data-tone="light"] .dawn { display: none; }
+
+.veil { position: absolute; inset: 0; background: var(--bg); opacity: var(--veil); }
+.vignette { position: absolute; inset: 0; background: radial-gradient(ellipse 86% 82% at 50% 48%, transparent 58%, color-mix(in srgb, var(--bg) 72%, transparent) 100%); }
+.sky[data-tone="light"] .vignette { opacity: .35; }
+
+/* ------------------------------------------------------------ ramen */
+/* Nästa tiopotens: en tunn ruta i mitten med hörnmärken, som i filmen. */
+
+.frame { position: absolute;
+  border: 1px solid color-mix(in srgb, var(--text) 62%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--bg) 30%, transparent); }
+.frame i { position: absolute; width: 14px; height: 14px; border: 0 solid var(--accent); }
+.frame i:nth-child(1) { left: -3px; top: -3px; border-left-width: 2px; border-top-width: 2px; }
+.frame i:nth-child(2) { right: -3px; top: -3px; border-right-width: 2px; border-top-width: 2px; }
+.frame i:nth-child(3) { left: -3px; bottom: -3px; border-left-width: 2px; border-bottom-width: 2px; }
+.frame i:nth-child(4) { right: -3px; bottom: -3px; border-right-width: 2px; border-bottom-width: 2px; }
+.frameLabel { position: absolute; left: calc(100% + 12px); top: -3px; white-space: nowrap;
+  font-family: var(--font-label, var(--font-mono)); font-size: 17px; font-weight: 500; letter-spacing: .04em; line-height: 1;
+  color: color-mix(in srgb, var(--text) 82%, transparent); }
+.frameLabel sup, .hudPow sup { position: relative; top: -.72em; margin-left: .04em; font-size: max(.54em, 14px); line-height: 0; vertical-align: baseline; }
+
+/* ------------------------------------------------------- skalmätaren */
+/* När mätaren är kapitelrubrik får den en mörk yta bakom sig, så att den syns mot vilken nivå som helst. */
+.hudScrim { position: absolute; left: 0; bottom: 0; width: 1320px; height: 720px; opacity: var(--big);
+  background: radial-gradient(ellipse 100% 100% at 0% 100%, color-mix(in srgb, var(--bg) 88%, transparent) 0%, color-mix(in srgb, var(--bg) 74%, transparent) 42%, color-mix(in srgb, var(--bg) 30%, transparent) 68%, transparent 88%); }
+/* Liten i hörnet; formen zoom gör den till kapitelrubrik (--big = 1). */
+
+.hud { position: absolute; left: calc(40px + 56px * var(--big)); bottom: calc(22px + 140px * var(--big));
+  color: var(--text); font-family: var(--font-label, var(--font-mono)); }
+.hudTop { display: flex; align-items: baseline; gap: calc(14px + 26px * var(--big)); margin: 0; }
+.hudPow { font-size: calc(27px + 181px * var(--big)); font-weight: 500; line-height: .9; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+.hudPow small { margin-left: .22em; font-size: max(.46em, 14px); font-weight: 400; letter-spacing: 0; color: var(--text-muted); }
+.hudPlace { font-size: calc(15px + 25px * var(--big)); font-weight: 500; line-height: 1; letter-spacing: .16em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--text) calc(62% + 38% * var(--big)), transparent); white-space: nowrap; }
+.ruler { position: relative; width: calc(280px + 640px * var(--big)); height: calc(12px + 14px * var(--big)); margin-top: calc(9px + 18px * var(--big));
+  border-bottom: 1px solid color-mix(in srgb, var(--text) 32%, transparent); }
+.ruler i { position: absolute; left: calc(var(--x) * 100%); bottom: 0; width: 1px; height: calc(5px + 8px * var(--big));
+  background: color-mix(in srgb, var(--text) 40%, transparent); }
+.ruler i[data-stop="true"] { height: calc(9px + 14px * var(--big)); background: color-mix(in srgb, var(--text) 76%, transparent); }
+.ruler b { position: absolute; left: calc(var(--m) * 100%); bottom: calc(-4px - 5px * var(--big)); translate: -50% 0;
+  width: calc(8px + 10px * var(--big)); aspect-ratio: 1; border-radius: 50%; background: var(--accent-bright);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-bright) 26%, transparent), 0 0 18px color-mix(in srgb, var(--accent-bright) 70%, transparent); }
+.sky[data-tone="light"] .ruler b { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-bright) 30%, transparent); }
+
+/* ------------------------------------------------------------ portalen */
+/* Inträdet ur bryggans portal (fältet inkomst="portal"): ett fönster med nivåns bild växer från portalens
+   ruta till hela bilden, med Eames-hörnen ut mot hörnen, och tonar sedan bort mot världen på samma nivå. */
+.portalIn { position: absolute; z-index: 60; left: 1014px; top: 356px; width: 192px; height: 108px; pointer-events: none;
+  box-shadow: 0 0 0 2400px var(--bg); animation: portalOpen 1.35s cubic-bezier(.65, 0, .25, 1) .08s both; }
+.portalIn img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+:global([data-tone="light"]) .portalIn img { filter: grayscale(1) contrast(1.08) brightness(1.08); }
+.portalIn i { position: absolute; width: 18px; height: 18px; border: 0 solid var(--accent); }
+.portalIn i:nth-of-type(1) { left: -3px; top: -3px; border-left-width: 2px; border-top-width: 2px; }
+.portalIn i:nth-of-type(2) { right: -3px; top: -3px; border-right-width: 2px; border-top-width: 2px; }
+.portalIn i:nth-of-type(3) { left: -3px; bottom: -3px; border-left-width: 2px; border-bottom-width: 2px; }
+.portalIn i:nth-of-type(4) { right: -3px; bottom: -3px; border-right-width: 2px; border-bottom-width: 2px; }
+@keyframes portalOpen {
+  0% { left: 1014px; top: 356px; width: 192px; height: 108px; opacity: 1; }
+  80% { left: 0; top: 0; width: 1600px; height: 900px; opacity: 1; }
+  100% { left: 0; top: 0; width: 1600px; height: 900px; opacity: 0; }
+}
+
+/* ------------------------------------------------------------ zoom */
+
+.zoom { position: absolute; inset: 0; }
+.zoomScrim { position: absolute; left: 0; top: 0; width: 1240px; height: 560px;
+  background: radial-gradient(ellipse 100% 100% at 0% 0%, color-mix(in srgb, var(--bg) 80%, transparent) 0%, color-mix(in srgb, var(--bg) 42%, transparent) 46%, transparent 76%); }
+.zoomHead { position: absolute; left: 96px; top: 92px; width: 660px; }
+.zoomHead > p:first-child { white-space: nowrap; }
+.zoomTitle { margin-top: 20px; font-family: var(--font-display); font-weight: var(--heading-weight);
+  font-size: 78px; line-height: 1.02; letter-spacing: -.042em; text-wrap: balance; }
+.zoomCaption { margin-top: 24px; width: 600px; font-size: 30px; line-height: 1.3; color: color-mix(in srgb, var(--text) 86%, transparent); text-wrap: pretty; }
+
+/* ------------------------------------------------------------ planeten i WebGL */
+/* planet-gl.tsx: canvasen ligger under nivåerna och ritar rymden och klotet själv. När klotet är ritat
+   (data-on) behövs inte kamerans svarta rymd, och planetbilden tonar bort. Utan WebGL står bilden kvar. */
+.planetGl { position: absolute; left: 0; top: 0; width: 1600px; height: 900px; visibility: hidden; }
+.planetGl[data-on="true"] { visibility: visible; }
+.planetGl[data-on="true"] ~ .cam[data-layer="bild"]::before { display: none; }
+.level[data-p="7"] img { transition: opacity .6s var(--ease); }
+.planetGl[data-on="true"] ~ .cam[data-layer="bild"] .level[data-p="7"] img { opacity: 0; }
+.sky[data-still="true"] .level[data-p="7"] img { transition: none; }
+.sky[data-tone="light"] .planetGl { filter: grayscale(1) contrast(1.08) brightness(1.08); mix-blend-mode: multiply; }

@@ -1,0 +1,9 @@
+{
+  "_om": "Appens identitet: namn, id, beskrivning, upphov, och startmappen som Hämta från GitHub klonar. Läses av electron/main.mjs, scripts/bygg-app.mjs och scripts/install-app-shortcuts.mjs.",
+  "namn": "Presenter",
+  "id": "com.joelsai.presenter",
+  "beskrivning": "Föreläsningar som går att göra mer med än i PowerPoint — verkstad och spelare.",
+  "upphov": "Joel Rangsjö",
+  "repo": "https://github.com/Pluggentipsar/presenter.git",
+  "mapp": "Presenter"
+}

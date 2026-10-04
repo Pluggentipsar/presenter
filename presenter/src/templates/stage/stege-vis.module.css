@@ -1,0 +1,139 @@
+/*
+ * Skalstegens visualiseringar (stege-vis.tsx). Ett lager per exempel som tonar in med sitt steg.
+ * Förloppen startar när lagret slås på ([data-on="true"]) och står stilla i stilla lägen, där
+ * slutbilden är grundstilen. Koordinater på 1600 × 900.
+ */
+
+.layer { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity .5s var(--ease); }
+.layer[data-on="true"] { opacity: 1; transition: opacity 1.2s var(--ease) .2s; }
+.layer[data-still="true"] { transition: none; }
+[data-tone="light"] .layer { --human-text: color-mix(in srgb, var(--human) 42%, var(--ink)); }
+.canvas { position: absolute; left: 0; top: 0; width: 1600px; height: 900px; }
+.full { position: absolute; left: 0; top: 0; width: 1600px; height: 900px; overflow: visible; }
+
+/* Vädret: cyklonens prognoskon ovanpå vindfältet. */
+.windCone { fill: color-mix(in srgb, var(--ai) 14%, transparent); stroke: color-mix(in srgb, var(--ai) 50%, transparent); stroke-width: 1; }
+.windLine { fill: none; stroke: var(--ai); stroke-width: 1.8; stroke-dasharray: 5 6; }
+.windDay { fill: var(--ai); }
+.windEye { fill: none; stroke: var(--ink); stroke-width: 2; }
+
+/* Floderna: tidslinjen ovanför flodnätet. Varningen står vid dag 0, vattnet vandrar till dag 5. */
+.days { position: absolute; left: 1228px; top: 200px; width: 260px; height: 1px; font-family: var(--font-label, var(--font-mono)); font-size: 15px; color: var(--muted); }
+.daysAxis { position: absolute; left: 0; right: 0; top: 0; height: 1px; background: color-mix(in srgb, var(--ink) 45%, transparent); }
+.daysTick { position: absolute; top: 12px; translate: -50% 0; }
+.daysTick::before { content: ""; position: absolute; left: 50%; top: -12px; width: 1px; height: 6px; background: currentColor; }
+.daysUnit { position: absolute; left: calc(100% + 22px); top: 12px; text-transform: uppercase; letter-spacing: .12em; }
+.daysWarn, .daysWater { position: absolute; bottom: -5px; translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  font-weight: 600; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
+.daysWarn { left: 0; color: var(--ai); }
+.daysWater { left: 100%; color: var(--ink); }
+.daysWarn i, .daysWater i { order: 2; width: 11px; height: 11px; border-radius: 50%; background: currentColor; }
+.layer[data-on="true"]:not([data-still="true"]) .daysWarn { animation: daysIn .5s var(--ease) var(--warn) backwards; }
+.layer[data-on="true"]:not([data-still="true"]) .daysWater { animation: daysRun var(--waterFor) linear var(--water) backwards; }
+@keyframes daysIn { from { opacity: 0; } }
+@keyframes daysRun { from { left: 0; } }
+
+/* Mammografin som isotyp: en ruta per procent av granskningen, en prick per procent av fallen. */
+.scan { position: absolute; left: 1272px; top: 206px; width: 290px; }
+.scanHead { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 14px; padding-bottom: 8px; border-bottom: 1px solid color-mix(in srgb, var(--ink) 28%, transparent); }
+.scanHead span { font-family: var(--font-label, var(--font-mono)); font-size: 15px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.scanHead b { font-family: var(--font-display); font-size: 46px; font-weight: 800; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.scanA, .scanB { display: grid; gap: 6px; margin: 0 0 30px; padding: 0; list-style: none; }
+.scanA { grid-template-columns: repeat(10, 16px); }
+.scanB { grid-template-columns: repeat(13, 16px); }
+.scanA li { width: 16px; height: 16px; background: var(--ink); }
+.scanA li[data-gone] { background: transparent; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ai) 70%, transparent); }
+.layer[data-on="true"]:not([data-still="true"]) .scanA li[data-gone] { animation: scanGone .5s var(--ease) calc(.9s + var(--d) * 1.2s) backwards; }
+@keyframes scanGone { from { background: var(--ink); box-shadow: inset 0 0 0 1.5px transparent; } }
+.scanB li { width: 16px; height: 16px; border-radius: 50%; background: var(--human); }
+.scanB li[data-new] { background: var(--ai); }
+.layer[data-on="true"]:not([data-still="true"]) .scanB li[data-new] { animation: scanNew .45s var(--ease) calc(2.6s + var(--d) * 1s) backwards; }
+@keyframes scanNew { from { opacity: 0; transform: scale(0); } }
+
+/* Mindmappen: klockan och kartan som växer. */
+.clock { position: absolute; left: 1236px; top: 214px; display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: 12px; margin: 0; }
+.clock b { font-family: var(--font-display); font-size: 76px; font-weight: 800; line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums; color: var(--human-text, var(--human)); }
+.clock span { font-family: var(--font-label, var(--font-mono)); font-size: 20px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.clock small { grid-column: 1 / -1; margin-top: 10px; font-family: var(--font-label, var(--font-mono)); font-size: 15px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.mapEdge { fill: none; stroke: color-mix(in srgb, var(--ink) 55%, transparent); stroke-width: 1.6; stroke-dasharray: 1 1; }
+.layer[data-on="true"]:not([data-still="true"]) .mapEdge { animation: mapDraw .5s var(--ease) var(--d) backwards; }
+@keyframes mapDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.mapNode { fill: var(--bg); stroke: var(--ink); stroke-width: 2; transform-box: fill-box; transform-origin: center; }
+.layer[data-on="true"]:not([data-still="true"]) .mapNode { animation: mapPop .4s var(--ease) var(--d) backwards; }
+@keyframes mapPop { from { transform: scale(0); } }
+.mapRoot { fill: var(--human); }
+
+/* Filmen (vis=film): ett stående fönster med Eames-hörn i människans färg, rubrik i mono ovanför och källa under. */
+.film { position: absolute; left: 1252px; top: 214px; width: 296px; height: 526px; margin: 0; }
+.film video, .filmPoster { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; background: #000; }
+/* Stillbilden ligger ovanpå tills filmen spelar, och tonar bort när den börjar. */
+.filmPoster { transition: opacity .5s var(--ease) .25s; }
+.film[data-playing="true"] .filmPoster { opacity: 0; }
+.film i { position: absolute; width: 16px; height: 16px; border: 0 solid var(--human); }
+.film i:nth-of-type(1) { left: -7px; top: -7px; border-left-width: 2px; border-top-width: 2px; }
+.film i:nth-of-type(2) { right: -7px; top: -7px; border-right-width: 2px; border-top-width: 2px; }
+.film i:nth-of-type(3) { left: -7px; bottom: -7px; border-left-width: 2px; border-bottom-width: 2px; }
+.film i:nth-of-type(4) { right: -7px; bottom: -7px; border-right-width: 2px; border-bottom-width: 2px; }
+.filmLabel { position: absolute; left: 0; bottom: calc(100% + 16px); width: 320px; font-family: var(--font-label, var(--font-mono)); font-size: 15px; font-weight: 600; letter-spacing: .14em; line-height: 1.35; text-transform: uppercase; color: var(--human-text, var(--human)); }
+.filmCredit { position: absolute; left: 0; top: calc(100% + 14px); width: 300px; margin: 0; font-family: var(--font-label, var(--font-mono)); font-size: 14px; line-height: 1.4; letter-spacing: .04em; color: var(--muted); }
+
+/* Molekylerna: hundra kedjor i ett rutnät. Ritas in, de verksamma tänds i AI:s färg, de bättre får människans. */
+.mol { position: absolute; left: 1250px; top: 206px; width: 300px; }
+.molGrid { display: grid; grid-template-columns: repeat(10, 26px); gap: 4px; margin: 0 0 22px; padding: 0; list-style: none; }
+.molGrid li { width: 26px; height: 22px; }
+.molGrid svg { display: block; width: 26px; height: 22px; overflow: visible; }
+.molGrid polyline { fill: none; stroke: color-mix(in srgb, var(--ink) 34%, transparent); stroke-width: 1.4; }
+.molGrid circle { fill: color-mix(in srgb, var(--ink) 40%, transparent); }
+.molGrid li[data-role="active"] polyline, .molGrid li[data-role="better"] polyline { stroke: var(--ai); }
+.molGrid li[data-role="active"] circle { fill: var(--ai); }
+.molGrid li[data-role="better"] circle { fill: var(--human); }
+.molGrid li[data-role="better"] circle:first-of-type { fill: var(--ai); }
+.layer[data-on="true"]:not([data-still="true"]) .molGrid li { animation: molDraw .35s var(--ease) calc(.2s + var(--a) * 1.4s) backwards; }
+.layer[data-on="true"]:not([data-still="true"]) .molGrid li[data-role="active"] :is(polyline, circle),
+.layer[data-on="true"]:not([data-still="true"]) .molGrid li[data-role="better"] polyline { animation: molActive .45s var(--ease) calc(1.9s + var(--d) * 1.2s) backwards; }
+.layer[data-on="true"]:not([data-still="true"]) .molGrid li[data-role="better"] circle { animation: molBetter .45s var(--ease) calc(3.2s + var(--d) * 1.1s) backwards; }
+@keyframes molDraw { from { opacity: 0; transform: translateY(4px) scale(.6); } }
+@keyframes molActive { from { fill: color-mix(in srgb, var(--ink) 40%, transparent); stroke: color-mix(in srgb, var(--ink) 34%, transparent); } }
+@keyframes molBetter { from { fill: var(--ai); } }
+.molKey { display: grid; grid-template-columns: 14px 1fr auto; align-items: baseline; column-gap: 12px; margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px solid color-mix(in srgb, var(--ink) 20%, transparent); }
+.molKey i { width: 12px; height: 12px; border-radius: 50%; background: var(--ai); }
+.molKey[data-role="better"] i { background: var(--human); }
+.molKey span { font-family: var(--font-label, var(--font-mono)); font-size: 15px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.molKey b { font-family: var(--font-display); font-size: 40px; font-weight: 800; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.molKey[data-role="better"] b { color: var(--human-text, var(--human)); }
+
+/* Lungan: två staplar från en nollinje, läkemedlet i AI:s färg uppåt och placebo nedåt. */
+.lungTitle { position: absolute; left: 1252px; top: 206px; width: 300px; margin: 0; padding-bottom: 10px; border-bottom: 1px solid color-mix(in srgb, var(--ink) 28%, transparent);
+  font-family: var(--font-label, var(--font-mono)); font-size: 15px; font-weight: 600; letter-spacing: .12em; line-height: 1.4; text-transform: uppercase; color: var(--muted); }
+.lungZero { fill: none; stroke: color-mix(in srgb, var(--ink) 50%, transparent); stroke-width: 1; }
+.lungZeroLabel { font-family: var(--font-label, var(--font-mono)); font-size: 14px; fill: var(--muted); }
+.lungBar { fill: color-mix(in srgb, var(--ink) 34%, transparent); }
+[data-role="drug"] .lungBar { fill: var(--ai); }
+.lungValue { font-family: var(--font-display); font-size: 40px; font-weight: 800; letter-spacing: -.03em; fill: var(--ink); font-variant-numeric: tabular-nums; }
+[data-role="drug"] .lungValue { fill: var(--ai); }
+.lungUnit { font-family: var(--font-label, var(--font-mono)); font-size: 16px; font-weight: 500; letter-spacing: .04em; }
+.lungLabel { font-family: var(--font-label, var(--font-mono)); font-size: 15px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; fill: var(--muted); }
+
+/* Rullen: spiralen i papyrusens ton, sidan i ett svagt varmt fält, bläcket i AI:s färg när svepet passerat. */
+.scrollLabel { position: absolute; left: 1252px; width: 300px; margin: 0; font-family: var(--font-label, var(--font-mono)); font-size: 15px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.scrollPath { fill: none; stroke: color-mix(in srgb, var(--human) 70%, var(--ink)); stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 1 1; }
+.scrollGhost { fill: none; stroke: color-mix(in srgb, var(--human) 70%, var(--ink)); stroke-width: 1.5; }
+.scrollPage { fill: color-mix(in srgb, var(--human) 14%, transparent); stroke: color-mix(in srgb, var(--human) 55%, transparent); stroke-width: 1; }
+.scrollInk { font-family: "Georgia", "Times New Roman", serif; font-size: 15px; fill: var(--ai); }
+.scrollSweep { fill: none; stroke: var(--ai); stroke-width: 2; }
+.scrollCount { position: absolute; left: 1252px; top: 748px; display: flex; align-items: baseline; gap: 10px; margin: 0; }
+.scrollCount b { font-family: var(--font-display); font-size: 40px; font-weight: 800; line-height: 1; letter-spacing: -.03em; color: var(--ai); font-variant-numeric: tabular-nums; }
+.scrollCount span { font-family: var(--font-label, var(--font-mono)); font-size: 15px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.scrollMark { position: absolute; left: 1252px; top: 800px; width: 300px; margin: 0; font-family: var(--font-label, var(--font-mono)); font-size: 14px; letter-spacing: .04em; color: var(--muted); }
+
+/* Rullen med riktiga bilder: röntgensnittet över spiralen och den utrullade texten som AI-färgade bokstäver.
+   Remsan är vita bokstäver med genomskinlighet (mask), så att färgen följer temat; den glider sakta förbi. */
+.scrollCt { position: absolute; left: 1324px; top: 232px; width: 152px; height: 188px; object-fit: cover;
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 78%, transparent 100%); }
+[data-tone="light"] .scrollCt { filter: invert(1) contrast(1.1); mix-blend-mode: multiply; }
+.scrollSheet { position: absolute; left: 1252px; top: 470px; width: 300px; overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--ai) 45%, transparent); background: color-mix(in srgb, var(--ink) 5%, var(--bg)); }
+.scrollText { position: absolute; left: 0; top: 0; width: 300px; height: 262px; background: var(--ai);
+  mask-image: var(--strip); mask-size: auto 100%; mask-repeat: no-repeat; mask-position: -560px 0; }
+.layer[data-on="true"]:not([data-still="true"]) .scrollText { animation: scrollPan 40s linear 5.6s forwards; }
+@keyframes scrollPan { to { mask-position: -1700px 0; } }

@@ -1,0 +1,305 @@
+/*
+ * Stage · lånade former (28 september 2026).
+ * Koordinater på 1600 × 900. Nödvändig text slutar ovanför y 765 (textningsmarginalen).
+ * I bildläget talare håller sig innehållet till x 96–1040. Färger ur temats roller.
+ */
+
+.head { position: absolute; left: 96px; top: 64px; width: 1180px; z-index: 6; }
+.head h2 { margin-top: 16px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 60px; line-height: 1.04; letter-spacing: -.038em; text-wrap: balance; }
+
+/* ------------------------------------------------------------- genvägen */
+
+.genvag { position: absolute; inset: 0; }
+.genvag > * { transition: opacity var(--mid) var(--ease), filter var(--mid) var(--ease); }
+.gvLines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; overflow: visible; pointer-events: none; }
+.gvWalk { fill: none; stroke: color-mix(in srgb, var(--human) 75%, transparent); stroke-width: 3; stroke-dasharray: 2 13; stroke-linecap: round; transition: opacity var(--mid) var(--ease); }
+.gvArc { fill: none; stroke: var(--ai); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: 1;
+  filter: drop-shadow(0 0 12px color-mix(in srgb, var(--ai) 70%, transparent)); transition: stroke-dashoffset 1.15s var(--ease); }
+.genvag[data-short="true"] .gvArc { stroke-dashoffset: 0; }
+.genvag[data-short="true"] .gvWalk { opacity: .28; }
+.gvTask, .gvResult { position: absolute; top: 392px; width: 300px; min-height: 176px; z-index: 4; padding: 24px 28px; border-radius: 10px;
+  background: var(--paper); color: var(--paper-ink); box-shadow: var(--shadow); }
+.gvTask { left: 96px; rotate: -2deg; }
+.gvResult { left: 1204px; rotate: 2deg; }
+.gvTask small, .gvResult small { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; opacity: .72; }
+.gvTask p, .gvResult p { margin-top: 12px; font-family: var(--font-display); font-weight: 800; font-size: 36px; line-height: 1.08; letter-spacing: -.02em; }
+.gvPathLabel { position: absolute; left: 470px; top: 520px; z-index: 4; display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: color-mix(in srgb, var(--human) 55%, var(--ink)); transition: opacity var(--mid) var(--ease); }
+.gvWork { position: absolute; left: calc(var(--x) - 122px); top: 580px; width: 252px; min-height: 66px; z-index: 3; display: flex; align-items: center; gap: 14px; padding: 12px 18px; border-radius: 16px;
+  background: color-mix(in srgb, var(--human) 14%, var(--glass)); border: 2px solid color-mix(in srgb, var(--human) 70%, transparent); box-shadow: inset 0 1px 0 var(--glass-top);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: opacity var(--mid) var(--ease), filter var(--mid) var(--ease), transform var(--slow) var(--ease); }
+.gvWork b { flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-size: 19px; background: var(--human); color: var(--on-human); }
+.gvWork span { font-size: 25px; line-height: 1.12; font-weight: 700; text-wrap: balance; }
+.genvag[data-short="true"] .gvWork, .genvag[data-short="true"] .gvPathLabel { opacity: .3; filter: blur(1px) saturate(.4); }
+.gvAiLabel { position: absolute; left: 800px; top: 186px; translate: -50% 0; z-index: 5; display: flex; align-items: center; gap: 12px; padding: 10px 22px; border-radius: 999px;
+  font-size: 24px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; background: color-mix(in srgb, var(--ai) 20%, var(--glass)); border: 1px solid color-mix(in srgb, var(--ai) 60%, transparent); }
+.gvNote { position: absolute; left: 150px; top: 250px; width: 1300px; z-index: 7; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 92px; line-height: 1.02; letter-spacing: -.045em; text-wrap: balance; }
+.genvag[data-resting="true"] > :not(.gvNote):not(.head) { opacity: .12; filter: blur(2px); }
+
+/* ------------------------------------------------------------ detektorn */
+
+.detektor { position: absolute; inset: 0; }
+.dtPaper { position: absolute; left: 150px; top: 236px; width: 620px; z-index: 3; padding: 32px 40px 38px; border-radius: 10px; background: var(--paper); color: var(--paper-ink); box-shadow: var(--shadow); rotate: -1deg;
+  transition: opacity var(--mid) var(--ease), filter var(--mid) var(--ease); }
+.dtPaper small { display: block; font-size: 17px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; opacity: .66; }
+.dtPaper p { margin-top: 16px; font-size: 28px; line-height: 1.42; }
+.dtTool { position: absolute; left: 860px; top: 236px; width: 460px; z-index: 4; padding: 28px 34px 30px; border-radius: 18px;
+  background: color-mix(in srgb, var(--bg) 78%, #000); border: 1px solid var(--glass-edge); box-shadow: var(--shadow); }
+.dtTool small { display: block; font-size: 17px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.dtValue { margin-top: 8px; font-family: var(--font-display); font-weight: 800; font-size: 150px; line-height: .95; letter-spacing: -.05em; color: var(--alert); }
+.dtValue span { font-size: .42em; margin-left: .06em; }
+.dtBar { position: relative; display: block; margin-top: 18px; height: 12px; overflow: hidden; border-radius: 99px; background: color-mix(in srgb, var(--ink) 14%, transparent); }
+.dtBar::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--alert); transform-origin: 0 50%; transform: scaleX(var(--v)); transition: transform 1.2s var(--ease) .25s; }
+.detektor[data-step="0"] .dtBar::after { transform: scaleX(0); }
+.dtVerdict { margin-top: 16px; font-size: 30px; font-weight: 700; }
+.dtReaction { position: absolute; left: 860px; top: 572px; width: 640px; z-index: 5; }
+.dtReaction blockquote { font-family: var(--font-display); font-weight: 800; font-size: 52px; line-height: 1.04; letter-spacing: -.03em; }
+.dtReaction p { margin-top: 14px; display: flex; flex-direction: column; gap: 4px; }
+.dtReaction strong { font-size: 20px; letter-spacing: .15em; text-transform: uppercase; color: var(--soft); }
+.dtReaction span { font-size: 28px; line-height: 1.28; }
+.detektor[data-step="3"] .dtPaper, .detektor[data-step="3"] .dtTool { opacity: .1; filter: blur(2px); }
+.dtResearch { position: absolute; left: 150px; top: 236px; width: 1280px; z-index: 6; }
+.dtFocus { font-size: 38px; font-weight: 700; line-height: 1.22; }
+.dtDetail { margin-top: 10px; font-size: 34px; line-height: 1.28; color: var(--soft); }
+.dtQuote { margin-top: 60px; font-family: var(--font-display); font-weight: 800; font-size: 68px; line-height: 1.03; letter-spacing: -.035em; text-wrap: balance; }
+.dtQuote cite { display: block; margin-top: 20px; font-family: var(--font-body); font-style: normal; font-size: 20px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+/* ------------------------------------------------------- EPA → ECPA */
+
+.insattning { position: absolute; inset: 0; }
+.insLetter { --c: var(--human); position: absolute; left: var(--x); top: 240px; width: 300px; translate: -50% 0; z-index: 3; text-align: center;
+  transition: left 1.1s var(--ease), opacity var(--mid) var(--ease), transform var(--slow) var(--ease), filter var(--mid) var(--ease); }
+.insLetter[data-role="ai"] { --c: var(--ai); }
+.insLetter[data-role="shared"] { --c: var(--accent-positive); }
+.insLetter strong { display: block; font-family: var(--font-display); font-weight: 800; font-size: 214px; line-height: .9; letter-spacing: -.04em; color: var(--c);
+  text-shadow: 0 0 44px color-mix(in srgb, var(--c) 32%, transparent); }
+.insLetter small { display: block; margin-top: 30px; font-size: 22px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+.insLetter p { margin-top: 10px; font-size: 28px; line-height: 1.28; color: var(--muted); text-wrap: balance; text-shadow: 0 2px 14px color-mix(in srgb, var(--bg) 85%, transparent); }
+.insLetter small { text-shadow: 0 2px 12px color-mix(in srgb, var(--bg) 85%, transparent); }
+.insLetter[data-on="false"] { opacity: 0; transform: translateY(140px) scale(.86); filter: blur(8px); }
+.insLetter[data-inserted="true"] strong { text-shadow: 0 0 70px color-mix(in srgb, var(--c) 62%, transparent); }
+.insattning[data-resting="true"] .insLetter { opacity: .26; filter: blur(1px); }
+.insNote { position: absolute; left: 96px; top: 104px; width: 1400px; z-index: 5; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 62px; line-height: 1.04; letter-spacing: -.038em; text-wrap: balance; }
+
+/* ----------------------------------------------------------- videoväggen */
+
+.vagg { position: absolute; inset: 0; }
+.vgGrid { position: absolute; left: 72px; top: 64px; right: 72px; bottom: 150px; z-index: 2; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 14px; }
+.vagg[data-count="4"] .vgGrid { grid-template-columns: repeat(2, 1fr); }
+.vagg[data-count="5"] .vgGrid, .vagg[data-count="3"] .vgGrid { grid-template-columns: repeat(3, 1fr); }
+.vgCell { position: relative; margin: 0; overflow: hidden; border-radius: 14px; background: color-mix(in srgb, var(--bg) 60%, #000); box-shadow: var(--shadow); }
+.vgCell video, .vgCell img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.vgTag { position: absolute; left: 14px; top: 14px; padding: 6px 13px 5px; border-radius: 999px; font-size: 16px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  background: var(--ai); color: var(--on-accent-secondary, var(--bg)); }
+.vgVeil { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; transition: opacity var(--mid) var(--ease);
+  background: radial-gradient(ellipse 72% 62% at 50% 46%, color-mix(in srgb, var(--bg) 58%, transparent), color-mix(in srgb, var(--bg) 88%, transparent)); }
+.vgVeil[data-on="true"] { opacity: 1; }
+.vgTitle { position: absolute; left: 150px; top: 250px; width: 1300px; z-index: 4; text-align: center; opacity: 0; transform: translateY(-90px) scale(1.04);
+  transition: opacity .45s var(--ease), transform .95s cubic-bezier(.34, 1.3, .5, 1); }
+.vgTitle[data-on="true"] { opacity: 1; transform: none; }
+.vgTitle > p:first-child { justify-content: center; }
+.vgTitle h2 { margin-top: 18px; font-family: var(--font-display); font-weight: 800; font-size: 136px; line-height: .96; letter-spacing: -.05em; }
+.vgTitle h2 + p { margin-top: 24px; font-size: 34px; line-height: 1.3; color: var(--soft); }
+.vgNote { position: absolute; left: 150px; top: 640px; width: 1300px; z-index: 5; text-align: center; font-size: 34px; font-weight: 700; }
+
+/* ----------------------------------------------------------- människoorden */
+
+.ord { position: absolute; inset: 0; }
+.ordHead { position: absolute; left: 96px; top: 84px; z-index: 5; }
+.ordLines { position: absolute; left: 96px; top: 148px; width: 930px; z-index: 3; margin: 0; padding: 0; list-style: none; display: grid; gap: 24px;
+  transition: opacity var(--mid) var(--ease), filter var(--mid) var(--ease); }
+.ordLines li { padding-left: 24px; border-left: 3px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+.ordLines p { font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 42px; line-height: 1.12; letter-spacing: -.025em; text-wrap: balance; }
+.ordLines small { display: block; margin-top: 8px; font-size: 18px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.litWord { border-radius: 6px; transition: color .9s var(--ease), text-shadow .9s var(--ease), background-color .9s var(--ease); }
+.litWord[data-lit="true"] { color: var(--human); background: color-mix(in srgb, var(--human) 14%, transparent); text-shadow: 0 0 28px color-mix(in srgb, var(--human) 55%, transparent); }
+.ordLabel { position: absolute; left: 96px; top: 652px; z-index: 4; font-family: var(--font-display); font-weight: 800; font-size: 54px; line-height: 1; letter-spacing: -.03em; color: var(--human); }
+.ord[data-final="true"] .ordLines { opacity: .18; filter: blur(1.5px); }
+.ordFinal { position: absolute; left: 96px; top: 280px; width: 940px; z-index: 5; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 78px; line-height: 1.03; letter-spacing: -.042em; text-wrap: balance; }
+
+/* ---------------------------------------------------------------- verben */
+
+.verben { position: absolute; inset: 0; }
+.vbRow { --c: var(--muted); position: absolute; left: 96px; top: calc(232px + var(--row) * 190px); width: 950px; z-index: 3; transition: top 1.1s var(--ease), opacity var(--mid) var(--ease); }
+.vbRow[data-on="false"] { opacity: 0; }
+.vbRow[data-role="ai"] { --c: var(--ai); }
+.vbRow[data-role="human"] { --c: var(--human); }
+.vbLabel { font-size: 22px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: color-mix(in srgb, var(--c) 70%, var(--ink)); }
+.vbRow ul { margin: 14px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 16px; }
+.vbRow li { padding: 16px 26px 17px; border-radius: 12px; font-family: var(--font-display); font-weight: 800; font-size: 42px; line-height: 1; letter-spacing: -.02em;
+  background: color-mix(in srgb, var(--c) 18%, var(--glass)); border: 2px solid color-mix(in srgb, var(--c) 72%, transparent); box-shadow: var(--shadow);
+  animation: vbIn .75s var(--ease) both; animation-delay: calc(var(--i) * .13s); }
+.vbRow[data-role="passive"] li { background: var(--glass); border-color: color-mix(in srgb, var(--ink) 22%, transparent); color: var(--muted); font-weight: 600; font-style: italic; }
+@keyframes vbIn { from { opacity: 0; transform: perspective(700px) translateY(20px) rotateX(70deg); } }
+.verben[data-still="true"] .vbRow li { animation: none; }
+.verben[data-final="true"] .vbRow { opacity: .5; }
+.vbFinal { position: absolute; left: 96px; top: 574px; width: 950px; z-index: 5; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 54px; line-height: 1.04; letter-spacing: -.04em; text-wrap: balance; }
+
+/* ------------------------------------------------------------- eftertexten */
+
+.eftertext { position: absolute; left: 96px; top: 150px; width: 940px; z-index: 3; }
+.etTitle { margin-top: 22px; font-family: var(--font-display); font-weight: 800; font-size: 100px; line-height: .98; letter-spacing: -.048em; }
+.etRoles { margin: 64px 0 0; display: grid; gap: 34px; }
+.etRoles > div { display: grid; grid-template-columns: 250px 1fr; align-items: end; column-gap: 28px; }
+.etRoles dt { padding-bottom: 8px; font-size: 22px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); text-align: right; }
+.etRoles dd { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 60px; line-height: 1; letter-spacing: -.03em; }
+.etRoles dd[data-blank] i { display: block; width: 440px; height: 3px; margin-bottom: 8px; background: color-mix(in srgb, var(--ink) 60%, transparent); }
+.etFoot { margin-top: 64px; font-size: 20px; line-height: 1.5; color: var(--muted); }
+
+/* ---------------------------------------------------------------- linsen */
+
+.lins { position: absolute; inset: 0; }
+.lins > * { transition: opacity var(--mid) var(--ease), filter var(--mid) var(--ease); }
+.lnRef { position: absolute; left: 96px; top: 196px; width: 900px; margin: 0; z-index: 3; padding: 18px 26px 20px; border-radius: 16px;
+  background: var(--glass); border: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 var(--glass-top); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+.lnRef figcaption { font-size: 17px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.lnRef blockquote { margin-top: 8px; font-size: 27px; line-height: 1.34; font-style: italic; }
+.lnVerdict { margin-top: 10px; display: flex; align-items: center; gap: 10px; font-size: 25px; font-weight: 700; }
+.lnQuestions { position: absolute; left: 96px; top: 392px; width: 930px; z-index: 4; margin: 0; padding: 0; list-style: none; display: grid; gap: 18px; }
+.lnQuestions h3 { font-family: var(--font-display); font-weight: 800; font-size: 36px; line-height: 1.1; letter-spacing: -.02em; }
+.lnQuestions p { margin-top: 6px; font-size: 26px; line-height: 1.28; color: var(--soft); }
+.lnQuestions li[data-on="true"][data-current="false"] { opacity: .42; }
+.lins[data-resting="true"] .lnQuestions, .lins[data-resting="true"] .lnRef { opacity: .05; filter: blur(3px); }
+.lnNote { position: absolute; left: 96px; top: 300px; width: 940px; z-index: 5; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 74px; line-height: 1.03; letter-spacing: -.042em; text-wrap: balance; }
+/* Bildläget full (3 oktober 2026): två spalter över x 150–1450 i stället för en tom högersida. Rösten
+   står kvar till vänster som underlag, och frågorna kommer en i taget till höger, med större grad. */
+:global([data-layout="full"]) .lins .head { left: 150px; width: 1300px; }
+:global([data-layout="full"]) .lnRef { left: 150px; top: 230px; width: 500px; padding: 22px 30px 24px; }
+:global([data-layout="full"]) .lnRef figcaption { font-size: 18px; }
+:global([data-layout="full"]) .lnRef blockquote { margin-top: 12px; font-size: 32px; line-height: 1.32; }
+:global([data-layout="full"]) .lnVerdict { margin-top: 14px; font-size: 28px; }
+:global([data-layout="full"]) .lnQuestions { left: 730px; top: 230px; width: 720px; gap: 30px; }
+:global([data-layout="full"]) .lnQuestions h3 { font-size: 44px; }
+:global([data-layout="full"]) .lnQuestions p { margin-top: 8px; font-size: 31px; }
+:global([data-layout="full"]) .lnNote { left: 150px; width: 1300px; font-size: 88px; }
+
+/* ---------------------------------------------------------------- gapet */
+
+/* Två banor från samma ljus (MatteusGap, 1 oktober 2026). Den övre tecknas när sliden kommer, den nedre
+   på nästa klick och gapet fylls; vid slutsatsen vänder den nedre uppåt och gapet sluts. Banorna slutar
+   vid x 1060 och texterna står till höger (x 1100–1520), i höjd mellan banornas ändar (y 316–638).
+   Ankomsten spelas bara i läge 0, så att ett steg bakåt och fram inte tecknar om den övre banan. */
+.gapet { --gp-light: var(--hz2-hot); --gp-dim: color-mix(in srgb, var(--ink) 44%, transparent); --gp-draw: cubic-bezier(.55, 0, .35, 1);
+  --gp-glow: 0 0 14px 4px color-mix(in srgb, var(--gp-light) 80%, transparent), 0 0 56px 16px color-mix(in srgb, var(--hz2-glow) 46%, transparent);
+  position: absolute; inset: 0; }
+:global([data-tone="light"]) .gapet { --gp-light: color-mix(in srgb, var(--accent-bright) 55%, var(--hz2-glow)); }
+.gapet .head h2 { transition: opacity var(--fast) var(--ease); }
+.gapet[data-resting="true"] .head h2 { opacity: 0; }
+
+.gpPlot { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; overflow: visible; pointer-events: none; }
+.gpArea { fill: color-mix(in srgb, var(--hz2-glow) 15%, transparent); opacity: 0; transition: opacity 1.2s var(--ease) 1.2s, d 1.9s var(--gp-draw); }
+.gapet[data-lower="true"] .gpArea { opacity: 1; }
+.gpGhost { fill: none; stroke: var(--gp-dim); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 3 12; opacity: 0; transition: opacity .9s var(--ease) .5s; }
+.gapet[data-closes="true"] .gpGhost { opacity: .8; }
+.gpUpper, .gpLower { fill: none; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 1; }
+.gpUpper { stroke: var(--gp-light); filter: drop-shadow(0 0 10px var(--hz2-glow)); }
+.gpLower { stroke: var(--gp-dim); stroke-dashoffset: 1;
+  transition: stroke-dashoffset 2s var(--gp-draw) .15s, d 1.9s var(--gp-draw), stroke .9s var(--ease) .4s, filter .9s var(--ease) .4s; }
+.gapet[data-lower="true"] .gpLower { stroke-dashoffset: 0; }
+.gapet[data-closes="true"] .gpLower { stroke: var(--gp-light); filter: drop-shadow(0 0 10px var(--hz2-glow)); }
+
+/* Punkterna i banornas ände. Den nedre åker med banans ände uppåt (translate i samma takt som d). */
+.gpDot { position: absolute; left: 0; top: 0; z-index: 4; width: 22px; height: 22px; border-radius: 50%; offset-rotate: 0deg; background: var(--gp-light); box-shadow: var(--gp-glow); }
+.gpUpperDot { offset-distance: 100%; }
+.gpRide { position: absolute; left: 0; top: 0; width: 1600px; height: 900px; z-index: 4; pointer-events: none; transition: translate 1.9s var(--gp-draw); }
+.gapet[data-closes="true"] .gpRide { translate: 0 var(--gp-lift); }
+.gpLowerDot { offset-distance: 0%; opacity: 0; background: var(--gp-dim); box-shadow: none;
+  transition: offset-distance 2s var(--gp-draw) .15s, opacity .3s var(--ease) .15s, background-color .9s var(--ease) .4s, box-shadow .9s var(--ease) .4s; }
+.gapet[data-lower="true"] .gpLowerDot { offset-distance: 100%; opacity: 1; }
+.gapet[data-closes="true"] .gpLowerDot { background: var(--gp-light); box-shadow: var(--gp-glow); }
+
+/* Startpunkten i ljuset och förgreningen, där den nedre banan vänder uppåt. */
+.gpMark { position: absolute; left: var(--x); top: var(--y); z-index: 3; width: 0; height: 0; }
+.gpMark::before { content: ""; position: absolute; left: -10px; top: -10px; width: 20px; height: 20px; border-radius: 50%; border: 3px solid var(--gp-light); background: var(--bg);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--hz2-glow) 60%, transparent); }
+.gpBranch { opacity: 0; scale: .3; transition: opacity .6s var(--ease) .1s, scale .9s var(--ease) .1s; }
+.gapet[data-closes="true"] .gpBranch { opacity: 1; scale: 1; }
+
+.gpSide { position: absolute; left: 1100px; width: 420px; z-index: 5; }
+.gpSide small { display: flex; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+.gpSide small i { flex: none; width: 12px; height: 12px; border-radius: 50%; background: var(--gp-light); box-shadow: 0 0 12px var(--hz2-glow); }
+.gpLow small i { background: var(--gp-dim); box-shadow: none; }
+.gpSide p { margin-top: 10px; font-size: 30px; line-height: 1.24; font-weight: 600; text-wrap: balance; }
+/* Den övre texten hänger under sin punkt och den nedre står ovanför sin, så att båda står i gapets höjd
+   och vattnets linjer (från y 655) inte skär genom texten. */
+.gpUp { top: 316px; transition: opacity var(--mid) var(--ease), filter var(--mid) var(--ease); }
+.gpLow { bottom: 262px; }
+.gapet[data-step="1"] .gpLow[data-on="true"] { transition-delay: 1.4s; }
+.gapet[data-resting="true"] .gpSide { opacity: .4; filter: saturate(.6); }
+.gpGapLabel { position: absolute; left: 760px; top: 604px; z-index: 4; font-size: 20px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--soft); }
+.gapet[data-step="1"] .gpGapLabel[data-on="true"] { transition-delay: 2s; }
+.gpStartLabel { position: absolute; left: 96px; top: 616px; width: 340px; z-index: 4; font-size: 20px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.gpNote { position: absolute; left: 96px; top: 140px; width: 980px; z-index: 6; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 62px; line-height: 1.04; letter-spacing: -.04em; text-wrap: balance; }
+.gapet[data-resting="true"] .gpNote[data-on="true"] { transition-delay: .5s; --play-delay: 1s; }
+
+/* Ankomsten: startpunkten, den övre banan med sin punkt och sist texten. */
+.gapet[data-still="false"][data-step="0"] .gpStart { animation: gpPop .8s var(--ease) .5s backwards; }
+.gapet[data-still="false"][data-step="0"] .gpUpper { animation: gpDraw 2.2s var(--gp-draw) .9s backwards; }
+.gapet[data-still="false"][data-step="0"] .gpUpperDot { animation: gpRun 2.2s var(--gp-draw) .9s backwards; }
+.gapet[data-still="false"][data-step="0"] .gpUp { animation: gpIn 1s var(--ease) 2.5s backwards; }
+@keyframes gpPop { from { opacity: 0; scale: .3; } }
+@keyframes gpDraw { from { stroke-dashoffset: 1; } }
+@keyframes gpRun { from { offset-distance: 0%; } }
+@keyframes gpIn { from { opacity: 0; transform: translateY(18px); filter: blur(6px); } }
+
+/* --------------------------------------------------------------- taggig */
+
+/* Den taggiga gränsen (JaggedReveal, 1 oktober 2026): en bergsrygg i AI:s turkos över sjön. Den tecknas
+   upp till toppen när sliden kommer (--tg-off) och vidare ned i dalen på nästa klick; vid slutsatsen glider
+   d till den flyttade ryggen medan den gamla står kvar streckad. Toppen x 640, dalen x 1150. Inget rött.
+   Horisonten 0,8 som i gapet: då hamnar en källrad på två rader på vattnet, under horisontlinjen. */
+.taggig { --tg-ai: color-mix(in srgb, var(--ai) 62%, var(--hz2-hot)); --tg-dim: color-mix(in srgb, var(--ink) 40%, transparent); --tg-draw: cubic-bezier(.55, 0, .35, 1);
+  position: absolute; inset: 0; }
+:global([data-tone="light"]) .taggig { --tg-ai: color-mix(in srgb, var(--ai) 78%, var(--ink)); }
+.tgPlot { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; overflow: visible; pointer-events: none; }
+.tgLine { fill: none; stroke: var(--tg-ai); stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: var(--tg-off);
+  filter: drop-shadow(0 0 9px color-mix(in srgb, var(--ai) 70%, transparent));
+  transition: stroke-dashoffset 2.2s var(--tg-draw) .1s, d 1.9s var(--tg-draw); }
+.tgGhost { fill: none; stroke: var(--tg-dim); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 3 11; opacity: 0; transition: opacity .9s var(--ease) .5s; }
+.taggig[data-moves="true"] .tgGhost { opacity: .85; }
+
+.tgPeakDot { position: absolute; left: calc(var(--x) - 11px); top: calc(var(--y) - 11px); z-index: 4; width: 22px; height: 22px; border-radius: 50%; background: var(--tg-ai);
+  box-shadow: 0 0 14px 4px color-mix(in srgb, var(--tg-ai) 80%, transparent), 0 0 50px 14px color-mix(in srgb, var(--ai) 45%, transparent); transition: translate 1.9s var(--tg-draw); }
+.taggig[data-moves="true"] .tgPeakDot { translate: 0 var(--tg-rise); }
+
+.tgSide { position: absolute; z-index: 5; }
+.tgSide small { display: flex; align-items: center; gap: 12px; font-size: 20px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+.tgSide small i { flex: none; width: 12px; height: 12px; border-radius: 50%; background: var(--tg-dim); }
+.tgHigh small i { background: var(--tg-ai); box-shadow: 0 0 12px var(--ai); }
+/* Det AI klarar: stort när sliden kommer, sedan krymper texten (inte etiketten) mot toppen. */
+.tgHigh { left: 700px; top: 150px; width: 820px; transition: opacity var(--mid) var(--ease), filter var(--mid) var(--ease); }
+.tgHigh p { margin-top: 14px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 58px; line-height: 1.06; letter-spacing: -.035em; text-wrap: balance;
+  transform-origin: 0 0; transition: transform 1s var(--ease); }
+.tgLines > span + span { margin-top: 12px; font-size: .52em; line-height: 1.25; letter-spacing: -.01em; }
+.taggig[data-dip="true"] .tgHigh p { transform: scale(.6); }
+.taggig[data-dip="true"] .tgHigh { opacity: .72; }
+/* Det AI klarar sämre: nästa tanke, i samma typsnitt som toppen. Ovanför klockan och förankrat
+   nedifrån, så att fler rader växer uppåt. Andra raden 28 px, läsbar längst bak. */
+.tgLow { left: 960px; bottom: 414px; width: 580px; }
+.tgLow p { margin-top: 12px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 44px; line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.tgLow .tgLines > span + span { margin-top: 8px; font-size: .64em; }
+.taggig[data-step="1"] .tgLow[data-on="true"] { transition-delay: 1.5s; }
+.taggig[data-resting="true"] .tgSide { opacity: .35; filter: saturate(.6); }
+
+/* Föremålet faller ned i dalen och studsar lätt. */
+.tgObject { position: absolute; left: calc(var(--x) - 88px); top: calc(var(--y) - 200px); z-index: 4; width: 176px; height: 176px; object-fit: contain;
+  filter: drop-shadow(0 24px 40px color-mix(in srgb, #000 45%, transparent)); transition: opacity var(--mid) var(--ease); }
+.taggig[data-dip="false"] .tgObject { opacity: 0; visibility: hidden; }
+.taggig[data-resting="true"] .tgObject { opacity: .6; }
+
+.tgNote { position: absolute; left: 96px; top: 268px; width: 480px; z-index: 6; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 64px; line-height: 1.02; letter-spacing: -.042em; text-wrap: balance; }
+.taggig[data-resting="true"] .tgNote[data-on="true"] { transition-delay: .4s; --play-delay: .9s; }
+
+/* Ankomsten: ryggen upp till toppen, texten och sist punkten i toppen. Klockans fall hör till läge 1. */
+.taggig[data-still="false"][data-step="0"] .tgLine { animation: tgDraw 1.5s var(--tg-draw) .7s backwards; }
+.taggig[data-still="false"][data-step="0"] .tgHigh { animation: tgIn 1s var(--ease) 1.1s backwards; }
+.taggig[data-still="false"][data-step="0"] .tgPeakDot { animation: tgPop .7s var(--ease) 2s backwards; }
+.taggig[data-still="false"][data-step="1"] .tgObject { animation: tgDrop 1.1s cubic-bezier(.3, 0, .4, 1) .7s backwards; }
+@keyframes tgDraw { from { stroke-dashoffset: 1; } }
+@keyframes tgIn { from { opacity: 0; transform: translateY(18px); filter: blur(6px); } }
+@keyframes tgPop { from { opacity: 0; scale: .3; } }
+@keyframes tgDrop { 0% { opacity: 0; translate: 0 -380px; rotate: -12deg; } 50% { opacity: 1; translate: 0 10px; rotate: 4deg; } 72% { translate: 0 -8px; rotate: -2deg; } 100% { translate: 0 0; rotate: 0deg; } }
+
+/* Reducerad rörelse och stilla lägen: allt står på plats. */
+@media (prefers-reduced-motion: reduce) {
+  .genvag *, .detektor *, .insattning *, .vagg *, .ord *, .verben *, .eftertext *, .lins *, .gapet *, .taggig * { animation: none !important; transition: none !important; }
+}

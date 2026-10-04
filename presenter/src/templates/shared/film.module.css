@@ -1,0 +1,4 @@
+/* Filmen i scenerna (shared/Film.tsx). Grundreglerna ur elevföreläsningens lecture.module.css, som
+   behåller sina egna sammanhangsregler för sin egen Film. */
+.film{position:relative;width:100%;height:100%;background:#080806;overflow:hidden}.film video,.film>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.decorative video,.decorative>img{object-fit:cover}
+.mediaControls{position:absolute;bottom:12px;right:12px;display:flex;gap:8px;z-index:5;font-size:16px;color:#fff}.mediaControls button,.mediaControls>span{padding:8px 12px;border:1px solid #ffffff70;background:#10100eed;color:#fff;border-radius:7px}

@@ -1,0 +1,56 @@
+/* Granskningsvyn: ett arbetsverktyg, inte en slide. Ljus, lugn och tät. */
+
+.page {
+  min-height: 100vh;
+  padding: 40px 48px 80px 48px;
+  padding-right: 560px;
+  background: #f4f2ee;
+  color: #1d1c1a;
+  font-family: var(--font-inter, system-ui), system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.head h1 { margin: 4px 0 10px; font-size: 30px; line-height: 1.15; letter-spacing: -.01em; }
+.kicker { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #6b675f; }
+.lead { max-width: 760px; margin: 0; color: #4a4741; }
+
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin: 26px 0 18px; padding: 14px 16px; border: 1px solid #dcd7ce; border-radius: 10px; background: #fff; }
+.controls label { display: inline-flex; align-items: center; gap: 6px; }
+.controls input[type="number"] { width: 58px; padding: 3px 6px; border: 1px solid #cfc9bd; border-radius: 6px; }
+.controls select { padding: 3px 6px; border: 1px solid #cfc9bd; border-radius: 6px; background: #fff; }
+.controls button { padding: 7px 14px; border: 1px solid #b9b2a4; border-radius: 8px; background: #fff; font-weight: 600; cursor: pointer; }
+.controls .primary { border-color: #1d4f91; background: #1d4f91; color: #fff; }
+.progress { color: #4a4741; font-variant-numeric: tabular-nums; }
+
+.summary { margin: 0 0 22px; }
+.summary p { margin: 0 0 8px; }
+.summary ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.summary li { padding: 5px 10px; border: 1px solid #dcd7ce; border-radius: 999px; background: #fff; color: #6b675f; }
+.summary li[data-hit] { border-color: #c2410c; background: #fff1e8; color: #7c2d12; }
+.saved { margin-top: 10px !important; color: #3f6212; }
+
+.findings h2, .sheet h2 { margin: 26px 0 10px; font-size: 19px; }
+.findings table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #dcd7ce; }
+.findings th, .findings td { padding: 7px 10px; border-bottom: 1px solid #ece8e0; text-align: left; vertical-align: top; }
+.findings th { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #6b675f; }
+.findings td:first-child { white-space: nowrap; }
+.findings code, .saved code { font-size: 13px; }
+.tag { display: inline-block; margin-right: 6px; padding: 1px 7px; border-radius: 5px; background: #ece8e0; font-size: 12px; font-weight: 700; }
+.tag[data-typ="talare"], .tag[data-typ="marginal"], .tag[data-typ="prompt"], .tag[data-typ="media"], .tag[data-typ="konsol"] { background: #fde2d4; color: #7c2d12; }
+
+.sheet ol { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.sheet li a { display: block; color: inherit; text-decoration: none; }
+.sheet img, .noImage { display: block; width: 100%; aspect-ratio: 16 / 9; border: 1px solid #cfc9bd; border-radius: 6px; background: #111; object-fit: cover; }
+.noImage { display: grid; place-items: center; color: #aaa; }
+.sheet li span { display: block; margin-top: 4px; font-size: 12px; color: #4a4741; font-variant-numeric: tabular-nums; }
+.sheet li[data-flagged] img { outline: 3px solid #c2410c; outline-offset: 1px; }
+
+/* Scenrutan i 1600 × 900, nerskalad till en liveruta. */
+.live { position: fixed; top: 40px; right: 40px; width: 480px; height: 270px; overflow: hidden; border: 1px solid #cfc9bd; border-radius: 10px; background: #111; box-shadow: 0 8px 24px rgb(0 0 0 / .12); }
+.frame { width: 1600px; height: 900px; border: 0; transform: scale(.3); transform-origin: 0 0; pointer-events: none; }
+
+@media (max-width: 1100px) {
+  .page { padding: 24px 16px 60px; }
+  .live { position: static; margin: 0 0 18px; }
+}

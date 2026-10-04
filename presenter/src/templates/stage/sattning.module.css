@@ -1,0 +1,17 @@
+/*
+ * Sättningen (sattning.tsx). Orden flyttas mellan sättningar utan övergång, som klipp; den sista landar
+ * i den riktiga rubriken, som tonar fram medan ordens lager försvinner. Koordinater på 1600 × 900.
+ */
+
+.sat { position: absolute; inset: 0; }
+.counter { position: absolute; left: 96px; top: 84px; display: flex; gap: 18px; align-items: baseline; margin: 0;
+  font-family: var(--font-label, var(--font-mono)); font-size: 16px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.counter b { font-size: 22px; letter-spacing: .08em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.sat[data-landed="true"] .counter b { color: var(--human-text, var(--human)); }
+.shuffle { position: absolute; inset: 0; pointer-events: none; }
+.shuffle span { position: absolute; transform-origin: 0 0; white-space: nowrap; line-height: 1; font-family: var(--font-display); color: var(--ink); }
+.shuffle span[data-soft] { color: var(--human-text, var(--human)); }
+.final { position: absolute; left: 96px; top: 236px; width: 880px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 92px; line-height: 1.02;
+  letter-spacing: -.04em; text-wrap: balance; }
+[data-tone="light"] .sat { --human-text: color-mix(in srgb, var(--human) 42%, var(--ink)); }
+.sat[data-still="true"] *, .sat[data-still="true"] *::before { transition: none !important; animation: none !important; }

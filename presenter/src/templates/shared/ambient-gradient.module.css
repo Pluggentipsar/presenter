@@ -1,0 +1,11 @@
+.field{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none;isolation:isolate;--light-a:var(--human,var(--accent-bright));--light-b:var(--ai,var(--accent-secondary));--ground:var(--surface,var(--bg))}
+.light{position:absolute;width:110%;height:150%;left:6%;top:-35%;background:radial-gradient(ellipse at center,color-mix(in srgb,var(--light-b) 68%,transparent),transparent 65%);opacity:.72;transform-origin:50% 50%;animation:driftOne 22s ease-in-out infinite;will-change:transform}
+.light:nth-child(2){left:27%;top:9%;width:105%;height:130%;background:radial-gradient(ellipse at center,color-mix(in srgb,var(--light-a) 66%,transparent),transparent 65%);animation:driftTwo 27s ease-in-out infinite;opacity:.66}
+.light:nth-child(3){left:-40%;top:-80%;width:125%;height:200%;background:radial-gradient(ellipse at center,color-mix(in srgb,var(--light-b) 48%,transparent),transparent 64%);animation:driftThree 31s ease-in-out infinite;opacity:.5}
+.shade{position:absolute;inset:0;background:linear-gradient(100deg,color-mix(in srgb,var(--ground) 70%,transparent),transparent 76%),linear-gradient(0deg,color-mix(in srgb,var(--ground) 58%,transparent),transparent 28%,transparent 78%,color-mix(in srgb,var(--ground) 55%,transparent))}
+.field[data-quiet=true] .light{opacity:.36}
+.field[data-still=true] .light,.field[data-paused=true] .light{animation-play-state:paused;will-change:auto}
+@keyframes driftOne{0%,100%{transform:translate(5%,-9%) rotate(-12deg) scale(.95)}50%{transform:translate(-23%,17%) rotate(17deg) scale(1.1)}}
+@keyframes driftTwo{0%,100%{transform:translate(15%,12%) rotate(10deg)}50%{transform:translate(-20%,-21%) rotate(-18deg) scale(1.12)}}
+@keyframes driftThree{0%,100%{transform:translate(-5%,4%) rotate(-15deg)}50%{transform:translate(25%,18%) rotate(9deg)}}
+@media(prefers-reduced-motion:reduce){.light{animation:none;will-change:auto}}

@@ -1,0 +1,2033 @@
+@import "tailwindcss";
+
+/* Default tokens - skrivs över per tema via style-attribut på root-container */
+:root {
+  --bg: #0b0c0f;
+  --bg-surface: #14161b;
+  --text: #ece9e2;
+  --text-muted: #8a8a92;
+  --accent: #06b6d4;
+  --accent-glow: rgba(6, 182, 212, 0.35);
+  --accent-dim: rgba(6, 182, 212, 0.15);
+
+  --font-display: "Fraunces", "Iowan Old Style", "Palatino", serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Consolas", monospace;
+  --heading-weight: 600;
+  --heading-tracking: -0.025em;
+  --heading-case: normal;
+  --body-tracking: 0;
+
+  --radius: 0.75rem;
+  --border-width: 1px;
+  --slide-max-width: 72rem;
+
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-duration: 0.6s;
+
+  --ornament-color: var(--accent);
+
+  /* Decoration system — memphis-riso och liknande uttalade stilar.
+     Default: alla "off" (none / 0). Memphis_riso sätter dem via theme-vars. */
+  --title-shadow: none;
+  --card-shadow: none;
+  --card-shadow-alt: none;
+  --card-border: none;
+}
+
+/* Memphis-riso decorations (noise + corner-ornaments).
+   Default-dolda; visas bara när data-theme="memphis_riso" är aktivt. */
+.memphis-riso-noise {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.memphis-ornaments {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+[data-theme="memphis_riso"] .memphis-riso-noise {
+  opacity: 0.18;
+}
+[data-theme="memphis_riso"] .memphis-ornaments {
+  opacity: 1;
+}
+.memphis-bubble-tail {
+  display: none;
+}
+[data-theme="memphis_riso"] .memphis-bubble-tail {
+  display: block;
+}
+.memphis-voice-spotlight {
+  display: none;
+}
+[data-theme="memphis_riso"] .memphis-voice-spotlight {
+  display: block;
+  background: radial-gradient(
+    ellipse 75% 100% at 22% 50%,
+    #F4ECD8 0%,
+    rgba(244, 236, 216, 0.94) 30%,
+    rgba(244, 236, 216, 0.56) 50%,
+    transparent 75%
+  );
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-surface: var(--bg-surface);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-glow: var(--accent-glow);
+  --color-accent-dim: var(--accent-dim);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  letter-spacing: var(--body-tracking);
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.allow-scroll {
+  overflow: auto;
+}
+
+em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.slide-container strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.slide-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  font-family: var(--font-body);
+  letter-spacing: var(--body-tracking);
+}
+
+@media (max-width: 768px) {
+  .slide-container {
+    padding: 2rem;
+  }
+}
+
+/* Prose styling för MDX-rendererad markdown inuti slides */
+.slide-prose h1 {
+  font-family: var(--font-display);
+  font-weight: var(--heading-weight);
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 1.05;
+  letter-spacing: var(--heading-tracking);
+  text-transform: var(--heading-case);
+  margin: 0;
+}
+
+.slide-prose.vb-title-xl h1,
+.vb-title-xl h1 {
+  font-size: clamp(4rem, 10vw, 8rem);
+  line-height: 0.98;
+}
+
+.slide-prose.vb-title-2xl h1,
+.vb-title-2xl h1 {
+  font-size: clamp(5rem, 13vw, 11rem);
+  line-height: 0.95;
+}
+
+.slide-prose.vb-title-3xl h1,
+.vb-title-3xl h1 {
+  font-size: clamp(6rem, 16vw, 14rem);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+}
+
+.slide-prose h2 {
+  font-family: var(--font-display);
+  font-weight: var(--heading-weight);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: var(--heading-tracking);
+  text-transform: var(--heading-case);
+  margin: 0 0 1rem 0;
+}
+
+.slide-prose h3 {
+  font-family: var(--font-display);
+  font-weight: var(--heading-weight);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: var(--heading-tracking);
+  text-transform: var(--heading-case);
+  margin: 0 0 0.75rem 0;
+}
+
+.slide-prose p {
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  line-height: 1.5;
+  margin: 0 0 1rem 0;
+  color: var(--text);
+}
+
+.slide-prose ul,
+.slide-prose ol {
+  margin: 0;
+  padding: 0 0 0 1.5rem;
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  line-height: 1.6;
+}
+
+.slide-prose li {
+  margin: 0 0 0.5rem 0;
+}
+
+.slide-prose blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1.5rem;
+  font-style: italic;
+  color: var(--text-muted);
+  margin: 1rem 0;
+}
+
+.slide-prose code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--bg-surface);
+  padding: 0.2rem 0.4rem;
+  border-radius: calc(var(--radius) / 3);
+  color: var(--accent);
+}
+
+.slide-prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/*
+ * MEMPHIS_RISO — Bagel Fat One är rund och chunky och behöver luft.
+ * Tightt line-height (1.05) gör att raderna pressar ihop sig särskilt
+ * vid mindre rubrikstorlekar och multi-rad. Vi släpper på lite för alla
+ * rubriknivåer + ger en aning letter-spacing.
+ */
+[data-theme="memphis_riso"] .slide-prose h1,
+[data-theme="memphis_riso"] h1 {
+  line-height: 1.18;
+  letter-spacing: 0.005em;
+}
+
+[data-theme="memphis_riso"] .slide-prose.vb-title-xl h1,
+[data-theme="memphis_riso"] .vb-title-xl h1 {
+  line-height: 1.08;
+}
+
+[data-theme="memphis_riso"] .slide-prose.vb-title-2xl h1,
+[data-theme="memphis_riso"] .vb-title-2xl h1 {
+  line-height: 1.02;
+}
+
+[data-theme="memphis_riso"] .slide-prose.vb-title-3xl h1,
+[data-theme="memphis_riso"] .vb-title-3xl h1 {
+  line-height: 0.98;
+}
+
+[data-theme="memphis_riso"] .slide-prose h2,
+[data-theme="memphis_riso"] h2 {
+  line-height: 1.22;
+}
+
+[data-theme="memphis_riso"] .slide-prose h3,
+[data-theme="memphis_riso"] h3 {
+  line-height: 1.25;
+}
+
+/* ====================================================================== */
+/* nattglas — premium dark glass theme (Apple Liquid Glass-inspired)     */
+/* ====================================================================== */
+
+/* Font smoothing — Apple-känsla */
+[data-theme="nattglas"] {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "ss01", "cv11", "kern";
+}
+
+/* Globala ambient orbs — fixed så de följer hela sessionen */
+[data-theme="nattglas"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 50% 40% at 8% 12%, rgba(122, 168, 255, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at 92% 88%, rgba(157, 122, 255, 0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 35% 30% at 80% 15%, rgba(122, 220, 255, 0.08) 0%, transparent 65%);
+}
+
+/* Global film grain — fixed, mycket subtil */
+[data-theme="nattglas"]::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+}
+
+/* Slide-container: gör bakgrunden subtle gradient så ambient orbs syns igenom */
+[data-theme="nattglas"] .slide-container {
+  background:
+    radial-gradient(ellipse 100% 60% at 50% 0%, rgba(122, 168, 255, 0.04) 0%, transparent 70%),
+    var(--bg);
+}
+
+/* Hoist alla slide-rendrar ovanför ambient pseudo (z-index 1-2 ovan) */
+[data-theme="nattglas"] .slide-container,
+[data-theme="nattglas"] [class*="h-full w-full"] {
+  position: relative;
+  z-index: 3;
+}
+
+/* Auto-glass på generiska "card-like" element — heuristic via border + bg.
+   Vi riktar inline-style-cards som har border-radius och bg-surface-färg. */
+[data-theme="nattglas"] .border-accent-dim,
+[data-theme="nattglas"] .border-white\/10 {
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.08));
+  border-top-color: var(--glass-border-top, rgba(255, 255, 255, 0.18));
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, var(--glass-tint, rgba(122, 168, 255, 0.04)) 100%);
+  backdrop-filter: blur(20px) saturate(170%) brightness(108%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%) brightness(108%);
+  box-shadow:
+    0 10px 32px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Selection: lila-blå istället för default */
+[data-theme="nattglas"] ::selection {
+  background: rgba(122, 168, 255, 0.35);
+  color: var(--text);
+}
+
+/* Heading-justeringar för nattglas-stil (mjukare tracking, lite mid-weight) */
+[data-theme="nattglas"] .slide-prose h1,
+[data-theme="nattglas"] .slide-prose h2,
+[data-theme="nattglas"] h1,
+[data-theme="nattglas"] h2 {
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+/* Subtle inner-glow på alla strong-element (bold-words) */
+[data-theme="nattglas"] strong {
+  text-shadow: 0 0 18px rgba(122, 168, 255, 0.35);
+}
+
+/* SectionDivider — frosted line + ambient under */
+[data-theme="nattglas"] .bg-accent {
+  background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+  box-shadow: 0 0 24px var(--accent-glow);
+}
+
+/* Förbättrad scroll-bar för ev. scrollade element (chat, prose) */
+[data-theme="nattglas"] ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+[data-theme="nattglas"] ::-webkit-scrollbar-thumb {
+  background: rgba(122, 168, 255, 0.25);
+  border-radius: 3px;
+}
+[data-theme="nattglas"] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ====================================================================== */
+/* dagsljus — ljus, projektor-säker tvilling till nattglas             */
+/* Sval pappersvit, vårgrön röst, gult dagsljus. Glas inverterat till ljust. */
+/* ====================================================================== */
+
+/* Root: font-smoothing + ljusa glas-card-variabler (läses av GlassDecorations) */
+[data-theme="dagsljus"] {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "ss01", "cv11", "kern";
+  --glass-card-bg: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(233, 237, 244, 0.62) 50%,
+    rgba(120, 135, 160, 0.1) 100%
+  );
+  --glass-card-brightness: 98%;
+  --glass-card-shadow: 0 8px 28px rgba(40, 52, 74, 0.1),
+    0 1px 2px rgba(40, 52, 74, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --glass-card-shadow-flat: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --ambient-overlay: 250, 251, 253;
+}
+
+/* Ambient orbs — grön + gult dagsljus, kantnära, låg alpha så centrum är rent */
+[data-theme="dagsljus"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 45% 38% at 6% 8%, rgba(52, 199, 89, 0.07) 0%, transparent 62%),
+    radial-gradient(ellipse 50% 42% at 94% 92%, rgba(255, 212, 59, 0.08) 0%, transparent 62%),
+    radial-gradient(ellipse 30% 26% at 88% 10%, rgba(52, 199, 89, 0.04) 0%, transparent 66%);
+}
+
+/* Film grain — MÖRK sval noise + multiply (vit-overlay syns inte på ljust) */
+[data-theme="dagsljus"]::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.025;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.06 0 0 0 0 0.078 0 0 0 0 0.11 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+}
+
+/* Slide-container: gult dagsljus uppifrån + hoist över ambient-pseudo */
+[data-theme="dagsljus"] .slide-container {
+  background:
+    radial-gradient(ellipse 100% 60% at 50% 0%, rgba(255, 212, 59, 0.05) 0%, transparent 70%),
+    var(--bg);
+}
+[data-theme="dagsljus"] .slide-container,
+[data-theme="dagsljus"] [class*="h-full w-full"] {
+  position: relative;
+  z-index: 3;
+}
+
+/* Auto-glass på generiska card-like element — LJUST recept (mörk hårfin kant,
+   sval-vit veil, cool-tonad mjuk skugga). Mörk botten skulle ge white-on-white. */
+[data-theme="dagsljus"] .border-accent-dim,
+[data-theme="dagsljus"] .border-white\/10 {
+  border: 1px solid var(--glass-border, rgba(16, 20, 28, 0.12));
+  border-top-color: var(--glass-border-top, rgba(255, 255, 255, 0.85));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    var(--glass-tint, rgba(120, 135, 160, 0.1)) 100%
+  );
+  backdrop-filter: blur(20px) saturate(140%) brightness(98%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%) brightness(98%);
+  box-shadow:
+    0 8px 28px rgba(40, 52, 74, 0.1),
+    0 1px 2px rgba(40, 52, 74, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* Selection: grön */
+[data-theme="dagsljus"] ::selection {
+  background: rgba(52, 199, 89, 0.28);
+  color: var(--text);
+}
+
+/* Heading: SF Pro, lite tyngre vikt (560) håller på svag projektor */
+[data-theme="dagsljus"] .slide-prose h1,
+[data-theme="dagsljus"] .slide-prose h2,
+[data-theme="dagsljus"] h1,
+[data-theme="dagsljus"] h2 {
+  font-weight: 560;
+  letter-spacing: -0.025em;
+}
+
+/* <strong>: mörkgrönt bläck + subtilt grönt markörsvep, ALDRIG glow.
+   Ordet bär kontrasten själv (ink-grön), den ljusa grönen är fyllnad bakom. */
+[data-theme="dagsljus"] strong {
+  color: var(--accent-ink);
+  background: linear-gradient(
+    180deg,
+    transparent 60%,
+    rgba(52, 199, 89, 0.2) 60%,
+    rgba(52, 199, 89, 0.2) 92%,
+    transparent 92%
+  );
+  padding: 0 0.05em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  text-shadow: none;
+}
+
+/* SectionDivider — grön frosted line + mjuk glow */
+[data-theme="dagsljus"] .bg-accent {
+  background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+  box-shadow: 0 0 24px var(--accent-glow);
+}
+
+/* Scrollbar — grön */
+[data-theme="dagsljus"] ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+[data-theme="dagsljus"] ::-webkit-scrollbar-thumb {
+  background: rgba(52, 199, 89, 0.3);
+  border-radius: 3px;
+}
+[data-theme="dagsljus"] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ── Slide-bakgrunder ──────────────────────────────────────────────────────
+   Två mekanismer, båda opt-in per slide.
+
+   1. `background`-propen (bild/video/platt färg). withSlideBg lägger ett skal
+      runt mallen som målar bakgrunden; mallens egen rot måste då bli
+      genomskinlig, annars målar den över skalet direkt.
+
+   2. Gradient (frontmatter `slideGradients`). Gradienten renderas som ett eget
+      lager längst bak. Mallar som målar sin egen basbakgrund — och de flesta
+      gör det, med `var(--slide-base, var(--bg))` eller rakt `var(--bg)` —
+      lade sig ovanpå den. På ett mörkt tema märktes det knappt; på
+      dagsljus, där var(--bg) är nästan vitt, försvann gradienten helt.
+      Det var Joels exakta repro.
+
+   Regeln träffar BARA direkta barn (och mallens rot när sliden har overlays,
+   som ligger ett steg ner i <SlideWithOverlays>). Inre ytor — AssessmentTwins
+   kort, DarkPatternsApp app-yta, LonelyTeenChat chattbubbla, PhoneFeedReveal
+   telefonskärm — ligger djupare och lämnas orörda. Det är avsiktligt: de ska
+   fortsätta vara ogenomskinliga.
+
+   Skalen undantas: har sliden både gradient och en background-prop är det
+   propen som ska synas (designpanelen varnar om kombinationen). */
+.slide-bg-shell > * {
+  background: transparent !important;
+}
+/* Suddad bakgrund: innehållet ligger i en data-slide-content-wrapper
+   (mallroten är då barnbarn) — töm den på bakgrund precis som videogrenen. */
+.slide-bg-shell [data-slide-content] > * {
+  background: transparent !important;
+}
+.slide-bg-video-shell [data-slide-content] > * {
+  background: transparent !important;
+}
+
+.slide-gradient-host > *:not(.slide-bg-shell):not(.slide-bg-video-shell),
+.slide-gradient-host
+  > [data-slide-overlays]
+  > *:first-child:not(.slide-bg-shell):not(.slide-bg-video-shell) {
+  background: transparent !important;
+}
+
+/* ====================================================================== */
+/* kobolt / kobolt_natt — sajtens identitet på duk, maxad.               */
+/* Papper · bläck · kobalt. Avgångstavlans versaler, ett rutnät under,      */
+/* filmkorn ovanpå och blå rök i kanterna. Inga rundningar, 2 px kanter,    */
+/* kobaltskugga i stället för glas. Tokens: src/themes/index.ts.            */
+/* ====================================================================== */
+
+[data-theme="betong"],
+[data-theme="betong_natt"],
+[data-theme="fyrfarg"],
+[data-theme="kobolt"],
+[data-theme="kobolt_natt"] {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Archivo är variabel i bredd; 76 % är sajtens displayröst (.gs-disp).
+     font-stretch ärvs och påverkar bara snitt med wdth-axel — Familjen
+     Grotesk och Plex Mono rör sig inte. */
+  font-stretch: 76%;
+  /* Rutnätet är AV på papper (Joel 2026-09-02: "är det verkligen snyggt?").
+     Det läste som räknehäfte i projektorgrad. Kvar i mörka läget där det
+     ligger under röken som på sajtens hero. Slå på med en färg vid behov. */
+  --joelsai-grid: transparent;
+  /* Papperet är RENT. Kobalt i låg opacitet över varmt papper blir
+     lilagrått och kornet läser som damm (Joel 2026-09-02: "smutsigt").
+     Atmosfären bor i det mörka registret: PosterText tone="dark",
+     gradientpresetet Kobalt i designpanelen, eller Midjourney-bilder. */
+  --joelsai-smoke-1: transparent;
+  --joelsai-smoke-2: transparent;
+  --joelsai-noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.07 0 0 0 0 0.07 0 0 0 0 0.06 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --joelsai-noise-blend: multiply;
+  --joelsai-noise-opacity: 0;
+  --glass-card-bg: #ffffff;
+  --glass-card-brightness: 100%;
+  --glass-card-shadow: 8px 8px 0 var(--accent);
+  --glass-card-shadow-flat: none;
+  --ambient-overlay: 242, 240, 233;
+}
+[data-theme="kobolt_natt"] {
+  --joelsai-grid: rgba(242, 240, 233, 0.05);
+  --joelsai-smoke-1: rgba(106, 138, 255, 0.24);
+  --joelsai-smoke-2: rgba(21, 51, 255, 0.2);
+  --joelsai-noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --joelsai-noise-blend: overlay;
+  --joelsai-noise-opacity: 0.07;
+  --glass-card-bg: #1c1e22;
+  --ambient-overlay: 15, 15, 14;
+}
+
+/* Rutnätet och röken — fixed, under allt. Maskas mot mitten så att
+   texten står på rent papper och nätet syns där innehållet inte är. */
+[data-theme="betong"]::before,
+[data-theme="fyrfarg"]::before,
+[data-theme="kobolt"]::before,
+[data-theme="kobolt_natt"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 55% 62% at 100% 100%, var(--joelsai-smoke-1) 0%, transparent 62%),
+    radial-gradient(ellipse 42% 48% at 0% 0%, var(--joelsai-smoke-2) 0%, transparent 64%),
+    linear-gradient(var(--joelsai-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--joelsai-grid) 1px, transparent 1px);
+  background-size: auto, auto, 4rem 4rem, 4rem 4rem;
+  -webkit-mask-image: radial-gradient(ellipse 60% 64% at 50% 50%, rgba(0, 0, 0, 0.15) 0%, #000 100%);
+  mask-image: radial-gradient(ellipse 60% 64% at 50% 50%, rgba(0, 0, 0, 0.15) 0%, #000 100%);
+}
+
+/* Filmkornet — mörkt korn i multiply på papper, vitt i overlay på natt. */
+[data-theme="betong"]::after,
+[data-theme="fyrfarg"]::after,
+[data-theme="kobolt"]::after,
+[data-theme="kobolt_natt"]::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: var(--joelsai-noise-opacity);
+  mix-blend-mode: var(--joelsai-noise-blend);
+  background-image: var(--joelsai-noise);
+  background-size: 160px;
+}
+
+/* Slide-containern är GENOMSKINLIG i de här temana: arket ligger på body,
+   nätet och röken i det maskade ::before-lagret under. Målar containern
+   sin egen botten täcker den masken och nätet blir lika starkt i mitten
+   som i kanterna — det var så första versionen såg ut. */
+[data-theme="betong"] .slide-container,
+[data-theme="betong_natt"] .slide-container,
+[data-theme="fyrfarg"] .slide-container,
+[data-theme="kobolt"] .slide-container,
+[data-theme="kobolt_natt"] .slide-container {
+  background: transparent;
+}
+[data-theme="betong"] .slide-container,
+[data-theme="betong_natt"] .slide-container,
+[data-theme="fyrfarg"] .slide-container,
+[data-theme="kobolt"] .slide-container,
+[data-theme="betong"] [class*="h-full w-full"],
+[data-theme="betong_natt"] [class*="h-full w-full"],
+[data-theme="fyrfarg"] [class*="h-full w-full"],
+[data-theme="kobolt"] [class*="h-full w-full"],
+[data-theme="kobolt_natt"] .slide-container,
+[data-theme="kobolt_natt"] [class*="h-full w-full"] {
+  position: relative;
+  z-index: 3;
+}
+
+/* TYST PAPPER. Många mallar målar en ambient accent-radial som atmosfär
+   (HookStatement uppe, ParadoxStat bakom siffran …). På mörka teman är
+   det glöd; på varmt papper blir kobalt i låg opacitet lilagrått och läser
+   som smuts. Sådana lager bär klassen `ambient-accent` (mönster: lägg den
+   på varje rent dekorativt accentlager i nya mallar) och släcks här.
+   Gäller BARA det ljusa temat — i mörkt läge är glöden rätt. */
+[data-theme="betong"] .ambient-accent ,
+[data-theme="betong_natt"] .ambient-accent ,
+[data-theme="fyrfarg"] .ambient-accent ,
+[data-theme="kobolt"] .ambient-accent {
+  display: none !important;
+}
+
+/* AVGÅNGSTAVLAN. Rubriker i versal Archivo, tät radhöjd — men aldrig under
+   0,95: Å, Ä och Ö kolliderar annars med raden ovanför (mätt på sajten). */
+[data-theme="betong"] :is(h1, h2, .slide-prose h1, .slide-prose h2),
+[data-theme="betong_natt"] :is(h1, h2, .slide-prose h1, .slide-prose h2),
+[data-theme="fyrfarg"] :is(h1, h2, .slide-prose h1, .slide-prose h2),
+[data-theme="kobolt"] :is(h1, h2, .slide-prose h1, .slide-prose h2),
+[data-theme="glas"] :is(h1, h2, .slide-prose h1, .slide-prose h2),
+[data-theme="kobolt_natt"] :is(h1, h2, .slide-prose h1, .slide-prose h2) {
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  line-height: 0.96;
+  text-transform: uppercase;
+}
+/* Prosa-rubrikerna får samma affischskala som statement-mallarna. */
+[data-theme="betong"] .slide-prose h1,
+[data-theme="betong_natt"] .slide-prose h1,
+[data-theme="fyrfarg"] .slide-prose h1,
+[data-theme="kobolt"] .slide-prose h1,
+[data-theme="kobolt_natt"] .slide-prose h1 {
+  font-size: calc(clamp(3rem, 8vw, 6rem) * var(--display-scale, 1));
+}
+
+/* KICKER-RÖSTEN. Små spärrade versaler sätts i Plex Mono — kapitelmarkörer,
+   källrader, etiketter — oavsett vilken font mallen bad om. */
+[data-theme="betong"] :is(.text-xs, .text-sm, .text-\[10px\], .text-\[11px\]).uppercase,
+[data-theme="betong_natt"] :is(.text-xs, .text-sm, .text-\[10px\], .text-\[11px\]).uppercase,
+[data-theme="fyrfarg"] :is(.text-xs, .text-sm, .text-\[10px\], .text-\[11px\]).uppercase,
+[data-theme="kobolt"] :is(.text-xs, .text-sm, .text-\[10px\], .text-\[11px\]).uppercase,
+[data-theme="kobolt_natt"] :is(.text-xs, .text-sm, .text-\[10px\], .text-\[11px\]).uppercase {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+}
+
+/* KONTURRÖSTEN. Sektionsnumret ritas som kontur i kobalt — orientering man
+   läser förbi, inte en rad man klickar på. Ingen glöd. */
+[data-theme="betong"] .font-black.text-accent,
+[data-theme="betong_natt"] .font-black.text-accent,
+[data-theme="fyrfarg"] .font-black.text-accent,
+[data-theme="kobolt"] .font-black.text-accent,
+[data-theme="kobolt_natt"] .font-black.text-accent {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--accent);
+  text-shadow: none !important;
+}
+
+/* Linjer: platta, utan glöd. Fyllda accentytor får ingen skugga. */
+[data-theme="betong"] .bg-accent,
+[data-theme="betong_natt"] .bg-accent,
+[data-theme="fyrfarg"] .bg-accent,
+[data-theme="kobolt"] .bg-accent,
+[data-theme="kobolt_natt"] .bg-accent {
+  box-shadow: none !important;
+}
+
+/* KORTEN. Bläckkant, kobaltskugga, inga rundningar, inget glas. Samma
+   heuristik som Apple-temana använder för sina glaspaneler. */
+[data-theme="betong"] :is(.border-accent-dim, .border-white\/10, .border-white\/5),
+[data-theme="betong_natt"] :is(.border-accent-dim, .border-white\/10, .border-white\/5),
+[data-theme="fyrfarg"] :is(.border-accent-dim, .border-white\/10, .border-white\/5),
+[data-theme="kobolt"] :is(.border-accent-dim, .border-white\/10, .border-white\/5),
+[data-theme="kobolt_natt"] :is(.border-accent-dim, .border-white\/10, .border-white\/5) {
+  border: 2px solid var(--text) !important;
+  border-radius: 0 !important;
+  background: var(--glass-card-bg);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Klarhet har inga rundade former. Undantaget är punkter och avatarer —
+   en fyrkantig stegindikator läses som trasig, inte som avsiktlig. */
+[data-theme="betong"] [class*="rounded-"]:not(.rounded-full),
+[data-theme="betong_natt"] [class*="rounded-"]:not(.rounded-full),
+[data-theme="fyrfarg"] [class*="rounded-"]:not(.rounded-full),
+[data-theme="kobolt"] [class*="rounded-"]:not(.rounded-full),
+[data-theme="kobolt_natt"] [class*="rounded-"]:not(.rounded-full) {
+  border-radius: 0 !important;
+}
+
+/* Hantverksdetaljer: markering i kobalt, fokusring utan rundning. */
+[data-theme="betong"] ::selection ,
+[data-theme="betong_natt"] ::selection ,
+[data-theme="fyrfarg"] ::selection ,
+[data-theme="kobolt"] ::selection {
+  background: rgba(21, 51, 255, 0.16);
+  color: var(--text);
+}
+[data-theme="kobolt_natt"] ::selection {
+  background: rgba(106, 138, 255, 0.28);
+  color: var(--text);
+}
+[data-theme="betong"] :focus-visible,
+[data-theme="betong_natt"] :focus-visible,
+[data-theme="fyrfarg"] :focus-visible,
+[data-theme="kobolt"] :focus-visible,
+[data-theme="kobolt_natt"] :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 0;
+}
+
+/* Strong utan glöd — kobalt räcker. Scrollbar i samma anda. */
+[data-theme="betong"] strong,
+[data-theme="betong_natt"] strong,
+[data-theme="fyrfarg"] strong,
+[data-theme="kobolt"] strong,
+[data-theme="kobolt_natt"] strong {
+  text-shadow: none;
+}
+[data-theme="betong"] ::-webkit-scrollbar,
+[data-theme="betong_natt"] ::-webkit-scrollbar,
+[data-theme="fyrfarg"] ::-webkit-scrollbar,
+[data-theme="kobolt"] ::-webkit-scrollbar,
+[data-theme="kobolt_natt"] ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+[data-theme="betong"] ::-webkit-scrollbar-thumb,
+[data-theme="betong_natt"] ::-webkit-scrollbar-thumb,
+[data-theme="fyrfarg"] ::-webkit-scrollbar-thumb,
+[data-theme="kobolt"] ::-webkit-scrollbar-thumb,
+[data-theme="kobolt_natt"] ::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 0;
+}
+[data-theme="betong"] ::-webkit-scrollbar-track,
+[data-theme="betong_natt"] ::-webkit-scrollbar-track,
+[data-theme="fyrfarg"] ::-webkit-scrollbar-track,
+[data-theme="kobolt"] ::-webkit-scrollbar-track,
+[data-theme="kobolt_natt"] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* kobolt: touch 2026-09-02 */
+
+/* kobolt: touch 10:07:58 */
+
+/* ====================================================================== */
+/* Markordet — mark="…" på vilken slide som helst (withSlideBg/SlideMark). */
+/* Ett massivt ord i bläck som får plats i sin helhet längst ner eller     */
+/* överst. Ljusgrått (opacity 0,07) bakom innehåll; opacity 1 där ordet    */
+/* får ytan för sig själv. Storleken mäts i SlideMark; typografin här.     */
+/* ====================================================================== */
+
+/* Ordet som bild (markOpacity ≥ 0,5): innehållet får bara den övre ytan.
+   Mallrötter som sätter 100vh (.slide-container) måste följa wrappern. */
+[data-mark-hero] .slide-container {
+  height: 100%;
+  width: 100%;
+}
+
+/* Mallar med AmbientBackdrop (LiquidQuote, StarterPrompts …) målar en egen
+   opak bas i temats --bg som annars täcker markordet. Töms i mark-skalet. */
+[data-mark-shell] .ambient-base {
+  background: transparent !important;
+}
+
+.slide-mark-word {
+  font-family: var(--font-display);
+  font-weight: var(--heading-weight);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  user-select: none;
+}
+
+/* ====================================================================== */
+/* Brutalistkontraktet — joelsai/kobolt_natt. Mallar märker upp sina      */
+/* element med data-card / data-tag / data-glow / data-row; temat gör      */
+/* resten. Andra teman ignorerar attributen. !important krävs eftersom     */
+/* mallarnas mjuka utseende ligger i inline-style.                         */
+/* ====================================================================== */
+
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) * {
+  text-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) {
+  --glass-card-bg: var(--bg-surface);
+  --glass-tint: transparent;
+  --glass-border: var(--text);
+  --glass-border-top: var(--text);
+  --glass-border-width: 2px;
+  --glass-radius: 0;
+  --glass-card-brightness: 100%;
+  --glass-card-shadow: var(--card-shadow);
+  --glass-card-shadow-flat: none;
+}
+
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-card] {
+  border: 2px solid var(--text) !important;
+  border-radius: 0 !important;
+  box-shadow: var(--card-shadow) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-card="flat"] {
+  box-shadow: none !important;
+}
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-card="round"] {
+  border-radius: 50% !important;
+}
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-card="paper"] {
+  background: var(--bg-surface) !important;
+}
+
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-tag] {
+  border-radius: 0 !important;
+  border: 1.5px solid currentColor !important;
+  background: var(--bg) !important;
+  box-shadow: none !important;
+  font-family: var(--font-mono) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.18em !important;
+}
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-tag="solid"] {
+  background: var(--text) !important;
+  border-color: var(--text) !important;
+  color: var(--bg) !important;
+}
+
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-glow] {
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-row] {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Registren (withSlideBg register="kobalt|natt"): korten får ljus kant och
+   svart/ljusblå hård skugga via --text/--card-shadow som registret sätter. */
+[data-register="kobalt"] [data-tag="solid"] {
+  color: #1533ff !important;
+}
+
+/* kobolt: touch 13:26:59 */
+
+/* HitZone: träffytans mjuka radial blir en platt kobaltyta i brutalismen. */
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) #hitzone-fill stop {
+  stop-color: var(--accent);
+  stop-opacity: 0.08;
+}
+
+/* kobolt: touch 13:36:43 */
+
+/* Varma registren (withSlideBg register="barnsten|glod"): solid-taggarnas färg. */
+[data-register="barnsten"] [data-tag="solid"] {
+  color: #ffb02e !important;
+}
+[data-register="glod"] [data-tag="solid"] {
+  color: #4a2410 !important;
+}
+
+/* HumanCapacities i kobolt: glaskorten blir brutalistkort — rak kant,
+   2 px bläck, hård kobaltskugga bara på det aktiva kortet. */
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-hc-card] {
+  border-radius: 0 !important;
+  border: var(--card-border) !important;
+  box-shadow: none !important;
+}
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-hc-card][data-active="true"] {
+  box-shadow: var(--card-shadow) !important;
+}
+
+/* kobolt: touch 09:38:59 */
+
+/* StudentVoices i kobolt: glaskorten blir brutalistkort. */
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-sv-card] {
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: var(--card-border) !important;
+  box-shadow: var(--card-shadow) !important;
+  background: var(--bg-elevated, var(--bg-surface)) !important;
+}
+/* kobolt: touch 10:32:28 */
+
+/* kobolt: touch 10:37:27 (sv-card) */
+
+/* Mallrötter med mjuk radial glasbotten (data-ambient-bg): platt yta i joelsai. */
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-ambient-bg] {
+  background: var(--slide-base, var(--bg)) !important;
+}
+
+/* Registren och glaskorten: --glass-card-bg m.fl. löses ut på temaroten
+   (var() i en custom property substitueras där den deklareras), så under
+   register="…" fick GlassCard papprets yta och cremevit text på cremevitt
+   kort (GlassShowcase på glöd). Deklarera om dem inne i
+   registret så de följer registrets tokens. */
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-register] {
+  --glass-card-bg: var(--bg-surface);
+  --glass-border: var(--text);
+  --glass-border-top: var(--text);
+  --glass-card-shadow: var(--card-shadow);
+}
+/* kobolt: touch 13:41:10 (ambient-bg, register-glass) */
+/* kobolt: touch 13:44:44 (register-glass 2) */
+
+/* ====================================================================== */
+/* fyrfarg (2026-09-03). Papper och bläck som      */
+/* kobolt, men fyra pastellregister (gul/mint/rosa/lila) + tavla i stället */
+/* för kobalt, signalrött som accent, risokorn på fälten, klistermärken     */
+/* på figurerna och tejp-etiketter. Register-tokens: withSlideBg.tsx.       */
+/* ====================================================================== */
+[data-theme="fyrfarg"] {
+  --joelsai-noise-opacity: 0.05;
+  --register-noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.08 0 0 0 0 0.07 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --register-noise-opacity: 0.11;
+  --glass-card-shadow: var(--card-shadow);
+}
+
+/* Klistermärket: figurer (frilagda PNG) får vit stansad kant och hård
+   bläckskugga — stickers på en dator, inte fotografier i ett kollage. */
+[data-theme="fyrfarg"] .slide-figure {
+  filter:
+    drop-shadow(0.28vw 0 0 #ffffff)
+    drop-shadow(-0.28vw 0 0 #ffffff)
+    drop-shadow(0 0.28vw 0 #ffffff)
+    drop-shadow(0 -0.28vw 0 #ffffff)
+    drop-shadow(0.7vw 0.7vw 0 #131311) !important;
+}
+
+/* Tejpen (withSlideBg tape="…"): monotext i en färgad remsa, 2° lutning,
+   hård bläckskugga. Färgerna sätts inline av SlideTape (tapeTone). */
+.slide-tape {
+  position: absolute;
+  z-index: 1;
+  top: 4.5vh;
+  left: 4vw;
+  transform: rotate(-2deg);
+  transform-origin: left center;
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: clamp(0.7rem, 0.95vw, 1.05rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  line-height: 1;
+  padding: 0.6em 1.1em 0.55em;
+  box-shadow: 0.3vw 0.3vw 0 var(--text);
+  white-space: nowrap;
+}
+.slide-tape[data-align="tr"] {
+  left: auto;
+  right: 4vw;
+  transform: rotate(2deg);
+  transform-origin: right center;
+}
+
+/* TYST PAPPER, hårdare: dagsljus-mallarna (ClassroomAssignment,
+   PromptReveal, JagAIJagCircles, ProcessBeats …) målar sina egna
+   accent-radialer i inline-style utan klass. På papper blir rött dis
+   rosa smuts. Tomma dekor-divar med radial släcks — registrets fyllning
+   (.register-fill) och symbolmasken undantas. */
+[data-theme="fyrfarg"] div[style*="radial-gradient"]:empty:not(.register-fill):not(.slide-symbol) {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Pastellregistren: korten får papper som yta. */
+[data-theme="fyrfarg"] [data-register] :is(.border-accent-dim, .border-white\/10, .border-white\/5) {
+  background: var(--glass-card-bg, #f2f0e9);
+}
+/* fyrfarg: touch 17:16:28 */
+
+/* Rutnätet på fyrfärgens register (cute-alism: räknehäftet). Ritas i
+   withSlideBg:s registerblock; färgen per register här. Papper får inget. */
+[data-theme="fyrfarg"] [data-register] {
+  --register-grid-ink: rgba(19, 19, 17, 0.11);
+  --register-grid-size: 4.2vw;
+}
+[data-theme="fyrfarg"] [data-register="tavla"] {
+  --register-grid-ink: rgba(242, 240, 233, 0.09);
+}
+
+/* Löpremsan (withSlideBg ticker="…"): bläckband längs kanten, monotext i
+   registrets färg, rullar åt vänster utan skarv. */
+.slide-ticker {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(1.9rem, 4.4vh, 3.2rem);
+  background: var(--text);
+  color: var(--bg);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: clamp(0.72rem, 1.05vw, 1.15rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.slide-ticker[data-align="top"] {
+  top: 0;
+  bottom: auto;
+}
+.slide-ticker-run {
+  display: flex;
+  width: max-content;
+  animation: slide-ticker-run 32s linear infinite;
+}
+.slide-ticker-track {
+  display: inline-flex;
+  flex: none;
+}
+.slide-ticker-track > span {
+  padding: 0 0 0 1.4em;
+}
+.slide-ticker-dot {
+  display: inline-block;
+  margin-left: 1.4em;
+  font-size: 0.6em;
+  vertical-align: 0.15em;
+}
+@keyframes slide-ticker-run {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+/* fyrfarg: touch 19:45:41 */
+
+/* ====================================================================== */
+/* betong (2026-09-04). Affischen: obestruket       */
+/* papper, svartvita rasterfoton, bläck, signalrött som enda färg och en    */
+/* orange sol. Register-tokens: withSlideBg.tsx (betong · rott · sol).      */
+/* ====================================================================== */
+[data-theme="betong"] {
+  /* Bred Archivo: affischens röst är 100–125 %, inte sajtens 76 %. */
+  font-stretch: 100%;
+  --joelsai-noise-opacity: 0.09;
+  --register-noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.08 0 0 0 0 0.07 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --register-noise-opacity: 0.16;
+  --glass-card-shadow: var(--card-shadow);
+  --slide-paper: #e7e2d6;
+  --slide-ink: #121210;
+  --slide-red: #e3321b;
+  /* Mockup-fönstren (glassCardStyle i _decorations): papper, bläckkant,
+     hård skugga, ingen radie — chattarna och promptfönstren ser tryckta ut. */
+  --glass-card-bg: #e7e2d6;
+  --glass-border: #121210;
+  --glass-border-top: #121210;
+  --glass-border-width: 2px;
+  --glass-radius: 0;
+  --glass-card-shadow: 8px 8px 0 #121210;
+  --glass-card-shadow-flat: none;
+  --glass-card-brightness: 100%;
+}
+[data-theme="betong"] [data-register="tavla"],
+[data-theme="betong"] [data-register="betong"] {
+  --glass-border: #e7e2d6 !important;
+  --glass-border-top: #e7e2d6 !important;
+  --glass-card-shadow: 8px 8px 0 #e3321b !important;
+}
+/* Tailwind-fönster utan glas (ChatPreview m.fl.: "rounded-2xl border shadow-2xl") */
+[data-theme="betong"] .slide-container .shadow-2xl {
+  border: 2px solid var(--text) !important;
+  box-shadow: 8px 8px 0 var(--accent) !important;
+  border-radius: 0 !important;
+}
+[data-theme="betong"] :is(h1, h2, .slide-prose h1, .slide-prose h2) {
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+/* Markordet i bred Archivo — det är affischens jättetyp. */
+[data-theme="betong"] .slide-mark-word {
+  font-stretch: 118%;
+}
+/* Rött bär aldrig betydelse ensamt (färgblinda): ett accentord blir också
+   bredare i snittet, så formen skiljer det från löptexten. */
+[data-theme="betong"] strong,
+[data-theme="betong"] .text-accent {
+  font-stretch: 112%;
+}
+
+/* Figurerna är foton, inte klistermärken: svartvitt med hög kontrast.
+   På de röda/orange registren multipliceras de in i färgen som ett
+   tvåfärgstryck. */
+[data-theme="betong"] .slide-figure {
+  filter: grayscale(1) contrast(1.3) drop-shadow(0 30px 40px rgba(0, 0, 0, 0.18)) !important;
+}
+[data-theme="betong"] [data-register="rott"] .slide-figure,
+[data-theme="betong"] [data-register="sol"] .slide-figure {
+  filter: grayscale(1) contrast(1.45) !important;
+}
+/* Blandningen läggs på lagret (slide-figure-wrap bildar egen stackning-
+   kontext med z-index, så multiply på själva bilden ser bara transparens). */
+[data-theme="betong"] [data-register="rott"] .slide-figure-wrap,
+[data-theme="betong"] [data-register="sol"] .slide-figure-wrap {
+  mix-blend-mode: multiply;
+}
+
+/* Allt bildmaterial i svartvitt: illustrationer, skärmdumpar och foton i
+   mallarna följer affischens gråskala. Figurerna har sin egen regel. */
+[data-theme="betong"] .slide-container img:not(.slide-figure):not([data-keep-color]),
+[data-theme="betong"] .slide-container video:not([data-keep-color]),
+[data-theme="betong"] img[data-slide-media]:not([data-keep-color]) {
+  filter: grayscale(1) contrast(1.15);
+}
+
+/* Tyst papper (samma regel som fyrfärgen): dagsljus-mallarnas
+   inline-radialer släcks. Rastret och skivan undantas. */
+[data-theme="betong"] div[style*="radial-gradient"]:empty:not(.register-fill):not(.slide-symbol):not(.slide-halftone):not(.slide-disc) {
+  background: transparent !important;
+  background-image: none !important;
+}
+[data-theme="betong"] [data-register] :is(.border-accent-dim, .border-white\/10, .border-white\/5) {
+  background: var(--glass-card-bg, #e7e2d6);
+}
+
+/* Tavla i betong: rött i stället för fyrfärgens gula accent. Inline-vars
+   på registerskalet slås över med !important. */
+[data-theme="betong"] [data-register="tavla"] {
+  --bg: #121210 !important;
+  --text: #e7e2d6 !important;
+  --accent: #e3321b !important;
+  --accent-ink: #e3321b !important;
+  --accent-bright: #e8912f !important;
+  --accent-glow: rgba(227, 50, 27, 0.2) !important;
+  --accent-dim: rgba(227, 50, 27, 0.14) !important;
+  --accent-alert: #e3321b !important;
+  --card-shadow: 8px 8px 0 #e3321b !important;
+  --card-shadow-alt: 8px 8px 0 #e7e2d6 !important;
+  --glass-card-bg: #1c1c1a !important;
+}
+[data-theme="betong"] [data-register="tavla"] .register-fill {
+  background: #121210 !important;
+}
+
+/* Rastret (withSlideBg halftone="true"): punktraster i soft-light ovanpå
+   den gråskalade bakgrunden. Punkten skalar med bredden. */
+.slide-halftone {
+  background-image: radial-gradient(circle, rgba(18, 18, 16, 0.55) 0 0.09vw, transparent 0.1vw);
+  background-size: 0.42vw 0.42vw;
+  mix-blend-mode: soft-light;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* Remsan (withSlideBg strip="…"): accentremsa längs kanten med titeln
+   vertikalt i mono, papperstext. */
+.slide-strip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: clamp(1.6rem, 3.4vw, 3.6rem);
+  background: var(--accent);
+  color: var(--bg);
+  pointer-events: none;
+}
+.slide-strip[data-align="r"] {
+  left: auto;
+  right: 0;
+}
+.slide-strip > span {
+  position: absolute;
+  bottom: 4.6vw;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 1vw, 1.1rem);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.slide-strip[data-align="r"] > span {
+  bottom: auto;
+  top: 2.4vw;
+  transform: translateX(-50%);
+}
+[data-theme="betong"] .slide-strip {
+  color: #e7e2d6;
+}
+
+/* betong: touch 09:05:01 */
+
+/* betong: touch 09:21:59 */
+/* betong: touch 09:23:47 (keep-color) */
+/* betong: touch 09:26:50 (floating) */
+
+/* betong: touch 09:28:52 (rebuild) */
+/* betong: touch 10:06:37 (mockup) */
+
+/* ====================================================================== */
+/* Betong · tredje passet (2026-09-04). Tokens och kontrakt som mallarna    */
+/* lutar sig mot efter granskningen av hela decket.                        */
+/* ====================================================================== */
+
+/* Affischen har ingen kursiv. Mallar sätter fontStyle: var(--display-italic,
+   italic) och får normal stil här; kobolt och fyrfärgen behåller sin. */
+[data-theme="betong"] {
+  --display-italic: normal;
+}
+
+/* Jag–AI–Jag: Jag-cirklarnas fyllning som token, så affischtemana får en
+   bläcktvätt i stället för en röd radial. */
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) {
+  --jaj-self-bg: var(--accent-dim);
+}
+
+/* Sigillets mitt: bläckring mot papper i stället för halvopak röd hårlinje. */
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-seal-core] {
+  border: 2px solid var(--text) !important;
+  background: transparent !important;
+}
+
+/* SycophancyMirror i affischformspråken: EN färg. Rättar-svaret skiljs på
+   form (papper/bläck), sykofant-svaret behåller rött = blottläggningen. */
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-verdict="corrects"] {
+  color: var(--text) !important;
+}
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-verdict="corrects"] > [data-glow] {
+  background: var(--text) !important;
+}
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-card][data-verdict="corrects"] {
+  background: transparent !important;
+}
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-card][data-verdict="confirms"] {
+  border-color: var(--accent) !important;
+  background: color-mix(in srgb, var(--accent) 12%, transparent) !important;
+}
+/* Rött bär aldrig betydelse ensamt: etiketten får tätare spärrning och tyngd. */
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-verdict="confirms"] {
+  letter-spacing: 0.34em;
+  font-weight: 700;
+}
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-punchline] {
+  font-style: normal !important;
+}
+
+/* LiquidChatCompare i kobolt: chattbubblorna blir tryckta block. Eleven är
+   fylld bläck, AI:n är omriss. Rött är reserverat för panen som tar bort
+   allt motstånd. */
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-chat-bubble] {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-chat-bubble="user"] {
+  background: var(--text) !important;
+  color: var(--bg) !important;
+  border: 2px solid var(--text) !important;
+}
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-chat-bubble="ai"] {
+  background: var(--bg-surface) !important;
+  color: var(--text) !important;
+  border: 2px solid var(--text) !important;
+}
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-chat-pane="alert"] [data-chat-bubble="ai"] {
+  border-color: var(--accent-alert) !important;
+  color: var(--accent-alert) !important;
+}
+:is([data-theme="kobolt"], [data-theme="kobolt_natt"], [data-theme="glas"], [data-theme="linjen"], [data-theme="tiopotenser"], [data-theme="fyrfarg"], [data-theme="betong"], [data-theme="betong_natt"], [data-theme="protokoll"], [data-theme="arkana"], [data-theme="rost"]) [data-chat-avatar] {
+  background: var(--text) !important;
+  color: var(--bg) !important;
+  box-shadow: none !important;
+}
+/* betong: touch pass 3 */
+
+/* ====================================================================== */
+/* betong_natt — "Vem skrev din kurs?" (2026-09-04). Betongen efter  */
+/* mörkrets inbrott. Ärver hela betongens grammatik: 2 px kant, noll radie,  */
+/* hård offsetskugga, Archivo 100 %, mono-etiketter. Skillnaden är marken    */
+/* (nästan svart), signalen (kall cyan) och rastret (linjer, inte punkter).  */
+/* Rött är BARA larm här. Solen är den enda varma ytan.                      */
+/* ====================================================================== */
+[data-theme="betong_natt"] {
+  font-stretch: 100%;
+  --joelsai-noise-opacity: 0.07;
+  --register-noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.91 0 0 0 0 0.89 0 0 0 0 0.84 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --register-noise-opacity: 0.10;
+  --slide-paper: #e7e2d6;
+  --slide-ink: #0f1113;
+  --slide-red: #ff4a2e;
+  --slide-signal: #2fd8e0;
+  /* Ritningsgittret: tunt, kallt, nästan osynligt. CAD-arket under affischen. */
+  --joelsai-grid: rgba(47, 216, 224, 0.055);
+  /* Fönstren blir mörka plåtar med papperskant. */
+  --glass-card-bg: #171a1d;
+  --glass-border: #e7e2d6;
+  --glass-border-top: #e7e2d6;
+  --glass-border-width: 2px;
+  --glass-radius: 0;
+  --glass-card-shadow: 8px 8px 0 #2fd8e0;
+  --glass-card-shadow-flat: none;
+  --glass-card-brightness: 100%;
+  --display-italic: normal;
+}
+/* På de ljusa registren vänder kort- och fönsterkanten till bläck igen. */
+[data-theme="betong_natt"] :is([data-register="signal"], [data-register="sol"]) {
+  --glass-border: #0f1113 !important;
+  --glass-border-top: #0f1113 !important;
+  --glass-card-shadow: 8px 8px 0 #0f1113 !important;
+}
+[data-theme="betong_natt"] [data-register="larm"] {
+  --glass-border: #e7e2d6 !important;
+  --glass-border-top: #e7e2d6 !important;
+  --glass-card-shadow: 8px 8px 0 #0f1113 !important;
+}
+[data-theme="betong_natt"] .slide-container .shadow-2xl {
+  border: 2px solid var(--text) !important;
+  box-shadow: 8px 8px 0 var(--accent) !important;
+  border-radius: 0 !important;
+}
+/* Fotona: samma gråskala som på papper, men rastret är LINJER. Ett tryck som
+   passerat en skärm. .slide-halftone får en egen bakgrund i nattemat. */
+[data-theme="betong_natt"] .slide-halftone {
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(231, 226, 214, 0.22) 0 1px,
+    transparent 1px 3px
+  );
+  background-size: auto;
+  mix-blend-mode: overlay;
+  opacity: 0.55;
+}
+[data-theme="betong_natt"] .slide-container img:not(.slide-figure):not([data-keep-color]),
+[data-theme="betong_natt"] .slide-container video:not([data-keep-color]),
+[data-theme="betong_natt"] img[data-slide-media]:not([data-keep-color]) {
+  filter: grayscale(1) contrast(1.16) brightness(0.86);
+}
+[data-theme="betong_natt"] .slide-figure {
+  filter: grayscale(1) contrast(1.2) brightness(1.05);
+}
+[data-theme="betong_natt"] :is([data-register="signal"], [data-register="sol"], [data-register="larm"]) .slide-figure-wrap {
+  mix-blend-mode: multiply;
+}
+[data-theme="betong_natt"] .slide-strip {
+  color: #0f1113;
+}
+
+/* REGISTERFÖRSKJUTNINGEN. markStyle="skift" på SlideMark, eller .slide-skift
+   på valfritt element: ordet trycks tre gånger — cyan åt vänster, rött åt
+   höger, papper i mitten. Feltrycket är hela nattemats signatur. Rör sig
+   långsamt så att det lever på duk utan att flimra. */
+/* På de ljusa registren skulle papperstexten försvinna — där blir mitten bläck. */
+
+/* betong_natt: touch 1 */
+
+/* Det delade betong-registret (#6b6963) är gjort för papper. På natten läser
+   det som en ljusgrå fläck mitt i ett mörkt deck — här blir det kall betong
+   i skugga, och accenten följer nattemat i stället för att vara röd. */
+[data-theme="betong_natt"] [data-register="betong"] {
+  --bg: #33383b !important;
+  --text: #e7e2d6 !important;
+  --text-muted: rgba(231, 226, 214, 0.7) !important;
+  --accent: #2fd8e0 !important;
+  --accent-ink: #2fd8e0 !important;
+  --accent-bright: #e8912f !important;
+  --accent-glow: rgba(47, 216, 224, 0.18) !important;
+  --accent-dim: rgba(231, 226, 214, 0.12) !important;
+  --accent-alert: #ff4a2e !important;
+  --card-shadow: 8px 8px 0 #2fd8e0 !important;
+  --card-shadow-alt: 8px 8px 0 #ff4a2e !important;
+  --card-border: 2px solid #e7e2d6 !important;
+  --glass-card-bg: rgba(15, 17, 19, 0.84) !important;
+}
+[data-theme="betong_natt"] [data-register="betong"] .register-fill {
+  background: #33383b !important;
+}
+
+/* PosterHero med wordStyle="skift": affischordet bär registerförskjutningen.
+   Skalan är större än på markordet — ordet är 20 vw, spöket måste synas
+   från femtonde bänkraden utan att bli en suddig kant. */
+
+/* betong_natt: touch 2 */
+
+/* betong_natt: touch 3 15:10:58 */
+
+/* ====================================================================== */
+/* REGISTERFÖRSKJUTNINGEN — nattemats signatur.                            */
+/*                                                                         */
+/* Ordet trycks tre gånger: cyan åt vänster, rött åt höger, papper i        */
+/* mitten. Byggt med pseudoelement och content: attr(data-word), INTE med   */
+/* text-shadow — brutalistkontraktet längre upp släcker text-shadow med     */
+/* !important på alla joelsai-teman, och den regeln ska stå kvar.           */
+/*                                                                         */
+/* Sätt klassen och data-word på samma element:                            */
+/*   <span className="slide-skift" data-word="Berättelser">Berättelser</span>*/
+/* PosterHero gör det åt dig med wordStyle="skift".                        */
+/* ====================================================================== */
+[data-theme="betong_natt"] :is(.slide-skift, .poster-word-skift, .slide-mark-word[data-mark-style="skift"]) {
+  position: relative;
+  isolation: isolate;
+  color: var(--text);
+}
+[data-theme="betong_natt"] :is(.slide-skift, .poster-word-skift)::before,
+[data-theme="betong_natt"] :is(.slide-skift, .poster-word-skift)::after {
+  content: attr(data-word);
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  pointer-events: none;
+  white-space: inherit;
+  letter-spacing: inherit;
+  font: inherit;
+  text-transform: inherit;
+}
+[data-theme="betong_natt"] :is(.slide-skift, .poster-word-skift)::before {
+  color: var(--slide-signal);
+  transform: translateX(-0.018em);
+}
+[data-theme="betong_natt"] :is(.slide-skift, .poster-word-skift)::after {
+  color: var(--slide-red);
+  transform: translateX(0.018em);
+}
+/* Affischordet är 20 vw — där räcker en mindre förskjutning. */
+[data-theme="betong_natt"] .poster-word-skift::before { transform: translateX(-0.011em); }
+[data-theme="betong_natt"] .poster-word-skift::after { transform: translateX(0.011em); }
+/* På de ljusa registren blir mitten bläck i stället för papper. */
+[data-theme="betong_natt"] :is([data-register="signal"], [data-register="sol"]) :is(.slide-skift, .poster-word-skift) {
+  color: #0f1113;
+}
+
+/* betong_natt: touch 4 */
+
+/* Nattemat ärver också betongens undertryckning av nattglas-arvet: tomma
+   radialgradienter (ProtagonistReclaim m.fl.) och kursiven i display-rösten.
+   Utan de här ser lånade mallar ut som ett annat deck mitt i affischen. */
+[data-theme="betong_natt"] div[style*="radial-gradient"]:empty:not(.register-fill):not(.slide-symbol):not(.slide-halftone):not(.slide-disc) {
+  display: none !important;
+}
+[data-theme="betong_natt"] [data-register] :is(.border-accent-dim, .border-white\/10, .border-white\/5) {
+  border-color: var(--text) !important;
+}
+
+/* betong_natt: touch 5 */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Verkstadens ljusa form (.verkstad)
+
+   Storyboard, manus och slide-editor är skrivna som ett mörkt gränssnitt med
+   Tailwind-klasser: `bg-bg`, `text-text-muted`, `border-white/10`, `bg-black/85`
+   … över fem tusen rader. I stället för att skriva om dem vänds de här, genom
+   att variablerna klasserna pekar på får nya värden inom `.verkstad`:
+
+     - temarollerna (--bg, --text, --accent …) blir papper, bläck och kobolt —
+       samma form som översikten, biblioteket och komponentgalleriet;
+     - "vitt" blir bläck och "svart" blir papper, så att `border-white/10` blir
+       en hårlinje i bläck och `bg-black/85` en ljus slöja;
+     - de få signalfärgerna (rött, bärnsten, grönt) får mörkare toner som går
+       att läsa mot ljus botten.
+
+   SLIDES ÄR UNDANTAGNA. Förhandsvisningen i editorn (`.presentation-root`)
+   återställer allt till Tailwinds original och tar sina temaroller från deckets
+   tema, precis som i presentationen. Ramen runt sliden är ljus; sliden är sig lik.
+
+   Klassen sätts av AuthoringShell och går att slå av (mörk verkstad) i
+   översiktens verktygsrad. Utan klassen är allt som förut.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Bild- och videoväljarna (AddImageModal, AddVideoModal) har egna inline-färger:
+   mörka i spelaren (M-menyn) och som standard. Variablerna nedan bär dem, och
+   .verkstad ger de ljusa motsvarigheterna. Slöjan över miniatyrerna är mörk i
+   båda formerna — ljus text på en mörk slöja går att läsa på vilken bild som helst. */
+:root {
+  --picker-surface: linear-gradient(150deg, rgba(30, 27, 22, 0.98) 0%, rgba(15, 13, 10, 0.98) 100%);
+  --picker-backdrop: rgba(10, 9, 8, 0.85);
+  --picker-ink: #f7f1e6;
+  --picker-ink-rgb: 247, 241, 230;
+  --picker-accent: #ec7e26;
+  --picker-accent-rgb: 236, 126, 38;
+  --picker-on-accent: #0a0908;
+  --picker-alert: #e84d4d;
+  --picker-alert-rgb: 232, 77, 77;
+  --picker-scrim: linear-gradient(to top, rgba(10, 9, 8, 0.95), transparent);
+  --picker-scrim-solid: rgba(10, 9, 8, 0.7);
+  --picker-on-scrim: #f7f1e6;
+}
+
+.verkstad {
+  --picker-surface: #fbfaf6;
+  --picker-backdrop: rgba(244, 242, 236, 0.86);
+  --picker-ink: #16150f;
+  --picker-ink-rgb: 22, 21, 15;
+  --picker-accent: #243cff;
+  --picker-accent-rgb: 36, 60, 255;
+  --picker-on-accent: #fbfaf6;
+  --picker-alert: #b3261e;
+  --picker-alert-rgb: 179, 38, 30;
+}
+
+/* Objektlagret i editorn (components/editor/ObjectLayer): markeringsramar,
+   handtag, hjälplinjer och verktygsraden. Egna variabler eftersom lagret
+   ligger inne i duken, där temarollerna är slidens — och ramen ska se
+   likadan ut oavsett vilket deck man redigerar. Mörk verkstad utan klassen. */
+:root {
+  --verkstad-paper: #1f1d19;
+  --verkstad-ink: #f7f1e6;
+  --verkstad-line: rgba(247, 241, 230, 0.16);
+  --verkstad-accent: #ec7e26;
+  --verkstad-guide: #ff2d95;
+}
+
+.verkstad {
+  --verkstad-paper: #fbfaf6;
+  --verkstad-ink: #16150f;
+  --verkstad-line: rgba(22, 21, 15, 0.14);
+  --verkstad-accent: #243cff;
+  --verkstad-guide: #ff2d95;
+}
+
+/* Objekt som går att markera visar en tunn ram när pekaren är över dem. */
+.presentation-root [data-object-index]:not([data-object-locked]):not([data-object-selected]):hover {
+  outline: calc(1px / var(--editor-scale, 1)) dashed var(--verkstad-accent);
+  outline-offset: calc(2px / var(--editor-scale, 1));
+}
+
+.object-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  background: var(--verkstad-paper);
+  color: var(--verkstad-ink);
+  border: 1px solid var(--verkstad-line);
+  border-radius: 9px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.14), 0 1px 2px rgba(0, 0, 0, 0.08);
+  font-family: var(--font-familjen-grotesk), system-ui, sans-serif;
+  pointer-events: auto;
+  white-space: nowrap;
+  z-index: 20;
+}
+.object-toolbar__group {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 0 2px;
+  border-radius: 7px;
+  border: 1px solid var(--verkstad-line);
+}
+.object-toolbar__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--verkstad-ink);
+  font: 600 13px/1 var(--font-familjen-grotesk), system-ui, sans-serif;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+.object-toolbar__btn.is-text {
+  padding: 0 10px;
+  font-size: 12px;
+}
+.object-toolbar__btn:hover {
+  background: color-mix(in srgb, var(--verkstad-accent) 12%, transparent);
+  color: var(--verkstad-accent);
+}
+.object-toolbar__btn.is-active {
+  background: var(--verkstad-accent);
+  color: var(--verkstad-paper);
+}
+.object-toolbar__btn.is-danger:hover {
+  background: color-mix(in srgb, #b3261e 12%, transparent);
+  color: #b3261e;
+}
+.object-toolbar__btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.object-toolbar__value {
+  min-width: 26px;
+  text-align: center;
+  font: 500 11px/1 var(--font-ibm-plex-mono), ui-monospace, monospace;
+  color: var(--verkstad-ink);
+  opacity: 0.8;
+}
+.object-toolbar__swatch {
+  width: 16px;
+  height: 16px;
+  margin: 0 3px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 0 0 0 1px var(--verkstad-paper);
+}
+.object-toolbar__swatch[aria-pressed="true"] {
+  box-shadow: 0 0 0 1px var(--verkstad-paper), 0 0 0 3px var(--verkstad-accent);
+}
+.object-toolbar__sep {
+  width: 1px;
+  height: 18px;
+  margin: 0 3px;
+  background: var(--verkstad-line);
+}
+.object-toolbar__name {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0 6px 0 4px;
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.verkstad {
+  --bg: #f4f2ec;
+  --bg-surface: #fbfaf6;
+  --text: #16150f;
+  --text-muted: #6d695e;
+  --accent: #243cff;
+  --accent-glow: rgba(36, 60, 255, 0.28);
+  --accent-dim: rgba(36, 60, 255, 0.1);
+  --ornament-color: var(--accent);
+
+  --font-display: var(--font-archivo), system-ui, sans-serif;
+  --font-body: var(--font-familjen-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, monospace;
+
+  --color-white: #16150f;
+  --color-black: #f4f2ec;
+
+  --color-red-300: #b3261e;
+  --color-red-400: #c4352b;
+  --color-red-500: #d13f33;
+  --color-red-950: #f7d9d5;
+  --color-amber-100: #5f3a00;
+  --color-amber-200: #7a4a00;
+  --color-amber-300: #d6951f;
+  --color-amber-400: #c07f12;
+  --color-yellow-200: #6b5200;
+  --color-yellow-300: #7a5d00;
+  --color-yellow-500: #b88a00;
+  --color-green-300: #1d6b3a;
+  --color-green-400: #2a8a4d;
+  --color-green-500: #2a8a4d;
+  --color-emerald-300: #1d6b3a;
+  --color-emerald-400: #2a8a4d;
+
+  color-scheme: light;
+  font-family: var(--font-body);
+}
+
+.verkstad .presentation-root {
+  --color-white: #fff;
+  --color-black: #000;
+  --color-red-300: oklch(80.8% 0.114 19.571);
+  --color-red-400: oklch(70.4% 0.191 22.216);
+  --color-red-500: oklch(63.7% 0.237 25.331);
+  --color-red-950: oklch(25.8% 0.092 26.042);
+  --color-amber-100: oklch(96.2% 0.059 95.617);
+  --color-amber-200: oklch(92.4% 0.12 95.746);
+  --color-amber-300: oklch(87.9% 0.169 91.605);
+  --color-amber-400: oklch(82.8% 0.189 84.429);
+  --color-yellow-200: oklch(94.5% 0.129 101.54);
+  --color-yellow-300: oklch(90.5% 0.182 98.111);
+  --color-yellow-500: oklch(79.5% 0.184 86.047);
+  --color-green-300: oklch(87.1% 0.15 154.449);
+  --color-green-400: oklch(79.2% 0.209 151.711);
+  --color-green-500: oklch(72.3% 0.219 149.579);
+  --color-emerald-300: oklch(84.5% 0.143 164.978);
+  --color-emerald-400: oklch(76.5% 0.177 163.223);
+
+  /* Det en slide ärver i presentationen: textfärgen ur SITT tema, och sidans
+     grundtypsnitt — inte verkstadens. */
+  color: var(--text);
+  font-family: "Inter", system-ui, sans-serif;
+  letter-spacing: normal;
+  color-scheme: normal;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Appmenyn — sidomenyn i verkstadens alla vyer (components/app/AppRail)
+
+   En smal list till vänster med ikoner: biblioteket, det öppna deckets lägen
+   (översikt, storyboard, manus, slide-editor, mallar, presentera, dela) och
+   inställningar. Utfälld visar den etiketter; ihopfälld visar etiketten som en
+   bubbla vid pekaren. Färgerna är verkstadens (--verkstad-*), så den ser
+   likadan ut i biblioteket, studion och editorn — ljus eller mörk verkstad.
+   ───────────────────────────────────────────────────────────────────────────── */
+.app-rail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  width: 56px;
+  padding: 8px 6px;
+  box-sizing: border-box;
+  background: var(--verkstad-paper);
+  border-right: 1px solid var(--verkstad-line);
+  color: var(--verkstad-ink);
+  font-family: var(--font-familjen-grotesk), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.app-rail[data-expanded] {
+  width: 216px;
+  padding: 8px 10px;
+}
+.app-rail__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  margin-bottom: 4px;
+  padding: 0 6px;
+  border-radius: 10px;
+  color: inherit;
+  text-decoration: none;
+}
+.app-rail:not([data-expanded]) .app-rail__brand {
+  justify-content: center;
+  padding: 0;
+}
+.app-rail__brand:hover .app-rail__mark {
+  background: var(--verkstad-accent);
+}
+.app-rail__mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--verkstad-ink);
+  color: var(--verkstad-paper);
+  font: 800 15px/1 var(--font-archivo), system-ui, sans-serif;
+  transition: background 120ms ease;
+}
+.app-rail__brandName {
+  font: 800 15px/1 var(--font-archivo), system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.app-rail__group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 0;
+  border-top: 1px solid var(--verkstad-line);
+}
+.app-rail__group--first {
+  border-top: 0;
+  padding-top: 0;
+}
+.app-rail__spacer {
+  flex: 1;
+}
+.app-rail__deckName {
+  padding: 4px 8px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.85;
+}
+.app-rail:not([data-expanded]) .app-rail__deckName {
+  display: none;
+}
+.app-rail__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--verkstad-ink);
+  opacity: 0.72;
+  cursor: pointer;
+  text-decoration: none;
+  font: 500 13px/1 var(--font-familjen-grotesk), system-ui, sans-serif;
+  white-space: nowrap;
+  transition: background 120ms ease, opacity 120ms ease, color 120ms ease;
+}
+.app-rail:not([data-expanded]) .app-rail__item {
+  justify-content: center;
+  width: 44px;
+  padding: 0;
+}
+.app-rail__item:hover,
+.app-rail__item:focus-visible {
+  opacity: 1;
+  background: color-mix(in srgb, var(--verkstad-ink) 7%, transparent);
+  outline: none;
+}
+.app-rail__item[aria-current="page"] {
+  opacity: 1;
+  color: var(--verkstad-accent);
+  background: color-mix(in srgb, var(--verkstad-accent) 11%, transparent);
+}
+.app-rail__item--primary {
+  opacity: 1;
+  color: var(--verkstad-paper);
+  background: var(--verkstad-ink);
+}
+.app-rail__item--primary:hover,
+.app-rail__item--primary:focus-visible {
+  background: var(--verkstad-accent);
+  color: var(--verkstad-paper);
+}
+.app-rail__item svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+.app-rail__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Ihopfälld: etiketten blir en bubbla till höger om ikonen. */
+.app-rail:not([data-expanded]) .app-rail__label {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  z-index: 61;
+  padding: 6px 9px;
+  border-radius: 6px;
+  background: var(--verkstad-ink);
+  color: var(--verkstad-paper);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: opacity 100ms ease;
+}
+.app-rail:not([data-expanded]) .app-rail__item:hover .app-rail__label,
+.app-rail:not([data-expanded]) .app-rail__item:focus-visible .app-rail__label {
+  opacity: 1;
+}
+.app-rail__kbd {
+  margin-left: auto;
+  padding: 1px 5px;
+  border: 1px solid var(--verkstad-line);
+  border-radius: 4px;
+  font: 500 10px/1.4 var(--font-ibm-plex-mono), ui-monospace, monospace;
+  opacity: 0.7;
+}
+.app-rail:not([data-expanded]) .app-rail__kbd {
+  display: none;
+}
+
+/* Tangenthjälpen */
+.app-rail-help {
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: color-mix(in srgb, var(--verkstad-ink) 45%, transparent);
+}
+.app-rail-help__panel {
+  width: min(56rem, 100%);
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  padding: 22px 26px 26px;
+  border-radius: 14px;
+  background: var(--verkstad-paper);
+  color: var(--verkstad-ink);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+  font-family: var(--font-familjen-grotesk), system-ui, sans-serif;
+}
+.app-rail-help__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.app-rail-help__head h2 {
+  margin: 0;
+  font: 800 20px/1.2 var(--font-archivo), system-ui, sans-serif;
+  letter-spacing: -0.01em;
+}
+.app-rail-help__close {
+  border: 1px solid var(--verkstad-line);
+  border-radius: 8px;
+  padding: 6px 10px;
+  background: transparent;
+  color: inherit;
+  font: 500 13px/1 inherit;
+  cursor: pointer;
+}
+.app-rail-help__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 18px 28px;
+}
+.app-rail-help__grid h3 {
+  margin: 0 0 6px;
+  font: 700 11px/1 var(--font-ibm-plex-mono), ui-monospace, monospace;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--verkstad-accent);
+}
+.app-rail-help__grid dl {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+  gap: 5px 12px;
+  margin: 0;
+  font-size: 13px;
+}
+.app-rail-help__grid dt {
+  max-width: 13rem;
+  font: 500 11px/1.6 var(--font-ibm-plex-mono), ui-monospace, monospace;
+}
+.app-rail-help__grid dd {
+  margin: 0;
+  opacity: 0.85;
+}
+
+/* Menyns Lägg till (AppRail · AddMenu): alla sätt att få in en ny slide. */
+.app-rail-menu {
+  position: fixed;
+  z-index: 130;
+  width: 300px;
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px solid var(--verkstad-line);
+  background: var(--verkstad-paper);
+  color: var(--verkstad-ink);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+  font-family: var(--font-familjen-grotesk), system-ui, sans-serif;
+}
+.app-rail-menu__head {
+  padding: 6px 10px 8px;
+  font: 600 10px/1.2 var(--font-plex-mono, ui-monospace), monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.app-rail-menu__item {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.app-rail-menu__item:hover,
+.app-rail-menu__item:focus-visible {
+  background: color-mix(in srgb, var(--verkstad-accent) 10%, transparent);
+  outline: none;
+}
+.app-rail-menu__title {
+  font: 600 14px/1.25 var(--font-familjen-grotesk), system-ui, sans-serif;
+}
+.app-rail-menu__item:hover .app-rail-menu__title {
+  color: var(--verkstad-accent);
+}
+.app-rail-menu__text {
+  font-size: 12px;
+  line-height: 1.35;
+  opacity: 0.68;
+}

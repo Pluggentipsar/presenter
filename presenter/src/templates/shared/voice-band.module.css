@@ -1,0 +1,7 @@
+/* Bred vågform för temat Rösten. Dold i alla andra teman. */
+.band{display:none;align-items:center;justify-content:space-between;pointer-events:none}
+@container style(--signature: voice){.band{display:flex}}
+.band i{display:block;width:4px;height:calc(var(--h) * 100%);border-radius:2px;transition:height .9s cubic-bezier(.16,1,.3,1),background-color .9s ease;transition-delay:calc(var(--d) * 1s)}
+.band[data-tone=ai] i{background:var(--accent-secondary,#5fe0c2)}
+.band[data-tone=human] i{background:var(--accent-bright,#ffb547)}
+@media (prefers-reduced-motion:reduce){.band i{transition:none}}

@@ -1,0 +1,116 @@
+/*
+ * Duken (visualiseringsprovet 1 oktober 2026). Appen är ett medvetet gränssnitt (en delad designyta),
+ * affischen byggs av agenternas arbete. Positionerna under förloppet sätts från koden varje bild; CSS
+ * står för utseendet och de korta inträdena. Koordinater på 1600 × 900, arbetsytan 1408 × 590.
+ */
+
+.duk { position: absolute; inset: 0; }
+[data-tone="light"] .duk { --human-text: color-mix(in srgb, var(--human) 42%, var(--ink)); }
+.head { position: absolute; left: 96px; top: 58px; width: 1400px; }
+.head h2 { margin-top: 14px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 50px; line-height: 1.04; letter-spacing: -.035em; }
+
+.app { position: absolute; left: 96px; top: 190px; width: 1408px; height: 640px; overflow: hidden; border-radius: 14px;
+  background: color-mix(in srgb, var(--bg-surface) 94%, transparent); border: 1px solid var(--glass-edge); box-shadow: var(--shadow); }
+.bar { position: relative; z-index: 3; display: flex; align-items: center; gap: 18px; height: 50px; padding: 0 20px; border-bottom: 1px solid var(--glass-edge);
+  background: color-mix(in srgb, var(--bg) 40%, var(--bg-surface)); font-size: 18px; transition: opacity .8s var(--ease), filter .8s var(--ease); }
+.dots { display: flex; gap: 8px; }
+.dots i { width: 12px; height: 12px; border-radius: 50%; background: color-mix(in srgb, var(--ink) 24%, transparent); }
+.name { font-weight: 650; }
+.label { margin-left: auto; font-family: var(--font-label, var(--font-mono)); font-size: 15px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.board { position: absolute; left: 0; top: 50px; width: 1408px; height: 590px; transition: opacity .8s var(--ease), filter .8s var(--ease);
+  background: radial-gradient(circle, color-mix(in srgb, var(--ink) 13%, transparent) 1.2px, transparent 1.8px) 0 0 / 26px 26px; }
+.duk[data-alone="true"] .board, .duk[data-alone="true"] .bar { opacity: .2; filter: blur(1.5px); }
+
+/* Loggen: vem som gör vad, tid i mono, namnet i avsändarens färg. */
+.log { position: absolute; left: 30px; top: 26px; width: 370px; margin: 0; padding: 0; list-style: none; border-top: 1px solid color-mix(in srgb, var(--ink) 22%, transparent); }
+.log li { display: grid; grid-template-columns: 62px 1fr; align-items: baseline; padding: 11px 0 12px; border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  font-size: 19px; line-height: 1.25; animation: logIn .5s var(--ease) both; }
+.log time { font-family: var(--font-label, var(--font-mono)); font-size: 14px; color: var(--muted); }
+.log b { font-weight: 700; color: var(--ai); }
+.log li[data-role="du"] b { color: var(--human-text, var(--human)); }
+.log li span { color: color-mix(in srgb, var(--ink) 86%, transparent); }
+@keyframes logIn { from { opacity: 0; transform: translateY(-6px); } }
+
+/* Affischen: papper, rutnät, rubrik, cirkel, brödtext och färgprover. */
+.poster { position: absolute; overflow: hidden; border-radius: 2px; background: var(--paper); color: var(--paper-ink);
+  box-shadow: 0 24px 60px color-mix(in srgb, #000 45%, transparent); }
+.guides { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; transition: opacity .4s; }
+.guides rect, .guides path { fill: none; stroke: color-mix(in srgb, var(--ai) 62%, transparent); stroke-width: 1; stroke-dasharray: 1 1; }
+.headline { position: absolute; z-index: 2; font-family: var(--font-display); font-weight: 900; line-height: .9; white-space: nowrap; }
+.caret { display: inline-block; width: 3px; height: .78em; margin-left: 3px; vertical-align: -.02em; background: var(--ai); animation: blink .9s steps(2, jump-none) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.body { position: absolute; width: 150px; height: 40px; transition: top .6s var(--ease);
+  background:
+    linear-gradient(color-mix(in srgb, var(--paper-ink) 34%, transparent), color-mix(in srgb, var(--paper-ink) 34%, transparent)) 0 0 / 100% 6px no-repeat,
+    linear-gradient(color-mix(in srgb, var(--paper-ink) 34%, transparent), color-mix(in srgb, var(--paper-ink) 34%, transparent)) 0 15px / 82% 6px no-repeat,
+    linear-gradient(color-mix(in srgb, var(--paper-ink) 34%, transparent), color-mix(in srgb, var(--paper-ink) 34%, transparent)) 0 30px / 56% 6px no-repeat; }
+.circle { position: absolute; left: 186px; top: 298px; width: 152px; height: 152px; border-radius: 50%; background: var(--alert); transform-origin: 50% 50%;
+  transition: background-color .5s var(--ease); }
+.circle[data-chosen="true"] { background: var(--human); }
+.swatches { position: absolute; display: flex; gap: 8px; }
+.swatches i { width: 26px; height: 26px; border-radius: 50%; box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--paper-ink) 18%, transparent); }
+.swatches i:nth-child(1) { background: var(--human); }
+.swatches i:nth-child(2) { background: var(--ai); }
+.swatches i:nth-child(3) { background: var(--paper-ink); }
+.swatches i:nth-child(4) { background: var(--alert); }
+/* Kontrastmätningen: en streckad ram kring rubriken och en bricka. */
+.measure { position: absolute; z-index: 3; height: 124px; border: 1.5px dashed var(--ai); }
+.measure span { position: absolute; right: -1.5px; top: -27px; padding: 4px 9px 3px; font-family: var(--font-label, var(--font-mono)); font-size: 14px; font-weight: 700; letter-spacing: .04em;
+  background: var(--ai); color: var(--on-ai, #04131b); }
+/* Finputsens markering, med handtag i hörnen. */
+.select { position: absolute; z-index: 3; height: 112px; border: 1.5px solid var(--ai); }
+.select i { position: absolute; width: 8px; height: 8px; background: var(--paper); border: 1.5px solid var(--ai); }
+.select i:nth-child(1) { left: -5px; top: -5px; } .select i:nth-child(2) { right: -5px; top: -5px; }
+.select i:nth-child(3) { left: -5px; bottom: -5px; } .select i:nth-child(4) { right: -5px; bottom: -5px; }
+.shine { position: absolute; z-index: 4; top: 0; bottom: 0; left: -60%; width: 60%; pointer-events: none; transform: translateX(calc(var(--p) * 270%));
+  background: linear-gradient(105deg, transparent 30%, color-mix(in srgb, #fff 45%, transparent) 50%, transparent 70%); }
+
+/* UX-leadens flöde: tre skärmar med trådmodeller, sammanbundna. */
+.flow { position: absolute; left: 900px; top: 236px; display: flex; gap: 30px; }
+.flow i { position: relative; width: 92px; height: 138px; border-radius: 12px; border: 1.5px solid color-mix(in srgb, var(--ai) 72%, transparent);
+  background:
+    linear-gradient(color-mix(in srgb, var(--ai) 45%, transparent), color-mix(in srgb, var(--ai) 45%, transparent)) 12px 18px / 50% 6px no-repeat,
+    linear-gradient(color-mix(in srgb, var(--ai) 25%, transparent), color-mix(in srgb, var(--ai) 25%, transparent)) 12px 34px / 68px 44px no-repeat,
+    linear-gradient(color-mix(in srgb, var(--ai) 30%, transparent), color-mix(in srgb, var(--ai) 30%, transparent)) 12px 112px / 68px 12px no-repeat,
+    color-mix(in srgb, var(--ai) 7%, var(--bg-surface)); }
+.flow i + i::before { content: ""; position: absolute; right: 100%; top: 50%; width: 30px; height: 1.5px; background: color-mix(in srgb, var(--ai) 72%, transparent); }
+
+/* Kommentaren: en nål på affischen och tråden bredvid (som i ett designverktyg). */
+.pin { position: absolute; left: 494px; top: 196px; z-index: 5; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50% 50% 50% 4px;
+  font-style: normal; font-size: 14px; font-weight: 800; text-transform: uppercase; background: var(--human); color: var(--on-human, #1a1204);
+  box-shadow: 0 6px 16px color-mix(in srgb, #000 40%, transparent); transform-origin: 0 100%; }
+.thread { position: absolute; left: 900px; top: 26px; z-index: 5; display: grid; gap: 10px; width: 400px; }
+.thread p { padding: 12px 16px 14px; border-radius: 4px 14px 14px 14px; font-size: 22px; line-height: 1.25; background: var(--bg-surface);
+  border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); box-shadow: 0 14px 34px color-mix(in srgb, #000 36%, transparent); }
+.thread small { display: block; margin-bottom: 5px; font-family: var(--font-label, var(--font-mono)); font-size: 15px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.human small { color: var(--human-text, var(--human)); }
+.ai small { color: var(--ai); }
+
+/* Tre varianter efter kommentaren, var och en sin komposition. */
+.variants { position: absolute; left: 900px; top: 418px; display: flex; gap: 24px; }
+.variant { position: relative; width: 104px; height: 147px; overflow: hidden; border-radius: 2px; background: var(--paper); color: var(--paper-ink);
+  box-shadow: 0 12px 30px color-mix(in srgb, #000 40%, transparent); }
+.variant b { position: absolute; left: 9px; top: 10px; z-index: 1; font-family: var(--font-display); font-weight: 900; font-size: 15px; line-height: .92; letter-spacing: -.02em; }
+.variant i { position: absolute; border-radius: 50%; }
+.variant[data-v="1"] i { right: -14px; bottom: -14px; width: 74px; height: 74px; background: var(--human); }
+.variant[data-v="2"] { background: var(--paper-ink); color: var(--paper); }
+.variant[data-v="2"] i { left: 18px; top: 58px; width: 66px; height: 66px; background: var(--alert); }
+.variant[data-v="3"] b { top: auto; bottom: 10px; }
+.variant[data-v="3"] i { right: 10px; top: 10px; width: 38px; height: 38px; background: var(--ai); }
+
+/* Markörerna: pil och namnbricka. Läget sätts från koden; vila ger en liten drift. */
+.cursor { position: absolute; z-index: 6; display: flex; align-items: flex-start; gap: 2px; pointer-events: none; opacity: 0; transition: opacity .45s var(--ease); }
+.cursor[data-on="true"] { opacity: 1; }
+.cursor svg { width: 26px; height: 26px; flex: none; filter: drop-shadow(0 3px 6px color-mix(in srgb, #000 50%, transparent)); }
+.cursor path { fill: var(--ai); stroke: var(--on-ai, #04131b); stroke-width: 1.2; }
+.cursor em { margin-top: 18px; padding: 3px 9px 4px; border-radius: 3px; font-style: normal; font-size: 15px; font-weight: 700; line-height: 1.2; white-space: nowrap;
+  background: var(--ai); color: var(--on-ai, #04131b); }
+.cursor[data-role="du"] path { fill: var(--human); stroke: var(--on-human, #1a1204); }
+.cursor[data-role="du"] em { background: var(--human); color: var(--on-human, #1a1204); }
+.cursor[data-alone] svg { width: 38px; height: 38px; }
+.cursor[data-alone] em { margin-top: 26px; padding: 6px 14px 7px; font-size: 24px; }
+.cursor[data-idle][data-on="true"] { animation: drift calc(3s + var(--i) * .4s) ease-in-out infinite alternate; }
+@keyframes drift { 0% { translate: 0 0; } 40% { translate: 9px -6px; } 100% { translate: -6px 8px; } }
+
+.question { position: absolute; left: 150px; top: 330px; z-index: 8; width: 1100px; font-family: var(--font-display); font-weight: var(--heading-weight); font-size: 92px; line-height: 1.02; letter-spacing: -.045em; text-wrap: balance; }
+.duk[data-still="true"] *, .duk[data-still="true"] *::before { transition: none !important; animation: none !important; }

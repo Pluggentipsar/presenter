@@ -1,0 +1,60 @@
+/* Projector in a room for 70 people. Fallbacks in templates
+   retain each other deck's type sizes. Keep source marks smaller than content. */
+[data-projector] {
+  --room-body: clamp(1.35rem, 2.05vw, 3rem);
+  --room-detail: clamp(1.2rem, 1.75vw, 2.6rem);
+  --room-caption: clamp(.95rem, 1.2vw, 1.8rem);
+  --room-label: clamp(1.1rem, 1.5vw, 2.2rem);
+  --room-heading: clamp(2rem, 3.4vw, 4.5rem);
+  --room-document-width: 88vw;
+  --room-instruction: clamp(1.5rem, 2.3vw, 3.2rem);
+  --room-response-width: 38vw;
+  --room-chart-label-width: 30vw;
+  --room-gap-chart-width: 67%;
+  --room-gap-label-left: 55.3%;
+  --room-source-spacing: .08em;
+  --room-stat-number: clamp(7rem, 18vw, 16rem);
+  --room-stat-source-width: 60vw;
+}
+.projection-prompts,.projection-bloom,.projection-loop { position:relative;height:100%;width:100%;padding:4vh 5vw 8vh;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:3vh;background:var(--slide-base,var(--bg));color:var(--text);overflow:hidden;font-family:var(--font-body); }
+.projection-prompts { grid-template-rows:auto auto minmax(0,1fr) auto; }
+.projection-caption { font-family:var(--font-mono);font-size:var(--room-caption);letter-spacing:.12em;text-transform:uppercase; }
+:is(.projection-prompts,.projection-bloom,.projection-loop) h2 { font-family:var(--font-display);font-size:var(--room-heading);line-height:1.05;margin:1vh 0;text-transform:uppercase;font-weight:750; }
+:is(.projection-prompts,.projection-bloom,.projection-loop) header p { font-size:var(--room-detail);margin:1vh 0 0;line-height:1.25; }
+:is(.projection-prompts,.projection-bloom,.projection-loop) footer { font-size:var(--room-body);line-height:1.2;border-top:2px solid currentColor;padding-top:1.4vh; }
+.projection-prompt-tabs { display:grid;grid-template-columns:repeat(3,1fr);gap:1.5vw; }
+.projection-prompt-tabs > div { font-size:var(--room-detail);padding:1.3vh 1vw;border:2px solid var(--text);display:flex;gap:1vw; }
+.projection-prompt-tabs [data-active="true"] { background:var(--accent);color:var(--bg);border-color:var(--accent); }
+.projection-prompt-text { border:2px solid var(--text);box-shadow:8px 8px 0 var(--accent);padding:2.4vh 2vw;display:flex;flex-direction:column;justify-content:center; }
+.projection-prompt-text p { font-size:clamp(1.5rem,2.4vw,3.4rem);line-height:1.35;margin:2vh 0 0; }
+.projection-bloom-layout { display:grid;grid-template-columns:1.25fr 1fr;gap:5vw;align-items:center;min-height:0; }
+.projection-pyramid { display:flex;flex-direction:column;align-items:center;gap:1vh; }
+.projection-pyramid > div { padding:1.8vh .5vw;border:2px solid var(--text);text-align:center;font-size:var(--room-body);line-height:1.1;opacity:.25; }
+.projection-pyramid [data-revealed="true"] { opacity:1; }
+.projection-pyramid [data-active="true"] { background:var(--accent);color:var(--bg);border-color:var(--accent); }
+.projection-bloom article { border-left:5px solid var(--accent);padding:2vh 0 2vh 2vw; }
+.projection-bloom article h3 { font-family:var(--font-display);font-size:4vw;margin:2vh 0; }
+.projection-bloom article p { font-size:clamp(1.5rem,2.7vw,4rem);line-height:1.25; }
+.projection-loop-layout { display:grid;grid-template-rows:auto auto;align-content:center;gap:4vh; }
+.projection-loop-circles { display:flex;justify-content:space-around;gap:5vw; }
+.projection-loop-circles > div { display:grid;place-items:center;width:12vw;height:12vw;border:3px solid var(--text);border-radius:50%;position:relative;font-family:var(--font-display);font-size:4vw; }
+.projection-loop-circles [data-active="true"] { background:var(--accent);color:var(--bg);box-shadow:7px 7px 0 var(--text); }
+.projection-loop-circles b { position:absolute;right:-12vw;top:30%;color:var(--text);font-family:var(--font-body);font-weight:400; }
+.projection-loop article { width:85%;margin:0 auto;border:2px solid var(--text);padding:2vh 2vw; }
+.projection-loop h3 { font-size:var(--room-body);color:var(--accent);margin:0 0 1.5vh; }
+.projection-loop ul { list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:1vh; }
+.projection-loop li { font-size:var(--room-body);line-height:1.2; }
+.projection-loop li::before { content:"✓";color:var(--accent);margin-right:1vw; }
+[data-projector] .projection-chat-message { font-size:var(--room-body);max-width:95%; }
+[data-projector="sl_uf_006"] { --room-body:clamp(1.35rem,1.85vw,2.8rem); }
+[data-projector="sl_uf_045"] { --room-body:clamp(1.35rem,1.9vw,2.8rem); }
+[data-projector="sl_uf_046"] { --room-body:clamp(1.3rem,1.85vw,2.8rem); }
+[data-projector] .slide-container .text-xs { font-size:var(--room-caption); }
+[data-projector] .slide-container strong { color:var(--text);font-weight:800; }
+[data-projector="sl_uf_038"] [data-card] { opacity:1!important; }
+[data-projector="sl_uf_038"] { --room-prompt-columns:minmax(0,.85fr) auto minmax(0,1.4fr);--room-prompt-before:clamp(1.5rem,2.35vw,3.5rem);--room-prompt-after:clamp(1.65rem,2.75vw,4rem); }
+[data-projector="sl_uf_038"] [data-card] div { color:var(--text)!important; }
+[data-projector] [data-card][data-verdict] { letter-spacing:normal!important;font-weight:400!important;font-family:var(--font-body)!important; }
+[data-projector="sl_uf_019"] svg text { font-size:30px!important;letter-spacing:.04em!important;fill:var(--text)!important;opacity:1!important; }
+[data-projector] [data-session-label] { display:none; }
+[data-projector] [data-stat-bridge] { color:var(--text)!important;opacity:1!important; }

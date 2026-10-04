@@ -1,0 +1,37 @@
+# Tredjepartsmaterial i Presenter
+
+Presenters kod är fri under MIT-licensen (se LICENSE), och exempelinnehållet under CC BY 4.0. Det som står nedan är
+skapat av andra och har sina egna licenser och villkor.
+
+## Bilder
+
+- **Jorden i zoomvärlden** (`presenter/public/bilder/skala/jorden-dag.webp`, `jorden-natt.webp` och `jorden-moln.webp`):
+  NASA:s Blue Marble Next Generation (oktober), Black Marble 2016 och Blue Marble-molnen, nedskalade och omkodade.
+  NASA Earth Observatory / Visible Earth. NASA:s bilder får i regel användas fritt. Se
+  https://www.nasa.gov/nasa-brand-center/images-and-media/ för riktlinjerna.
+- **Övriga bilder i zoomvärlden** (`skala-*.webp`) och **välkomstdeckets klassrum** (`presenter-valkommen/klassrum.webp`)
+  är genererade lokalt med bildmodellen Z-Image-Turbo (Apache 2.0). De hör till exempelinnehållet och ligger under
+  CC BY 4.0, © Joel Rangsjö. Prompterna står i `_prompter.md` bredvid bilderna, där sådan finns.
+- **Loggor** (`presenter/public/logos/`): varumärken som tillhör sina ägare (bland andra Anthropic, OpenAI, Google,
+  Microsoft, Meta, Amazon, xAI, Spotify, LinkedIn och Instagram). De följer med för att mallarna ska kunna visa vilken
+  tjänst något gäller. MIT-licensen gäller inte dem, och de ger ingen rätt att använda varumärkena på annat sätt.
+
+## Typsnitt
+
+Mallarna och temana använder typsnitt från Google Fonts, bland andra Archivo, Familjen Grotesk, IBM Plex Mono, Inter,
+Fraunces och Instrument Serif. De hämtas när programmet byggs och ligger då i byggets egna filer. Typsnitten har sina
+egna licenser, i regel SIL Open Font License 1.1 och i några fall Apache 2.0. Se respektive typsnitt på
+https://fonts.google.com.
+
+## Paket och verktyg
+
+- **npm-paketen** (Next.js, React, Electron, Framer Motion, three.js med flera) har sina egna licenser, mest MIT,
+  BSD och Apache 2.0. De står i respektive paket under `node_modules` efter `npm install`.
+- **Electron** och Chromium följer med i installationsfilen, med sina licenser (`LICENSE` och `LICENSES.chromium.html`
+  i installationsmappen).
+- **FFmpeg** (ffmpeg och ffprobe) följer med i installationsfilen för filmexport och ljud. Det är en LGPL-build
+  (LGPL-3.0-or-later) med delade bibliotek från https://github.com/BtbN/FFmpeg-Builds. Källkoden finns på
+  https://ffmpeg.org, och licenstexten ligger som `LICENSE-FFmpeg.txt` i installationens mapp `verktyg/ffmpeg`.
+  Vilken version en installationsfil har står i `verktyg/verktyg.json` och i `ffmpeg -version`, till exempel
+  n8.1.3-14-g330caae0c1: källkoden för den finns i FFmpeg:s git (https://git.ffmpeg.org/ffmpeg.git, incheckning
+  330caae0c1), och byggskripten hos BtbN.

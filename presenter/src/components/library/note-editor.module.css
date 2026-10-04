@@ -1,0 +1,53 @@
+/* Anteckningsfältet. Färgerna kommer från ytan det ligger i (bibliotek eller översikt). */
+
+.editor {
+  display: grid;
+  gap: 0.3rem;
+}
+.area {
+  width: 100%;
+  min-height: 9rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.55rem;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  resize: vertical;
+  outline: none;
+}
+.area::placeholder {
+  color: var(--faint);
+}
+.area:focus {
+  border-color: var(--cobalt);
+  box-shadow: 0 0 0 3px var(--cobalt-dim);
+}
+.foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.03em;
+  color: var(--faint);
+}
+.foot span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.status {
+  flex: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.status[data-state="dirty"],
+.status[data-state="saving"] {
+  color: var(--cobalt);
+}
+.status[data-state="error"] {
+  color: #b92016;
+}
