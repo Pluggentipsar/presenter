@@ -27,8 +27,8 @@ https://fonts.google.com.
 
 - **npm-paketen** (Next.js, React, Electron, Framer Motion, three.js med flera) har sina egna licenser, mest MIT,
   BSD och Apache 2.0. De står i respektive paket under `node_modules` efter `npm install`.
-- **Electron** och Chromium följer med i installationsfilen, med sina licenser (`LICENSE` och `LICENSES.chromium.html`
-  i installationsmappen).
+- **Electron** och Chromium följer med i installationsfilen, med sina licenser (`LICENSE.electron.txt` och
+  `LICENSES.chromium.html` i installationsmappen).
 - **FFmpeg** (ffmpeg och ffprobe) följer med i installationsfilen för filmexport och ljud. Det är en LGPL-build
   (LGPL-3.0-or-later) med delade bibliotek från https://github.com/BtbN/FFmpeg-Builds. Källkoden finns på
   https://ffmpeg.org, och licenstexten ligger som `LICENSE-FFmpeg.txt` i installationens mapp `verktyg/ffmpeg`.
